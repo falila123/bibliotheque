@@ -1,0 +1,194 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #1e90ff; /* fond bleu */
+    color: #fff;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Dashboard layout */
+.dashboard {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #0b3d91;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style: none;
+    flex: 1;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #cfd8e3;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #4a5a78;
+    color: #fff;
+}
+
+.sidebar .btn-logout {
+    margin-top: auto;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2f3b52;
+    color: #fff;
+    cursor: pointer;
+}
+
+.sidebar .btn-logout:hover {
+    background-color: #4a5a78;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header .user-info {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.notifications {
+    position: relative;
+    font-size: 1.5rem;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #ff4d4d;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Cartes */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 15px;
+}
+
+.card .btn {
+    padding: 8px 16px;
+    background-color: #0b3d91;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.card .btn:hover {
+    background-color: #4a5a78;
+}
+
+.card-primary { border-top: 4px solid #0b3d91; }
+.card-success { border-top: 4px solid #28a745; }
+.card-info { border-top: 4px solid #17a2b8; }
+
+/* Tableau */
+.table-section {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 30px;
+}
+
+.table-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-section th, .table-section td {
+    padding: 12px;
+    text-align: left;
+}
+
+.table-section th {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.table-section tr:nth-child(even) {
+    background-color: rgba(255,255,255,0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+    .sidebar ul { display: flex; gap: 10px; }
+    .main-content { padding: 20px 10px; }
+    .cards { flex-direction: column; align-items: center; }
+    .table-section { max-width: 100%; }
+}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administration - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, #00b4db 0%, #00d4ff 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            border-bottom: 3px solid white;
+            padding-bottom: 5px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .btn-logout-custom {
+            background-color: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: white;
+            color: #00d4ff;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 50px 20px;
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* Cartes KPI */
+        .kpi-section {
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .kpi-card h5 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .kpi-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .kpi-card p {
+            font-size: 0.9rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .kpi-emprunts { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .kpi-retards { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .kpi-disponibles { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .kpi-utilisateurs { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        /* Section Title */
+        .section-title {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00b4db;
+        }
+
+        .section-title h3 {
+            color: #333;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Graphiques */
+        .chart-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 30px;
+        }
+
+        /* Tableau rapports */
+        .table-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .table-section table {
+            margin-bottom: 0;
+        }
+
+        .table-section thead {
+            background-color: #f8f9fa;
+        }
+
+        .table-section th {
+            color: #333;
+            font-weight: 700;
+            border-bottom: 2px solid #ddd;
+            padding: 15px;
+        }
+
+        .table-section td {
+            color: #666;
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table-section tbody tr:hover {
+            background-color: #f5f7fa;
+        }
+
+        /* Badges */
+        .badge-activity {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-high {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-low {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Notifications */
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f5576c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-custom .nav-link {
+                margin: 8px 0;
+            }
+
+            .main-container {
+                padding: 30px 15px;
+            }
+
+            .welcome-section {
+                padding: 20px;
+            }
+
+            .chart-section {
+                padding: 20px;
+            }
+
+            .table-section {
+                padding: 20px;
+                overflow-x: auto;
+            }
+
+            .user-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-administration.html">
+            <i class="fas fa-chart-line"></i> Administration
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Boutons centrés -->
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="dashboard-administration.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="statistiques.html">
+                        <i class="fas fa-chart-bar"></i> Statistiques
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Droite: Notifications et Déconnexion -->
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">1</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="main-container">
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Bienvenue, <span id="userName"></span> 👋</h1>
+            <p>Consultez les statistiques et rapports globaux de votre bibliothèque</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-section">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="kpi-card kpi-emprunts">
+                        <h5>Emprunts ce mois</h5>
+                        <div class="number">248</div>
+                        <p>+12% par rapport au mois dernier</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="kpi-card kpi-retards">
+                        <h5>Retards actifs</h5>
+                        <div class="number">23</div>
+                        <p>Livres non retournés</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="kpi-card kpi-disponibles">
+                        <h5>Livres disponibles</h5>
+                        <div class="number">456</div>
+                        <p>Sur 650 au total</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="kpi-card kpi-utilisateurs">
+                        <h5>Utilisateurs actifs</h5>
+                        <div class="number">342</div>
+                        <p>Cette semaine</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <!-- <div class="chart-section">
+            <div class="section-title">
+                <h3><i class="fas fa-chart-line"></i> Activité des emprunts</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="empruntsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="section-title">
+                <h3><i class="fas fa-chart-pie"></i> Distribution par rôle</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="rolesChart"></canvas>
+            </div>
+        </div> -->
+
+        <!-- Tableau d'activité -->
+        <!-- <div class="table-section">
+            <div class="section-title">
+                <h3><i class="fas fa-list"></i> Activité récente</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Événement</th>
+                            <th>Utilisateur</th>
+                            <th>Détails</th>
+                            <th>Niveau d'activité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>23/02/2026</td>
+                            <td>Emprunt validé</td>
+                            <td>Alice Dupont</td>
+                            <td>Le Seigneur des Anneaux</td>
+                            <td><span class="badge-activity badge-high">Haute</span></td>
+                        </tr>
+                        <tr>
+                            <td>23/02/2026</td>
+                            <td>Retard détecté</td>
+                            <td>Bob Martin</td>
+                            <td>1984 - 2 jours de retard</td>
+                            <td><span class="badge-activity badge-high">Haute</span></td>
+                        </tr>
+                        <tr>
+                            <td>22/02/2026</td>
+                            <td>Livre retourné</td>
+                            <td>Claire Lefevre</td>
+                            <td>Harry Potter</td>
+                            <td><span class="badge-activity badge-medium">Moyenne</span></td>
+                        </tr>
+                        <tr>
+                            <td>22/02/2026</td>
+                            <td>Utilisateur créé</td>
+                            <td>Admin</td>
+                            <td>Nouvel étudiant</td>
+                            <td><span class="badge-activity badge-low">Basse</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth script -->
+<script src="auth.js" defer></script>
+
+<script>
+    // Graphique Emprunts
+    const empruntsCtx = document.getElementById('empruntsChart').getContext('2d');
+    new Chart(empruntsCtx, {
+        type: 'line',
+        data: {
+            labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7'],
+            datasets: [{
+                label: 'Emprunts',
+                data: [45, 52, 48, 61, 55, 68, 72],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // Graphique Rôles
+    const rolesCtx = document.getElementById('rolesChart').getContext('2d');
+    new Chart(rolesCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Étudiants', 'Bibliothécaires', 'Administrateurs', 'Administration'],
+            datasets: [{
+                data: [200, 30, 10, 15],
+                backgroundColor: ['#667eea', '#f093fb', '#4facfe', '#43e97b']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

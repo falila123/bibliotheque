@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Livres - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            border-bottom: 3px solid white;
+            padding-bottom: 5px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .btn-logout-custom {
+            background-color: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: white;
+            color: #f45c43;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        /* Filtres et actions */
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .filters-section .row {
+            gap: 15px;
+            align-items: end;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-group input:focus {
+            outline: none;
+            border-color: #eb3349;
+            box-shadow: 0 0 0 3px rgba(235, 51, 73, 0.1);
+        }
+
+        .search-group button,
+        .btn-add-book {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-group button:hover,
+        .btn-add-book:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .filter-select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #eb3349;
+            box-shadow: 0 0 0 3px rgba(235, 51, 73, 0.1);
+        }
+
+        /* Grille de livres */
+        .books-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .book-content {
+            padding: 20px;
+        }
+
+        .book-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .book-info {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .book-info-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .book-availability {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .availability-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .availability-unavailable {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-borrow {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .btn-borrow:hover {
+            opacity: 0.9;
+        }
+
+        .btn-borrow:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        /* Notif */
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f5576c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Modal style */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            border: none;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .books-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .search-group {
+                flex-direction: column;
+            }
+
+            .navbar-custom .nav-link {
+                margin: 8px 0;
+            }
+
+            .user-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .filters-section .row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-bibliothecaire.html">
+            <i class="fas fa-book"></i> Bibliothécaire
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard-bibliothecaire.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="gestion-livres.html">
+                        <i class="fas fa-book"></i> Gestion des livres
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="demandes-emprunts.html">
+                        <i class="fas fa-tasks"></i> Demandes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="suivi-emprunts.html">
+                        <i class="fas fa-history"></i> Suivi des emprunts
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">3</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="main-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-book-open"></i> Catalogue de Livres</h1>
+            <p>Gérez votre collection de livres</p>
+        </div>
+
+        <!-- Filtres et actions -->
+        <div class="filters-section">
+            <div class="row align-items-end">
+                <div class="col-md-7">
+                    <div class="search-group">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Rechercher par titre, auteur ou ISBN..."
+                        >
+                        <button onclick="searchBooks()">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="filter-select" id="categoryFilter" onchange="searchBooks()">
+                        <option value="">Toutes les catégories</option>
+                        <option value="Littérature">Littérature</option>
+                        <option value="Classique">Classique</option>
+                        <option value="Philosophie">Philosophie</option>
+                        <option value="Sciences Humaines">Sciences Humaines</option>
+                        <option value="Informatique">Informatique</option>
+                        <option value="Mathématiques">Mathématiques</option>
+                        <option value="Physique">Physique</option>
+                    </select>
+                </div>
+                <!-- <div class="col-md-7"> -->
+                <div class="row align-items-end">
+    <div class="col-md-3">
+        <div class="add-group">
+            <button class="btn-add-book" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Ajouter
+            </button>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <!-- Grille de livres -->
+        <div class="books-container" id="booksContainer">
+            <!-- Les livres seront générés par JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter/Modifier Livre -->
+<div class="modal fade" id="bookModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Ajouter un livre</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookForm">
+                    <div class="mb-3">
+                        <label class="form-label">Titre *</label>
+                        <input type="text" class="form-control" id="formTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Auteur *</label>
+                        <input type="text" class="form-control" id="formAuthor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ISBN *</label>
+                        <input type="text" class="form-control" id="formISBN" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Catégorie *</label>
+                        <select class="form-control" id="formCategory" required>
+                            <option>Littérature</option>
+                            <option>Classique</option>
+                            <option>Philosophie</option>
+                            <option>Sciences Humaines</option>
+                            <option>Informatique</option>
+                            <option>Mathématiques</option>
+                            <option>Physique</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Année *</label>
+                        <input type="number" class="form-control" id="formYear" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre total d'exemplaires *</label>
+                        <input type="number" class="form-control" id="formTotal" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="saveBook()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth script -->
+<script src="auth.js" defer></script>
+
+<script>
+    // Données des livres
+    const books = [
+        {
+            id: 1,
+            title: "Le Petit Prince",
+            author: "Antoine de Saint-Exupéry",
+            isbn: "978-2070612758",
+            category: "Littérature",
+            year: 1943,
+            available: 3,
+            total: 5,
+            image: "🌙"
+        },
+        {
+            id: 2,
+            title: "Les Misérables",
+            author: "Victor Hugo",
+            isbn: "978-2253096344",
+            category: "Classique",
+            year: 1862,
+            available: 2,
+            total: 4,
+            image: "📖"
+        },
+        {
+            id: 3,
+            title: "L'Étranger",
+            author: "Albert Camus",
+            isbn: "978-2070360024",
+            category: "Philosophie",
+            year: 1942,
+            available: 0,
+            total: 3,
+            image: "🤔"
+        },
+        {
+            id: 4,
+            title: "Sapiens",
+            author: "Yuval Noah Harari",
+            isbn: "978-2226257017",
+            category: "Sciences Humaines",
+            year: 2011,
+            available: 4,
+            total: 6,
+            image: "🌍"
+        },
+        {
+            id: 5,
+            title: "Introduction aux Algorithmes",
+            author: "Thomas H. Cormen",
+            isbn: "978-2100545261",
+            category: "Informatique",
+            year: 2010,
+            available: 5,
+            total: 8,
+            image: "💻"
+        },
+        {
+            id: 6,
+            title: "La Peste",
+            author: "Albert Camus",
+            isbn: "978-2070360420",
+            category: "Classique",
+            year: 1947,
+            available: 0,
+            total: 3,
+            image: "😷"
+        },
+        {
+            id: 7,
+            title: "Mathématiques pour l'Ingénieur",
+            author: "Jean-Pierre Ramis",
+            isbn: "978-2100547821",
+            category: "Mathématiques",
+            year: 2014,
+            available: 6,
+            total: 10,
+            image: "📐"
+        },
+        {
+            id: 8,
+            title: "Physique Générale",
+            author: "Douglas C. Giancoli",
+            isbn: "978-2744075131",
+            category: "Physique",
+            year: 2015,
+            available: 4,
+            total: 7,
+            image: "⚛️"
+        }
+    ];
+
+    // Afficher les livres
+    function displayBooks(booksToDisplay) {
+        const container = document.getElementById('booksContainer');
+        container.innerHTML = '';
+
+        if (booksToDisplay.length === 0) {
+            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">Aucun livre trouvé</p>';
+            return;
+        }
+
+        booksToDisplay.forEach(book => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card';
+
+            const isAvailable = book.available > 0;
+
+            bookCard.innerHTML = `
+                <div class="book-image">${book.image}</div>
+                <div class="book-content">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author"><i class="fas fa-pen-fancy"></i> ${book.author}</p>
+                    
+                    <div class="book-info">
+                        <span class="book-info-label">ISBN:</span>
+                        <span>${book.isbn}</span>
+                    </div>
+                    <div class="book-info">
+                        <span class="book-info-label">Catégorie:</span>
+                        <span>${book.category}</span>
+                    </div>
+                    <div class="book-info">
+                        <span class="book-info-label">Année:</span>
+                        <span>${book.year}</span>
+                    </div>
+
+                    <div class="book-availability ${isAvailable ? 'availability-available' : 'availability-unavailable'}">
+                        <i class="fas ${isAvailable ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                        Disponibles: ${book.available} / ${book.total}
+                    </div>
+
+                    <div class="book-actions">
+                        <button class="btn-action btn-borrow" ${!isAvailable ? 'disabled' : ''}>
+                            <i class="fas fa-share"></i> ${isAvailable ? 'Emprunter' : 'Non disponible'}
+                        </button>
+                        <button class="btn-action btn-edit" onclick="editBook(${book.id})">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(bookCard);
+        });
+    }
+
+    // Recherche
+    function searchBooks() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const categoryFilter = document.getElementById('categoryFilter').value;
+
+        const filtered = books.filter(book => {
+            const matchesSearch = book.title.toLowerCase().includes(searchTerm) ||
+                                book.author.toLowerCase().includes(searchTerm) ||
+                                book.isbn.includes(searchTerm);
+            const matchesCategory = !categoryFilter || book.category === categoryFilter;
+            
+            return matchesSearch && matchesCategory;
+        });
+
+        displayBooks(filtered);
+    }
+
+    // Ouvrir modal ajout
+    function openAddModal() {
+        document.getElementById('bookForm').reset();
+        const modal = new bootstrap.Modal(document.getElementById('bookModal'));
+        modal.show();
+    }
+
+    // Modifier livre
+    function editBook(id) {
+        const book = books.find(b => b.id === id);
+        if (book) {
+            document.getElementById('formTitle').value = book.title;
+            document.getElementById('formAuthor').value = book.author;
+            document.getElementById('formISBN').value = book.isbn;
+            document.getElementById('formCategory').value = book.category;
+            document.getElementById('formYear').value = book.year;
+            document.getElementById('formTotal').value = book.total;
+            
+            const modal = new bootstrap.Modal(document.getElementById('bookModal'));
+            modal.show();
+        }
+    }
+
+    // Enregistrer livre
+    function saveBook() {
+        alert('✅ Livre enregistré avec succès!');
+        bootstrap.Modal.getInstance(document.getElementById('bookModal')).hide();
+    }
+
+    // Afficher tous les livres au chargement
+    window.addEventListener('load', function() {
+        displayBooks(books);
+    });
+</script>
+
+</body>
+</html>

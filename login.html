@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - Système de Gestion de Bibliothèque</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+    }
+
+    .login-wrapper {
+        display: flex;
+        width: 100%;
+        max-width: 850px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .login-intro {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex: 0.9;
+        min-height: 300px;
+    }
+
+    .login-intro h1 { font-size:2rem; font-weight:700; margin-bottom:10px; }
+    .login-intro p { font-size:0.85rem; opacity:0.9; margin-bottom:15px; line-height:1.3; }
+    .login-intro-icon { font-size:3rem; margin-bottom:10px; opacity:0.8; }
+
+    .login-features { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px; font-size:0.8rem; }
+    .login-feature { display:flex; align-items:center; gap:6px; opacity:0.85; }
+    .login-feature i { font-size:1rem; min-width:20px; }
+
+    .login-form-container {
+        padding: 25px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        flex:1;
+        min-height:300px;
+    }
+
+    .login-form-title { font-size:1.5rem; font-weight:700; color:#333; margin-bottom:5px; }
+    .login-form-subtitle { color:#666; margin-bottom:15px; font-size:0.85rem; }
+
+    .form-group { margin-bottom:12px; }
+    .form-group label { display:block; font-weight:600; color:#333; margin-bottom:4px; font-size:0.85rem; }
+    .form-group input {
+        width:100%; padding:8px 10px;
+        border:2px solid #e0e0e0;
+        border-radius:6px;
+        font-size:0.9rem;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus {
+        outline:none;
+        border-color:#1e3c72;
+        box-shadow:0 0 0 3px rgba(30,60,114,0.1);
+    }
+
+    .btn-login, .btn-google {
+        width:100%; padding:10px; border:none; border-radius:6px; font-weight:700; font-size:0.9rem; cursor:pointer; transition:all 0.3s ease; margin-top:6px;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color:white;
+    }
+    .btn-login:hover { transform:translateY(-2px); box-shadow:0 8px 15px rgba(30,60,114,0.3); }
+
+    .btn-google {
+        background:white;
+        color:#1e3c72;
+        border:1px solid #1e3c72;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+    }
+    .btn-google:hover { background:#f0f4f8; }
+
+    /* Google "G" coloré */
+    .google-g { font-weight:bold; font-size:1.2rem; }
+    .google-g span { display:inline-block; }
+    .g-blue { color:#4285F4; }
+    .g-red { color:#EA4335; }
+    .g-yellow { color:#FBBC05; }
+    .g-green { color:#34A853; }
+
+    .links-row { display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:0.85rem; }
+    .links-row a { color:#1e3c72; text-decoration:none; font-weight:600; }
+    .links-row a:hover { text-decoration:underline; }
+
+    #message { text-align:center; margin-top:10px; padding:8px; border-radius:6px; font-weight:600; font-size:0.85rem; min-height:18px; }
+    #message.success { background-color:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+    #message.error { background-color:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+
+    .test-accounts-section { background:#f8f9fa; border-top:2px solid #e0e0e0; padding:12px; margin-top:12px; border-radius:6px; max-height:100px; overflow-y:auto; }
+    .test-accounts-section h5 { color:#333; font-weight:700; margin-bottom:8px; font-size:0.85rem; }
+    .test-accounts-list { display:flex; flex-direction:column; gap:6px; }
+    .account-item { background:white; padding:6px 8px; border-radius:6px; border-left:3px solid #1e3c72; cursor:pointer; transition:all 0.3s ease; font-size:0.85rem; }
+    .account-item:hover { box-shadow:0 3px 8px rgba(0,0,0,0.1); transform:translateX(3px); }
+    .account-name { font-weight:600; color:#333; display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:2px; }
+    .account-name i { font-size:0.9rem; }
+    .account-email { font-size:0.8rem; color:#666; }
+    .badge-role { padding:2px 6px; border-radius:12px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+    .badge-etudiant { background-color:#d4edda; color:#155724; }
+    .badge-bibliothecaire { background-color:#fff3cd; color:#856404; }
+    .badge-administrateur { background-color:#cfe2ff; color:#084298; }
+    .badge-administration { background-color:#f8d7da; color:#842029; }
+
+    @media(max-width:768px){
+        .login-wrapper{ flex-direction:column; max-width:500px; }
+        .login-intro{ min-height:180px; padding:25px 15px; }
+        .login-intro h1{ font-size:1.6rem; }
+        .login-intro-icon{ font-size:2.5rem; }
+        .login-features{ grid-template-columns:1fr; gap:6px; font-size:0.8rem; }
+        .login-form-container{ padding:25px 15px; min-height:auto; }
+    }
+    @media(max-width:480px){
+        .login-wrapper{ border-radius:12px; }
+        .login-intro{ min-height:160px; padding:20px 12px; }
+        .login-intro h1{ font-size:1.4rem; }
+        .login-intro-icon{ font-size:2rem; margin-bottom:8px; }
+        .login-form-container{ padding:20px 12px; }
+        .form-group input{ padding:8px 10px; font-size:0.85rem; }
+        .btn-login, .btn-google{ padding:8px; font-size:0.85rem; }
+        .test-accounts-section{ padding:10px; margin-top:10px; max-height:90px; }
+        .account-item{ padding:5px 6px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="login-wrapper">
+
+    <!-- Section gauche -->
+    <div class="login-intro">
+        <i class="fas fa-book login-intro-icon"></i>
+        <h1>Bibliothèque</h1>
+        <p>Système de gestion centralisé</p>
+        <div class="login-features">
+            <div class="login-feature"><i class="fas fa-database"></i> Gestion des livres</div>
+            <div class="login-feature"><i class="fas fa-exchange-alt"></i> Suivi emprunts</div>
+            <div class="login-feature"><i class="fas fa-users-cog"></i> Administration</div>
+            <div class="login-feature"><i class="fas fa-chart-bar"></i> Statistiques</div>
+        </div>
+    </div>
+
+    <!-- Section droite -->
+    <div class="login-form-container">
+        <h2 class="login-form-title">Connexion</h2>
+        <p class="login-form-subtitle">Accédez à votre espace</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" placeholder="exemple@mail.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
+
+            <div class="links-row">
+                <a href="#" id="forgotPassword">Mot de passe oublié ?</a>
+                <a href="register.html">Créer un compte</a>
+            </div>
+
+            <button type="button" class="btn-google mt-2">
+                <span class="google-g"> Continuer avec
+                    <span class="g-blue">G</span>
+                    <span class="g-red">o</span>
+                    <span class="g-yellow">o</span>
+                    <span class="g-blue">g</span>
+                    <span class="g-green">l</span>
+                    <span class="g-red">e</span>
+                </span>
+            </button>
+
+            <div id="message"></div>
+        </form>
+
+        <div class="test-accounts-section">
+            <h5><i class="fas fa-user-check"></i> Comptes de test</h5>
+            <div class="test-accounts-list" id="accountsList"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="login.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Bibliothécaire - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            border-bottom: 3px solid white;
+            padding-bottom: 5px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .btn-logout-custom {
+            background-color: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: white;
+            color: #f45c43;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 50px 20px;
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* Cartes stats */
+        .stats-section {
+            margin-bottom: 40px;
+        }
+
+        .card-stats {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+            color: white;
+        }
+
+        .card-stats h5 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-stats .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stats-books { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); }
+        .stats-requests { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stats-returns { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
+        /* Sections avec titre */
+        .section-title {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #eb3349;
+        }
+
+        .section-title h3 {
+            color: #333;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Tableau */
+        .table-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .table-section table {
+            margin-bottom: 0;
+        }
+
+        .table-section thead {
+            background-color: #f8f9fa;
+        }
+
+        .table-section th {
+            color: #333;
+            font-weight: 700;
+            border-bottom: 2px solid #ddd;
+            padding: 15px;
+        }
+
+        .table-section td {
+            color: #666;
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table-section tbody tr:hover {
+            background-color: #f5f7fa;
+        }
+
+        /* Badges */
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-approuve {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-en-attente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-refuse {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Boutons action */
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 0 3px;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+
+        .btn-refuse {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-refuse:hover {
+            background-color: #c82333;
+        }
+
+        /* Notifications */
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f5576c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-custom .nav-link {
+                margin: 8px 0;
+            }
+
+            .main-container {
+                padding: 30px 15px;
+            }
+
+            .welcome-section {
+                padding: 20px;
+            }
+
+            .table-section {
+                padding: 20px;
+                overflow-x: auto;
+            }
+
+            .user-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-bibliothecaire.html">
+            <i class="fas fa-book"></i> Bibliothécaire
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Boutons centrés -->
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="dashboard-bibliothecaire.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gestion-livres.html">
+                        <i class="fas fa-book"></i> Gestion des livres
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="demandes-emprunts.html">
+                        <i class="fas fa-tasks"></i> Demandes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="suivi-emprunts.html">
+                        <i class="fas fa-history"></i> Suivi des emprunts
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Droite: Notifications et Déconnexion -->
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">3</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="main-container">
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Bienvenue, <span id="userName"></span> 👋</h1>
+            <p>Gérez les livres, les emprunts et les demandes de votre bibliothèque</p>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-section">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-stats stats-books">
+                        <h5>Livres disponibles</h5>
+                        <div class="number">156</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-stats stats-requests">
+                        <h5>Demandes en attente</h5>
+                        <div class="number">12</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-stats stats-returns">
+                        <h5>Retours attendus</h5>
+                        <div class="number">8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demandes d'emprunt en attente -->
+        <!-- <div class="table-section">
+            <div class="section-title">
+                <h3><i class="fas fa-tasks"></i> Demandes d'emprunt en attente</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Étudiant</th>
+                            <th>Livre demandé</th>
+                            <th>Date demande</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Alice Dupont</td>
+                            <td>Le Seigneur des Anneaux</td>
+                            <td>22/02/2026</td>
+                            <td><span class="badge-status badge-en-attente">En attente</span></td>
+                            <td>
+                                <button class="btn-action btn-approve" title="Approuver"><i class="fas fa-check"></i></button>
+                                <button class="btn-action btn-refuse" title="Refuser"><i class="fas fa-times"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bob Martin</td>
+                            <td>1984</td>
+                            <td>21/02/2026</td>
+                            <td><span class="badge-status badge-en-attente">En attente</span></td>
+                            <td>
+                                <button class="btn-action btn-approve" title="Approuver"><i class="fas fa-check"></i></button>
+                                <button class="btn-action btn-refuse" title="Refuser"><i class="fas fa-times"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Emprunts en cours -->
+<!--         <div class="table-section">
+            <div class="section-title">
+                <h3><i class="fas fa-book-open"></i> Emprunts en cours</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Étudiant</th>
+                            <th>Livre</th>
+                            <th>Date emprunt</th>
+                            <th>Date retour prévue</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Claire Lefevre</td>
+                            <td>Harry Potter</td>
+                            <td>15/02/2026</td>
+                            <td>01/03/2026</td>
+                            <td><span class="badge-status badge-approuve">En cours</span></td>
+                            <td>
+                                <button class="btn-action btn-approve" title="Enregistrer retour"><i class="fas fa-check"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> --> 
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth script -->
+<script src="auth.js" defer></script>
+
+</body>
+</html>

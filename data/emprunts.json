@@ -1,0 +1,3 @@
+[
+  { "id": 1, "livre": "Mathématiques", "membre": "Alice", "dateEmprunt": "2026-02-15", "dateRetour": "2026-02-22", "etat": "en cours" }
+]

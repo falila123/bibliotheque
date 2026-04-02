@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Emprunts - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-decoration {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-decoration-2 {
+            position: fixed;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            bottom: -50px;
+            left: -50px;
+            animation: float 25s infinite ease-in-out reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -50px); }
+            66% { transform: translate(-20px, 20px); }
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #667eea !important;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .navbar-custom .nav-link {
+            color: #555 !important;
+            margin: 0 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .navbar-custom .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover::after,
+        .navbar-custom .nav-link.active::after {
+            width: 100%;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: #667eea;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-logout-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-logout-custom:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #888;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card.primary {
+            border-left-color: #667eea;
+        }
+
+        .stat-card.success {
+            border-left-color: #28a745;
+        }
+
+        .stat-card.danger {
+            border-left-color: #f5576c;
+        }
+
+        .stat-card h4 {
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .stat-card.primary .number {
+            color: #667eea;
+        }
+
+        .stat-card.success .number {
+            color: #28a745;
+        }
+
+        .stat-card.danger .number {
+            color: #f5576c;
+        }
+
+        /* Section Title */
+        .section-title {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section-title h3 {
+            color: #333;
+            font-weight: 800;
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        /* Emprunts Container */
+        .emprunts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .emprunt-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #667eea;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .emprunt-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .emprunt-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .emprunt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+        }
+
+        .emprunt-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .emprunt-value {
+            color: #888;
+        }
+
+        .emprunt-status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .status-en-cours {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+
+        /* Historique */
+        .historique-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .historique-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #28a745;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .historique-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .historique-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .historique-date {
+            font-size: 0.85rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .historique-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            margin-top: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .emprunts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Décoration -->
+<div class="bg-decoration"></div>
+<div class="bg-decoration-2"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-etudiant.html">
+            <i class="fas fa-book"></i> Bibliothèque
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: none;">
+            <i class="fas fa-bars" style="color: #667eea;"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard-etudiant.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="catalogue.html">
+                        <i class="fas fa-book-open"></i> Catalogue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="mes-demandes.html">
+                        <i class="fas fa-tasks"></i> Mes demandes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="profil.html">
+                        <i class="fas fa-user-circle"></i> Mon profil
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">2</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU -->
+<div class="main-container">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1><i class="fas fa-tasks"></i> Mes Emprunts</h1>
+            <p>Suivez vos emprunts de livres</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-cards">
+            <div class="stat-card primary">
+                <h4><i class="fas fa-book"></i> Emprunts en cours</h4>
+                <div class="number">3</div>
+            </div>
+            <div class="stat-card danger">
+                <h4><i class="fas fa-clock"></i> En retard</h4>
+                <div class="number">0</div>
+            </div>
+            <div class="stat-card success">
+                <h4><i class="fas fa-history"></i> Historique total</h4>
+                <div class="number">4</div>
+            </div>
+        </div>
+
+        <!-- Emprunts en cours -->
+        <div>
+            <div class="section-title">
+                <h3><i class="fas fa-book-open"></i> Emprunts en cours</h3>
+            </div>
+
+            <div class="emprunts-container">
+                <div class="emprunt-card">
+                    <h4 class="emprunt-title">L'Étranger</h4>
+                    
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Exemplaire:</span>
+                        <span class="emprunt-value">LIV003-C1</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Emprunté le:</span>
+                        <span class="emprunt-value">28/01/2026</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">À rendre le:</span>
+                        <span class="emprunt-value">25/02/2026</span>
+                    </div>
+
+                    <span class="emprunt-status status-en-cours">
+                        <i class="fas fa-check-circle"></i> En cours
+                    </span>
+                </div>
+
+                <div class="emprunt-card">
+                    <h4 class="emprunt-title">Introduction aux Algorithmes</h4>
+                    
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Exemplaire:</span>
+                        <span class="emprunt-value">LIV005-C1</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Emprunté le:</span>
+                        <span class="emprunt-value">01/02/2026</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">À rendre le:</span>
+                        <span class="emprunt-value">01/03/2026</span>
+                    </div>
+
+                    <span class="emprunt-status status-en-cours">
+                        <i class="fas fa-check-circle"></i> En cours
+                    </span>
+                </div>
+
+                <div class="emprunt-card">
+                    <h4 class="emprunt-title">Mathématiques pour l'Ingénieur</h4>
+                    
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Exemplaire:</span>
+                        <span class="emprunt-value">LIV008-C2</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">Emprunté le:</span>
+                        <span class="emprunt-value">10/02/2026</span>
+                    </div>
+
+                    <div class="emprunt-info">
+                        <span class="emprunt-label">À rendre le:</span>
+                        <span class="emprunt-value">10/03/2026</span>
+                    </div>
+
+                    <span class="emprunt-status status-en-cours">
+                        <i class="fas fa-check-circle"></i> En cours
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historique -->
+        <div style="margin-top: 50px;">
+            <div class="section-title">
+                <h3><i class="fas fa-history"></i> Historique des emprunts</h3>
+            </div>
+
+            <div class="historique-container">
+                <div class="historique-card">
+                    <h4 class="historique-title">Sapiens</h4>
+                    <div class="historique-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        Du 20/01/2026 au 03/02/2026
+                    </div>
+                    <span class="historique-status">
+                        <i class="fas fa-check"></i> Retourné
+                    </span>
+                </div>
+
+                <div class="historique-card">
+                    <h4 class="historique-title">Le Petit Prince</h4>
+                    <div class="historique-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        Du 05/01/2026 au 19/01/2026
+                    </div>
+                    <span class="historique-status">
+                        <i class="fas fa-check"></i> Retourné
+                    </span>
+                </div>
+
+                <div class="historique-card">
+                    <h4 class="historique-title">Fondation</h4>
+                    <div class="historique-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        Du 15/12/2025 au 29/12/2025
+                    </div>
+                    <span class="historique-status">
+                        <i class="fas fa-check"></i> Retourné
+                    </span>
+                </div>
+
+                <div class="historique-card">
+                    <h4 class="historique-title">1984</h4>
+                    <div class="historique-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        Du 01/12/2025 au 15/12/2025
+                    </div>
+                    <span class="historique-status">
+                        <i class="fas fa-check"></i> Retourné
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js" defer></script>
+
+</body>
+</html>

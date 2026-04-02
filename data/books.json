@@ -1,0 +1,4 @@
+[
+  { "code": "LIV001-1", "titre": "Mathématiques", "auteurs": ["Auteur1", "Auteur2"], "categorie": "Science", "image": "images/math.jpg", "disponibilite": 2 },
+  { "code": "LIV002-1", "titre": "Physique", "auteurs": ["Auteur3"], "categorie": "Science", "image": "images/physique.jpg", "disponibilite": 0 }
+]

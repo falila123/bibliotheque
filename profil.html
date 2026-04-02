@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-decoration {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-decoration-2 {
+            position: fixed;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            bottom: -50px;
+            left: -50px;
+            animation: float 25s infinite ease-in-out reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -50px); }
+            66% { transform: translate(-20px, 20px); }
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #667eea !important;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .navbar-custom .nav-link {
+            color: #555 !important;
+            margin: 0 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .navbar-custom .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover::after,
+        .navbar-custom .nav-link.active::after {
+            width: 100%;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .notif-icon:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-logout-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-logout-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #888;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 50px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 4px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+            animation: bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-role {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-body {
+            padding: 40px 30px;
+        }
+
+        .section-title {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title h3 {
+            color: #333;
+            font-weight: 800;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .profile-section {
+            margin-bottom: 35px;
+        }
+
+        .profile-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .info-value {
+            color: #888;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .checkbox-custom {
+            cursor: pointer;
+        }
+
+        .checkbox-custom input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 30px 20px;
+            }
+
+            .profile-body {
+                padding: 25px 20px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .info-value {
+                text-align: left;
+                margin-top: 8px;
+            }
+
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-edit {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Décoration -->
+<div class="bg-decoration"></div>
+<div class="bg-decoration-2"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-etudiant.html">
+            <i class="fas fa-book"></i> Bibliothèque
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: none;">
+            <i class="fas fa-bars" style="color: #667eea;"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard-etudiant.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="catalogue.html">
+                        <i class="fas fa-book-open"></i> Catalogue
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mes-demandes.html">
+                        <i class="fas fa-tasks"></i> Mes demandes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="profil.html">
+                        <i class="fas fa-user-circle"></i> Mon profil
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">2</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU -->
+<div class="main-container">
+    <div class="container" style="max-width: 850px;">
+        <div class="page-header">
+            <h1><i class="fas fa-user-circle"></i> Mon Profil</h1>
+            <p>Gérez vos informations personnelles</p>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-name" id="profileName">Sophie Martin</div>
+                <div class="profile-role">Étudiant</div>
+            </div>
+
+            <div class="profile-body">
+                <!-- Informations personnelles -->
+                <div class="profile-section">
+                    <div class="section-title">
+                        <h3><i class="fas fa-user"></i> Informations Personnelles</h3>
+                        <button class="btn-edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-id-card"></i> Numéro Étudiant:</span>
+                        <span class="info-value">ETU001</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-calendar"></i> Membre depuis:</span>
+                        <span class="info-value">Septembre 2023</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+                        <span class="info-value" id="profileEmail">sophie.martin@etudiant.fr</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-phone"></i> Téléphone:</span>
+                        <span class="info-value">+33 6 12 34 56 78</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-graduation-cap"></i> Filière:</span>
+                        <span class="info-value">Informatique</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-map-marker-alt"></i> Adresse:</span>
+                        <span class="info-value">123 Rue de l'Université, 75005 Paris</span>
+                    </div>
+                </div>
+
+                <!-- Préférences -->
+                <div class="profile-section">
+                    <div class="section-title">
+                        <h3><i class="fas fa-sliders-h"></i> Préférences</h3>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-bell"></i> Notifications:</span>
+                        <label class="checkbox-custom">
+                            <input type="checkbox" checked> Activées
+                        </label>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-language"></i> Langue:</span>
+                        <span class="info-value">Français</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-moon"></i> Thème:</span>
+                        <span class="info-value">Clair</span>
+                    </div>
+                </div>
+
+                <!-- Sécurité -->
+                <div class="profile-section">
+                    <div class="section-title">
+                        <h3><i class="fas fa-lock"></i> Sécurité</h3>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-key"></i> Mot de passe:</span>
+                        <button class="btn-edit" style="margin: 0;">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-shield-alt"></i> Authentification 2FA:</span>
+                        <span class="info-value">Non activée</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-clock"></i> Dernière connexion:</span>
+                        <span class="info-value">Aujourd'hui à 14:35</span>
+                    </div>
+                </div>
+
+                <!-- Statistiques -->
+                <div class="profile-section">
+                    <div class="section-title">
+                        <h3><i class="fas fa-chart-bar"></i> Statistiques</h3>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-book-open"></i> Emprunts en cours:</span>
+                        <span class="info-value" style="font-weight: 700; color: #667eea;">3</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-history"></i> Total emprunts:</span>
+                        <span class="info-value" style="font-weight: 700; color: #667eea;">24</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-check"></i> Livres retournés à temps:</span>
+                        <span class="info-value" style="font-weight: 700; color: #28a745;">21 (87.5%)</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-exclamation"></i> En retard:</span>
+                        <span class="info-value" style="font-weight: 700; color: #f5576c;">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js" defer></script>
+
+<script>
+    // Charger les informations de l'utilisateur connecté
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    
+    if (currentUser) {
+        document.getElementById('profileName').textContent = currentUser.nom;
+        document.getElementById('profileEmail').textContent = currentUser.email;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Emprunts - Bibliothèque</title>
+    
+    <!-- ✅ Vérification authentification EN PREMIER -->
+    <script src="check-auth.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            border-bottom: 3px solid white;
+            padding-bottom: 5px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .btn-logout-custom {
+            background-color: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: white;
+            color: #f45c43;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        /* Stats cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #eb3349;
+        }
+
+        .stat-card h4 {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #eb3349;
+        }
+
+        /* Filtres */
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #eb3349;
+            box-shadow: 0 0 0 3px rgba(235, 51, 73, 0.1);
+        }
+
+        /* Tableau */
+        .table-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        .table-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .table-custom thead {
+            background-color: #f8f9fa;
+        }
+
+        .table-custom th {
+            color: #333;
+            font-weight: 700;
+            border-bottom: 2px solid #ddd;
+            padding: 15px;
+        }
+
+        .table-custom td {
+            color: #666;
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f5f7fa;
+        }
+
+        /* Badges statut */
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-actif {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-retard {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-retourne {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Boutons action */
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-return {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-return:hover {
+            background-color: #218838;
+        }
+
+        /* Notif */
+        .notif-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f5576c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .table-section {
+                padding: 20px;
+            }
+
+            .table-custom th,
+            .table-custom td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .navbar-custom .nav-link {
+                margin: 8px 0;
+            }
+
+            .user-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard-bibliothecaire.html">
+            <i class="fas fa-book"></i> Bibliothécaire
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard-bibliothecaire.html">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gestion-livres.html">
+                        <i class="fas fa-book"></i> Gestion des livres
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="demandes-emprunts.html">
+                        <i class="fas fa-tasks"></i> Demandes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="suivi-emprunts.html">
+                        <i class="fas fa-history"></i> Suivi des emprunts
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-section">
+                <div class="notif-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge">3</span>
+                </div>
+                <button class="btn-logout-custom" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="main-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-list"></i> Gestion des Emprunts</h1>
+            <p>Suivez et gérez les emprunts de livres</p>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h4><i class="fas fa-book"></i> Emprunts Actifs</h4>
+                <div class="number">5</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #f5576c;">
+                <h4><i class="fas fa-clock"></i> En Retard</h4>
+                <div class="number" style="color: #f5576c;">1</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #28a745;">
+                <h4><i class="fas fa-check"></i> Retournés</h4>
+                <div class="number" style="color: #28a745;">1</div>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters-section">
+            <label style="font-weight: 600; color: #333; margin-right: 10px;">Statut:</label>
+            <select class="filter-select" id="statusFilter" onchange="filterEmprunts()">
+                <option value="tous">Tous</option>
+                <option value="actif">Actifs</option>
+                <option value="retard">En retard</option>
+                <option value="retourne">Retournés</option>
+            </select>
+        </div>
+
+        <!-- Tableau emprunts -->
+        <div class="table-section">
+            <h3><i class="fas fa-list"></i> Tous les emprunts</h3>
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Livre</th>
+                            <th>Exemplaire</th>
+                            <th>Membre</th>
+                            <th>Date d'emprunt</th>
+                            <th>Date de retour</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>L'Étranger</strong></td>
+                            <td>LIV003-C1</td>
+                            <td>Sophie Martin</td>
+                            <td>28/01/2026</td>
+                            <td>25/02/2026</td>
+                            <td><span class="badge-status status-actif"><i class="fas fa-check-circle"></i> Actif</span></td>
+                            <td><button class="btn-action btn-return" onclick="returnBook('L\'Étranger')"><i class="fas fa-undo"></i> Retourner</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Introduction aux Algorithmes</strong></td>
+                            <td>LIV005-C1</td>
+                            <td>Sophie Martin</td>
+                            <td>01/02/2026</td>
+                            <td>01/03/2026</td>
+                            <td><span class="badge-status status-actif"><i class="fas fa-check-circle"></i> Actif</span></td>
+                            <td><button class="btn-action btn-return" onclick="returnBook('Introduction aux Algorithmes')"><i class="fas fa-undo"></i> Retourner</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>La Peste</strong></td>
+                            <td>LIV006-C1</td>
+                            <td>Pierre Dubois</td>
+                            <td>15/01/2026</td>
+                            <td>12/02/2026</td>
+                            <td><span class="badge-status status-retard"><i class="fas fa-exclamation-circle"></i> En retard</span></td>
+                            <td><button class="btn-action btn-return" onclick="returnBook('La Peste')"><i class="fas fa-undo"></i> Retourner</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Physique Générale</strong></td>
+                            <td>LIV008-C1</td>
+                            <td>Jean Moreau</td>
+                            <td>05/02/2026</td>
+                            <td>05/03/2026</td>
+                            <td><span class="badge-status status-actif"><i class="fas fa-check-circle"></i> Actif</span></td>
+                            <td><button class="btn-action btn-return" onclick="returnBook('Physique Générale')"><i class="fas fa-undo"></i> Retourner</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Les Misérables</strong></td>
+                            <td>LIV002-C1</td>
+                            <td>Jean Moreau</td>
+                            <td>08/02/2026</td>
+                            <td>08/03/2026</td>
+                            <td><span class="badge-status status-actif"><i class="fas fa-check-circle"></i> Actif</span></td>
+                            <td><button class="btn-action btn-return" onclick="returnBook('Les Misérables')"><i class="fas fa-undo"></i> Retourner</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sapiens</strong></td>
+                            <td>LIV004-C1</td>
+                            <td>Sophie Martin</td>
+                            <td>20/01/2026</td>
+                            <td>03/02/2026</td>
+                            <td><span class="badge-status status-retourne"><i class="fas fa-check"></i> Retourné</span></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth script -->
+<script src="auth.js" defer></script>
+
+<script>
+    function filterEmprunts() {
+        const filter = document.getElementById('statusFilter').value;
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const status = row.querySelector('.badge-status').textContent.trim();
+            
+            if (filter === 'tous') {
+                row.style.display = '';
+            } else if (filter === 'actif' && status.includes('Actif')) {
+                row.style.display = '';
+            } else if (filter === 'retard' && status.includes('retard')) {
+                row.style.display = '';
+            } else if (filter === 'retourne' && status.includes('Retourné')) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function returnBook(title) {
+        alert(`✅ Retour de "${title}" enregistré!\n\nLe livre a été retourné avec succès.`);
+    }
+</script>
+
+</body>
+</html>

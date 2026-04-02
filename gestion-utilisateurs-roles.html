@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion Utilisateurs - Bibliothèque</title>
+
+<script src="check-auth.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+body{
+  background:#f4f6f9;
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top:0; left:0; width:200px; height:100%; background:#2563eb;
+  padding:20px 0; display:flex; flex-direction:column; gap:10px;
+}
+.sidebar h4 { text-align:center; color:white; font-weight:500; margin-bottom:30px; }
+.sidebar a { color:white; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:8px; font-weight:500; transition:0.3s; border-radius:8px; margin: 0 10px 10px 10px;}
+.sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2);}
+.logout-btn { margin-top:auto; width:90%; bottom: 20px; margin-left: 10px;}
+
+/* MAIN */
+.main {
+    padding-left: 220px; 
+    padding-right: 20px;
+    max-width: 1200px;   
+    margin: 20px auto;   
+}
+
+/* HEADER */
+.page-header{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom:25px;
+}
+.page-header h1{ font-weight:700; }
+.page-header p{ color:#666; margin:0; }
+
+/* STATS */
+.stat-card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+.stat-card h6{ color:#666; margin-bottom:8px; }
+.stat-card h3{ font-weight:700; color:#2563eb; }
+
+/* TABLE */
+.table-section{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+.table tbody tr:hover{ background:#f1f5f9; }
+
+/* ROLE BADGES */
+.badge-role{ padding:5px 10px; border-radius:20px; font-weight:600; font-size:0.85rem; }
+.badge-etudiant{ background:#d4edda; color:#155724; }
+.badge-bibliothecaire{ background:#d1ecf1; color:#0c5460; }
+.badge-administrateur{ background:#fff3cd; color:#856404; }
+.badge-administration{ background:#f8d7da; color:#721c24; }
+
+/* BUTTONS */
+.btn-add, .btn-search, .btn-reset{
+  background:#2563eb;
+  color:white;
+  padding:8px 18px;
+  border-radius:8px;
+  border:none;
+  font-weight:600;
+}
+.btn-add:hover, .btn-search:hover, .btn-reset:hover{ opacity:0.9; }
+
+/* ACTION MENU */
+.action-menu{ position:relative; }
+.menu-dots{ cursor:pointer; padding:6px; }
+.dropdown-menu-user{
+  position:absolute; right:0; top:25px;
+  background:white; border-radius:8px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+  display:none; min-width:130px; overflow:hidden;
+}
+.dropdown-menu-user button{
+  width:100%; border:none; background:none; padding:8px 12px; text-align:left; font-size:14px;
+}
+.dropdown-menu-user button:hover{ background:#f1f5f9; }
+.dropdown-menu-user .delete{ color:#dc3545; }
+
+/* SEARCH + RECHERCHE BOX */
+.search-add-box{
+  background:#fff;
+  padding:12px 20px; 
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin-bottom:20px;
+}
+.search-add-box input, .search-add-box select{
+    padding:8px 12px; border-radius:6px; border:1px solid #ccc; flex:1; min-width:150px; 
+}
+.search-add-box select { flex: 0 0 170px; padding-right: 40px; }
+.search-add-box button{ min-width:130px; }
+.search-add-box input:focus,
+.search-add-box select:focus,
+.search-add-box button:focus {
+    outline: none;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    border-color: #2563eb;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .search-add-box{ flex-direction:column; align-items:stretch; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h4><i class="fas fa-book-open"></i> BiblioAdmin</h4>
+<a href="dashboard-admin.html"><i class="fas fa-home"></i> Dashboard</a>
+<a href="gestion-livres-admin.html"><i class="fas fa-book"></i> Livres</a>
+<a href="#" class="active"><i class="fas fa-users"></i> Utilisateurs</a>
+<a href="statistiques-admin.html"><i class="fas fa-chart-bar"></i> Statistiques</a>
+<button onclick="logout()" class="btn btn-outline-light logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="page-header">
+<h1><i class="fas fa-users-cog"></i> Gestion Utilisateurs</h1>
+<p>Gérez les utilisateurs de la bibliothèque</p>
+</div>
+
+<!-- STATS -->
+<div class="row mb-4">
+<div class="col-md-3"><div class="stat-card"><h6>Étudiants</h6><h3 id="count-etudiant">0</h3></div></div>
+<div class="col-md-3"><div class="stat-card"><h6>Bibliothécaires</h6><h3 id="count-biblio">0</h3></div></div>
+<div class="col-md-3"><div class="stat-card"><h6>Administrateurs</h6><h3 id="count-admin">0</h3></div></div>
+<div class="col-md-3"><div class="stat-card"><h6>Administration</h6><h3 id="count-administration">0</h3></div></div>
+</div>
+
+<!-- SEARCH + RECHERCHE BOX -->
+<div class="search-add-card d-flex align-items-center gap-2 mb-4 p-3" 
+     style="background:white; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-top:20px;">
+    
+    <!-- Barre de recherche -->
+    <input type="text" id="searchInput" class="form-control" placeholder="🔎 Rechercher un utilisateur..." 
+           style="max-width:250px; height:38px;">
+
+    <!-- Sélecteur rôle -->
+    <select id="roleFilter" class="form-select" style="width:180px; height:38px;">
+        <option value="">Tous les rôles</option>
+        <option value="Étudiant">Étudiant</option>
+        <option value="Bibliothécaire">Bibliothécaire</option>
+        <option value="Administrateur">Administrateur</option>
+        <option value="Administration">Administration</option>
+    </select>
+
+    <!-- Bouton Rechercher -->
+    <button class="btn btn-primary" onclick="renderUsers()" 
+            style="height:38px; min-width:100px; display:flex; align-items:center; justify-content:center;">
+        <i class="fas fa-search me-1"></i> Rechercher
+    </button>
+
+    <!-- Bouton Réinitialiser -->
+    <button class="btn btn-primary" onclick="resetFilters()" 
+            style="height:38px; min-width:100px; display:flex; align-items:center; justify-content:center;">
+        <i class="fas fa-rotate me-1"></i> Réinitialiser
+    </button>
+
+    <!-- Bouton Ajouter -->
+    <button class="btn btn-primary" onclick="openUserModal()" 
+            style="height:38px; min-width:130px; display:flex; align-items:center; justify-content:center;">
+        <i class="fas fa-plus me-1"></i> Ajouter
+    </button>
+
+</div>
+<!-- TABLE -->
+<div class="table-section">
+<h4>Liste des utilisateurs</h4>
+<div class="table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>ID</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Date création</th><th>Actions</th>
+</tr>
+</thead>
+<tbody id="usersTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<script>
+let users=[
+{id:1,name:"Alice Dupont",email:"alice@mail.com",role:"Étudiant",date:"10/01/2026"},
+{id:2,name:"Bob Martin",email:"bob@mail.com",role:"Bibliothécaire",date:"05/01/2026"},
+{id:3,name:"Claire Lefevre",email:"claire@mail.com",role:"Administrateur",date:"01/01/2026"},
+{id:4,name:"David Admin",email:"admin@mail.com",role:"Administration",date:"01/01/2026"},
+{id:5,name:"Emma Laurent",email:"emma@mail.com",role:"Étudiant",date:"12/01/2026"}
+];
+
+function renderUsers(){
+  const tbody=document.getElementById("usersTable");
+  const search=document.getElementById("searchInput").value.toLowerCase();
+  const roleFilter=document.getElementById("roleFilter").value;
+  tbody.innerHTML="";
+  users.filter(u=>{
+    const matchesSearch = u.name.toLowerCase().includes(search)||u.email.toLowerCase().includes(search);
+    const matchesRole = roleFilter===""||u.role===roleFilter;
+    return matchesSearch&&matchesRole;
+  }).forEach(u=>{
+    let badgeClass = u.role==="Étudiant"?"badge-etudiant":u.role==="Bibliothécaire"?"badge-bibliothecaire":u.role==="Administrateur"?"badge-administrateur":"badge-administration";
+    tbody.innerHTML+=`
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td><span class="badge-role ${badgeClass}">${u.role}</span></td>
+        <td>${u.date}</td>
+        <td>
+          <div class="action-menu">
+            <div class="menu-dots" onclick="toggleMenu(this)"><i class="fas fa-ellipsis-h"></i></div>
+            <div class="dropdown-menu-user">
+              <button onclick="editUser(${u.id})"><i class="fas fa-edit"></i> Modifier</button>
+              <button class="delete"><i class="fas fa-trash"></i> Supprimer</button>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+  });
+  updateRoleStats();
+}
+
+function toggleMenu(element){
+  document.querySelectorAll(".dropdown-menu-user").forEach(menu=>{ if(menu!==element.nextElementSibling){ menu.style.display="none"; }});
+  const menu=element.nextElementSibling;
+  menu.style.display=menu.style.display==="block"?"none":"block";
+}
+
+document.addEventListener("click",function(e){
+  if(!e.target.closest(".action-menu")){
+    document.querySelectorAll(".dropdown-menu-user").forEach(menu=>{ menu.style.display="none"; });
+  }
+});
+
+function logout(){ localStorage.removeItem("currentUser"); window.location.href="login.html"; }
+
+function updateRoleStats(){
+  const counts={Étudiant:0,Bibliothécaire:0,Administrateur:0,Administration:0};
+  users.forEach(u=>counts[u.role]++);
+  document.getElementById("count-etudiant").innerText=counts["Étudiant"];
+  document.getElementById("count-biblio").innerText=counts["Bibliothécaire"];
+  document.getElementById("count-admin").innerText=counts["Administrateur"];
+  document.getElementById("count-administration").innerText=counts["Administration"];
+}
+
+function resetFilters(){
+  document.getElementById("searchInput").value="";
+  document.getElementById("roleFilter").value="";
+  renderUsers();
+}
+
+renderUsers();
+</script>
+
+</body>
+</html>
