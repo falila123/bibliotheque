@@ -274,7 +274,7 @@ tbody tr:hover{ background:#f1f5f9; }
             </div>
             <div class="col-md-6">
               <label>Catégorie</label>
-              <select class="form-select" id="editCategorie">
+             <select class="form-select" id="editCategorie">
                 <option>Littérature</option>
                 <option>Informatique</option>
                 <option>Mathématiques</option>
@@ -598,7 +598,9 @@ function editBook(code){
   const book = booksData.find(b => b.code === code);
   if(!book) return;
 
-  // Remplir le formulaire
+  // Stocker l'ancien code pour retrouver le livre après modif
+  document.getElementById("editCodeLivre").dataset.oldCode = book.code;
+
   document.getElementById("editTitre").value = book.titre;
   document.getElementById("editCodeLivre").value = book.code;
   document.getElementById("editIsbnSuffix").value = book.isbn.replace("978-","");
@@ -614,12 +616,17 @@ function editBook(code){
   });
 
   document.getElementById("editDescription").value = book.description || "";
+
+  // Recalcul automatique du code si on change la catégorie
+  document.getElementById("editCategorie").onchange = updateEditCode;
+
   new bootstrap.Modal(document.getElementById("editBookModal")).show();
 }
 
 function saveBookEdits(){
-  const code = document.getElementById("editCodeLivre").value;
-  const book = booksData.find(b => b.code === code);
+  const codeInput = document.getElementById("editCodeLivre");
+  const oldCode = codeInput.dataset.oldCode;
+  const book = booksData.find(b => b.code === oldCode);
   if(!book) return;
 
   book.titre = document.getElementById("editTitre").value;
@@ -627,21 +634,26 @@ function saveBookEdits(){
   book.auteur = Array.from(document.getElementById("editAuteurs").selectedOptions).map(o => o.value).join(", ");
   book.isbn = "978-" + document.getElementById("editIsbnSuffix").value;
   book.description = document.getElementById("editDescription").value;
-  
-  // Image si sélectionnée
+
+  // Recalculer le code
+  const newCode = generateEditCode(book);
+  book.code = newCode;
+  book.exemplaires = book.exemplaires.map((ex, index) => `${newCode}-${index+1}`);
+  codeInput.value = newCode;
+
   const imgInput = document.getElementById("editBookImage");
   if(imgInput.files && imgInput.files[0]){
     const reader = new FileReader();
     reader.onload = function(e){
       book.image = e.target.result;
-      saveToStorage();
-      renderCards();
-      renderTable();
-      updateKpiCards();
-      bootstrap.Modal.getInstance(document.getElementById("editBookModal")).hide();
+      finalizeSave();
     }
     reader.readAsDataURL(imgInput.files[0]);
   } else {
+    finalizeSave();
+  }
+
+  function finalizeSave(){
     saveToStorage();
     renderCards();
     renderTable();
@@ -649,6 +661,32 @@ function saveBookEdits(){
     bootstrap.Modal.getInstance(document.getElementById("editBookModal")).hide();
   }
 }
+
+function generateEditCode(book) {
+  const newCategory = document.getElementById("editCategorie").value;
+  const dewey = classification[newCategory]; // code Dewey correct
+
+  // Premier auteur du formulaire
+  const auteurCode = Array.from(document.getElementById("editAuteurs").selectedOptions)[0].value.substring(0,3).toUpperCase();
+
+  // Nombre de livres existants dans cette catégorie
+  const count = booksData.filter(b => b.categorie === newCategory && b !== book).length + 1;
+
+  return `${dewey} ${auteurCode} ${String(count).padStart(3,'0')}`;
+}
+
+function updateEditCode() {
+  const codeInput = document.getElementById("editCodeLivre");
+  const book = booksData.find(b => b.code === codeInput.dataset.oldCode);
+  if(!book) return;
+
+  const newCode = generateEditCode(book);
+  codeInput.value = newCode;
+
+  // Exemples mis à jour dans le modal
+  book.exemplaires = book.exemplaires.map((ex, index) => `${newCode}-${index+1}`);
+}
+
 
 document.getElementById("categorie").addEventListener("change", generateCode);
 document.getElementById("auteurs").addEventListener("change", generateCode);
