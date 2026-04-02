@@ -311,6 +311,14 @@ tbody tr:hover{ background:#f1f5f9; }
 
 let booksData = JSON.parse(localStorage.getItem("books")) || [];
 
+const classification = {
+  "Littérature": "800",
+  "Informatique": "004",
+  "Mathématiques": "510",
+  "Science": "500",
+  "Histoire": "900"
+};
+
   function saveToStorage() {
     localStorage.setItem("books", JSON.stringify(booksData));
   }
@@ -331,10 +339,32 @@ updateKpiCards();
 
 // ----- UTILS -----
 function generateCode(){
+
   const categorie = document.getElementById("categorie").value;
-  const prefix = categorie.substring(0,3).toUpperCase();
-  const count = booksData.filter(b => b.categorie===categorie).length + 1;
-  document.getElementById("codeLivre").value = prefix + String(count).padStart(3,'0');
+
+  const auteurs =
+  Array.from(document.getElementById("auteurs").selectedOptions)
+  .map(opt => opt.value);
+
+  if(auteurs.length === 0) return;
+
+  const auteurPrincipal = auteurs[0];
+
+  const auteurCode =
+  auteurPrincipal.substring(0,3).toUpperCase();
+
+  const dewey = classification[categorie];
+
+  const count =
+  booksData.filter(b => b.categorie === categorie).length + 1;
+
+  const numero =
+  String(count).padStart(3,'0');
+
+  const cote = `${dewey} ${auteurCode} ${numero}`;
+
+  document.getElementById("codeLivre").value = cote;
+
 }
 
 // ----- AJOUT AUTEUR -----
@@ -389,7 +419,7 @@ function addBook(){
       auteur: auteurs.join(", "),
       categorie,
       isbn,
-      exemplaires: [`${code}-1`],
+      exemplaires: [`${code}-01`],
       statut: "Disponible",
       description,
       image: img
@@ -402,6 +432,11 @@ function addBook(){
     document.getElementById("addBookForm").reset();
     bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
   }
+}
+
+function openAddModal(){
+  generateCode();
+  new bootstrap.Modal(document.getElementById('addBookModal')).show();
 }
 
 // ----- RENDER CARDS -----
@@ -614,6 +649,9 @@ function saveBookEdits(){
     bootstrap.Modal.getInstance(document.getElementById("editBookModal")).hide();
   }
 }
+
+document.getElementById("categorie").addEventListener("change", generateCode);
+document.getElementById("auteurs").addEventListener("change", generateCode);
 
 // Initial render
 renderCards();
