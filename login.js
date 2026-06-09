@@ -1,6 +1,5 @@
 // ======= Vider le localStorage au chargement =======
-console.log("🧹 Nettoyage de la session précédente");
-localStorage.clear();
+localStorage.removeItem("currentUser");
 
 // ======= Charger les comptes de test =======
 document.addEventListener('DOMContentLoaded', function() {
@@ -75,7 +74,6 @@ function setupLoginForm() {
     });
 }
 
-// Fonction principale de connexion
 function handleLogin() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
@@ -96,60 +94,93 @@ function handleLogin() {
         return;
     }
 
-    // Réinitialiser le message
-    messageDiv.textContent = '';
-    messageDiv.className = '';
-
-    // Afficher un message de chargement
     messageDiv.textContent = '⏳ Vérification des identifiants...';
 
+    // 🔥 Charger depuis users.json ET localStorage
     fetch('data/users.json?v=' + new Date().getTime())
         .then(response => response.json())
-        .then(users => {
-            // Chercher l'utilisateur par email ET mot de passe
-            const user = users.find(u => 
-                u.email === email && u.password === password
-            );
-
-            if(user) {
-                // ✅ Connexion réussie
-                messageDiv.textContent = `✅ Connexion réussie ! Bienvenue ${user.nom}`;
-                messageDiv.className = 'success';
-                
-                // Sauvegarder l'utilisateur
-                localStorage.setItem("currentUser", JSON.stringify(user));
-
-                console.log(`🔐 Connexion réussie pour ${user.nom} (${user.role})`);
-
-                // Redirection après 1.5 secondes
-                setTimeout(() => {
-                    redirectByRole(user.role);
-                }, 1500);
-
-            } else {
-                // ❌ Identifiants incorrects
-                const emailExists = users.find(u => u.email === email);
-                
-                if (emailExists) {
-                    // L'email existe mais le mot de passe est faux
-                    messageDiv.textContent = '❌ Mot de passe incorrect';
-                    messageDiv.className = 'error';
-                    document.getElementById('password').focus();
-                    console.warn(`⚠️ Tentative de connexion échouée pour ${email}: mot de passe incorrect`);
-                } else {
-                    // L'email n'existe pas
-                    messageDiv.textContent = '❌ Email ou mot de passe incorrect';
-                    messageDiv.className = 'error';
-                    document.getElementById('email').focus();
-                    console.warn(`⚠️ Tentative de connexion échouée: email ${email} non trouvé`);
+        .then(jsonUsers => {
+            // 🔥 Charger les utilisateurs du localStorage
+            const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+            
+            // 🔥 FUSIONNER : users.json + localStorage
+            // 1. Ajouter les statuts du localStorage aux utilisateurs du JSON
+            const users = jsonUsers.map(jsonUser => {
+                const storedUser = storedUsers.find(su => su.email === jsonUser.email);
+                if (storedUser && storedUser.status) {
+                    return { ...jsonUser, status: storedUser.status };
                 }
-            }
+                return jsonUser;
+            });
+
+            // 2. Ajouter les utilisateurs créés localement (qui ne sont pas dans users.json)
+            storedUsers.forEach(storedUser => {
+                const existsInJson = jsonUsers.find(ju => ju.email === storedUser.email);
+                if (!existsInJson) {
+                    users.push(storedUser);
+                }
+            });
+
+            console.log("📋 Utilisateurs fusionnés (JSON + localStorage):", users);
+            performLogin(users, email, password, messageDiv);
         })
         .catch(error => {
             console.error('❌ Erreur de connexion:', error);
             messageDiv.textContent = '❌ Erreur serveur. Veuillez réessayer plus tard.';
             messageDiv.className = 'error';
         });
+}
+
+function performLogin(users, email, password, messageDiv) {
+    // Chercher l'utilisateur par email ET mot de passe
+    const user = users.find(u => 
+        u.email === email && u.password === password
+    );
+
+    if(user) {
+        // 🔥 VÉRIFIER SI LE COMPTE EST ACTIF
+        const status = user.status || 'actif';
+        console.log(`DEBUG: User ${user.email} status = "${status}"`);
+        
+        if(status === 'inactif') {
+            // ❌ Compte désactivé
+            messageDiv.textContent = '❌ Compte désactivé. Veuillez contacter l\'administrateur.';
+            messageDiv.className = 'error';
+            console.warn(`⚠️ Tentative de connexion échouée pour ${email}: compte désactivé`);
+            return;
+        }
+
+        // ✅ Connexion réussie ET compte actif
+        const displayName = user.nom || user.name || email;
+        messageDiv.textContent = `✅ Connexion réussie ! Bienvenue ${displayName}`;
+        messageDiv.className = 'success';
+        
+        // Sauvegarder l'utilisateur
+        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        console.log(`🔐 Connexion réussie pour ${displayName} (${user.role})`);
+
+        // Redirection après 1.5 secondes
+        setTimeout(() => {
+            redirectByRole(user.role);
+        }, 1500);
+
+    } else {
+        // ❌ Identifiants incorrects
+        const emailExists = users.find(u => u.email === email);
+        
+        if (emailExists) {
+            messageDiv.textContent = '❌ Mot de passe incorrect';
+            messageDiv.className = 'error';
+            document.getElementById('password').focus();
+            console.warn(`⚠️ Tentative de connexion échouée pour ${email}: mot de passe incorrect`);
+        } else {
+            messageDiv.textContent = '❌ Email ou mot de passe incorrect';
+            messageDiv.className = 'error';
+            document.getElementById('email').focus();
+            console.warn(`⚠️ Tentative de connexion échouée: email ${email} non trouvé`);
+        }
+    }
 }
 
 // Fonction de redirection selon le rôle

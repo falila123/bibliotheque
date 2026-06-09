@@ -26,7 +26,23 @@ body{
 .sidebar h4 { text-align:center; color:white; font-weight:500; margin-bottom:30px; }
 .sidebar a { color:white; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:8px; font-weight:500; transition:0.3s; border-radius:8px; margin: 0 10px 10px 10px;}
 .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2);}
-.logout-btn { margin-top:auto; width:90%; bottom: 20px; margin-left: 10px;}
+.logout-btn{
+  margin-top:auto;
+  width:90%;
+  margin-left:10px;
+
+  border:1px solid rgba(255,255,255,0.5);
+  color:white;
+  background:transparent;
+
+  transition:0.25s ease;
+}
+
+.logout-btn:hover{
+  background:white;
+  color:#2563eb !important;
+  border-color:white;
+}
 
 /* Main wrapper */
 .main {
@@ -74,29 +90,143 @@ body{
     font-weight:bold;
 }
 
-/* ALERTS */
+/* ================= KPI DASHBOARD ADMIN ================= */
 
-.alerts-panel{
+.stat-card{
     background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+    padding:18px;
+    border-radius:14px;
+    text-align:center;
+    transition:all 0.28s ease;
+    cursor:pointer;
+
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.05),
+      0 1px 3px rgba(0,0,0,0.03);
+}
+
+/* Hover */
+.stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:
+      0 10px 22px rgba(0,0,0,0.10),
+      0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Icônes */
+.stat-icon{
+    font-size:24px;
+    margin-bottom:10px;
+    transition:transform 0.25s ease, opacity 0.25s ease;
+    opacity:0.9;
+}
+
+/* Animation icône */
+.stat-card:hover .stat-icon{
+    transform:scale(1.12);
+    opacity:1;
+}
+
+/* Nombre */
+.stat-number{
+    font-size:1.7rem;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+/* Texte */
+.stat-card div:last-child{
+    font-size:0.9rem;
+    font-weight:500;
+}
+
+/* ================= COULEURS KPI ================= */
+
+/* Livres */
+.stat-card.primary{
+    border-top:4px solid #2563eb;
+    background:linear-gradient(
+      135deg,
+      rgba(37,99,235,0.08),
+      rgba(37,99,235,0.03)
+    );
+}
+
+.stat-card.primary .stat-icon,
+.stat-card.primary .stat-number,
+.stat-card.primary div:last-child{
+    color:#2563eb;
+}
+
+/* Exemplaires */
+.stat-card.info{
+    border-top:4px solid #ec4899;
+    background:linear-gradient(
+      135deg,
+      rgba(236,72,153,0.08),
+      rgba(236,72,153,0.03)
+    );
+}
+
+.stat-card.info .stat-icon,
+.stat-card.info .stat-number,
+.stat-card.info div:last-child{
+    color:#ec4899;
+}
+
+/* Utilisateurs actifs */
+.stat-card.success{
+    border-top:4px solid #28a745;
+    background:linear-gradient(
+      135deg,
+      rgba(40,167,69,0.08),
+      rgba(40,167,69,0.03)
+    );
+}
+
+.stat-card.success .stat-icon,
+.stat-card.success .stat-number,
+.stat-card.success div:last-child{
+    color:#28a745;
+}
+
+/* Utilisateurs désactivés */
+.stat-card.danger{
+    border-top:4px solid #dc2626;
+    background:linear-gradient(
+      135deg,
+      rgba(220,38,38,0.08),
+      rgba(220,38,38,0.03)
+    );
+}
+
+.stat-card.danger .stat-icon,
+.stat-card.danger .stat-number,
+.stat-card.danger div:last-child{
+    color:#dc2626;
 }
 
 .alert-item{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:12px 10px;
+    padding:14px 10px;
     border-bottom:1px solid #e2e8f0;
+    transition:0.2s ease;
 }
 
 .alert-item:last-child{
     border-bottom:none;
 }
 
+.alert-item:hover{
+    background:#f8fafc;
+    border-radius:10px;
+    transform:translateX(3px);
+}
+
 .alert-item i{
-    color:#2563eb;
+    font-size:15px;
 }
 
 /* Responsive */
@@ -155,143 +285,308 @@ body{
 </div>
 
 <!-- MAIN -->
-
 <div class="main">
-<div class="page-header">
-<h1><i class="fas fa-user-circle fa-lg"></i> Bienvenue </h1>
-<div>
 
-<!-- <i class="fas fa-bell me-3" style="position:relative; margin-left: 900px;" >
+  <div class="page-header">
+    <h1><i class="fas fa-user-circle fa-lg"></i> Bienvenue <span id="userName"></span></h1>
+  </div>
 
-<span style="
-position:absolute;
-top:-8px;
-right:-8px;
-background:#f43f5e;
-color:white;
-font-size:0.75rem;
-padding:2px 6px;
-border-radius:50%;
-">3</span>
+  <!-- KPI DASHBOARD -->
+  <div class="row g-4">
 
-</i> -->
+    <!-- TOTAL LIVRES -->
+    <div class="col-md-3">
+      <div class="stat-card primary">
 
-</div>
-</div>
+        <div class="stat-icon">
+          <i class="fas fa-book"></i>
+        </div>
 
-<!-- STATISTIQUES -->
+        <div class="stat-number" id="totalBooks">0</div>
 
-<div class="row g-4">
+        <div>Total Livres</div>
 
-<div class="col-md-3">
+      </div>
+    </div>
 
-<div class="stat-card">
+    <!-- TOTAL EXEMPLAIRES -->
+    <div class="col-md-3">
+      <div class="stat-card info">
 
-<div class="stat-icon">
-<i class="fas fa-book"></i>
-</div>
+        <div class="stat-icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
 
-<div class="stat-number">120</div>
+        <div class="stat-number" id="totalCopies">0</div>
 
-<div>Total Livres</div>
+        <div>Total Exemplaires</div>
 
-</div>
+      </div>
+    </div>
 
-</div>
+    <!-- UTILISATEURS ACTIFS -->
+    <div class="col-md-3">
+      <div class="stat-card success">
 
+        <div class="stat-icon">
+          <i class="fas fa-user-check"></i>
+        </div>
 
-<div class="col-md-3">
+        <div class="stat-number" id="activeUsers">0</div>
 
-<div class="stat-card">
+        <div>Utilisateurs Actifs</div>
 
-<div class="stat-icon">
-<i class="fas fa-users"></i>
-</div>
+      </div>
+    </div>
 
-<div class="stat-number">85</div>
+    <!-- UTILISATEURS DÉSACTIVÉS -->
+    <div class="col-md-3">
+      <div class="stat-card danger">
 
-<div>Utilisateurs</div>
+        <div class="stat-icon">
+          <i class="fas fa-user-slash"></i>
+        </div>
 
-</div>
+        <div class="stat-number" id="inactiveUsers">0</div>
 
-</div>
+        <div>Utilisateurs Désactivés</div>
 
+      </div>
+    </div>
 
-<div class="col-md-3">
+  </div>
 
-<div class="stat-card">
+  <!-- ALERTES -->
+  <div class="alerts-panel mt-4">
 
-<div class="stat-icon">
-<i class="fas fa-exchange-alt"></i>
-</div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">
+        <i class="fas fa-bell"></i> Activité récente
+      </h6>
 
-<div class="stat-number">34</div>
+      <span class="text-muted" style="font-size:0.85rem;">
+        Temps réel
+      </span>
+    </div>
 
-<div>Emprunts Actifs</div>
+    <div id="alertsContainer"></div>
 
-</div>
-
-</div>
-
-
-<div class="col-md-3">
-
-<div class="stat-card">
-
-<div class="stat-icon">
-<i class="fas fa-clock"></i>
-</div>
-
-<div class="stat-number">5</div>
-
-<div>Retards</div>
+  </div>
 
 </div>
-
-</div>
-
-</div>
-
-
-<!-- ALERTES -->
-
-<div class="alerts-panel mt-4">
-
-<h6 class="mb-3">
-<i class="fas fa-bell"></i> Alertes récentes
-</h6>
-
-<div class="alert-item">
-<span>Retard emprunt : "Informatique avancée"</span>
-<i class="fas fa-exclamation-circle"></i>
-</div>
-
-<div class="alert-item">
-<span>Nouveau utilisateur : Jean Dupont</span>
-<i class="fas fa-user-plus"></i>
-</div>
-
-<div class="alert-item">
-<span>Livre bientôt indisponible : Littérature</span>
-<i class="fas fa-book"></i>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 
 <script src="auth.js"></script>
 
 <script>
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+document.addEventListener("DOMContentLoaded", () => {
 
-if(currentUser){
-document.getElementById("userName").textContent = currentUser.nom;
+  // ===== USER CONNECTÉ =====
+
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+  if(currentUser){
+
+    document.getElementById("userName").textContent =
+      currentUser.nom || currentUser.name || "Administrateur";
+  }
+
+  // ===== DASHBOARD KPI =====
+
+  function updateDashboardStats(){
+
+    const books =
+      JSON.parse(localStorage.getItem("books")) || [];
+
+    const users =
+      JSON.parse(localStorage.getItem("users")) || [];
+
+    // 📚 Total livres
+    document.getElementById("totalBooks").innerText =
+      books.length;
+
+    // 📦 Total exemplaires
+    let totalExemplaires = 0;
+
+    books.forEach(book => {
+      totalExemplaires +=
+        (book.exemplaires?.length || 0);
+    });
+
+    document.getElementById("totalCopies").innerText =
+      totalExemplaires;
+
+    // ✅ Utilisateurs actifs
+    const actifs =
+      users.filter(u => u.status === "actif").length;
+
+    // ❌ Utilisateurs désactivés
+    const inactifs =
+      users.filter(u => u.status === "inactif").length;
+
+    document.getElementById("activeUsers").innerText =
+      actifs;
+
+    document.getElementById("inactiveUsers").innerText =
+      inactifs;
+  }
+
+  // ===== ALERTES =====
+
+  function renderRecentAlerts(){
+
+  const container =
+    document.getElementById("alertsContainer");
+
+  const users =
+    JSON.parse(localStorage.getItem("users")) || [];
+
+  const books =
+    JSON.parse(localStorage.getItem("books")) || [];
+
+  const emprunts =
+    JSON.parse(localStorage.getItem("empruntsData")) || [];
+
+  container.innerHTML = "";
+
+  // ======================
+  // 📌 DERNIER EMPRUNT
+  // ======================
+  const lastBorrow =
+    [...emprunts]
+      .reverse()
+      .find(e => e.statut === "En cours");
+
+  if(lastBorrow){
+
+    container.innerHTML += `
+      <div class="alert-item">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-book text-primary"></i>
+          <span>
+            Livre emprunté :
+            <strong>${lastBorrow.bookTitle || lastBorrow.bookCode}</strong>
+          </span>
+        </div>
+
+        <small class="text-muted">
+          par ${lastBorrow.studentName || lastBorrow.studentCode}
+        </small>
+      </div>
+    `;
+  }
+
+  // ======================
+  // 📌 DERNIER RETOUR
+  // ======================
+  const lastReturn =
+    [...emprunts]
+      .reverse()
+      .find(e => e.statut === "Retourné");
+
+  if(lastReturn){
+
+    container.innerHTML += `
+      <div class="alert-item">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-check text-success"></i>
+          <span>
+            Livre retourné :
+            <strong>${lastReturn.bookTitle || lastReturn.bookCode}</strong>
+          </span>
+        </div>
+
+        <small class="text-muted">
+          ${lastReturn.studentName || lastReturn.studentCode}
+        </small>
+      </div>
+    `;
+  }
+
+  // ======================
+  // 📌 RETARDS
+  // ======================
+  const now = new Date();
+
+  const late =
+    emprunts.filter(e =>
+      e.statut !== "Retourné" &&
+      new Date(e.dateRetour) < now
+    );
+
+  if(late.length > 0){
+
+    container.innerHTML += `
+      <div class="alert-item">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-exclamation-triangle text-danger"></i>
+          <span>
+            Emprunts en retard
+          </span>
+        </div>
+
+        <small class="text-muted">
+          ${late.length} emprunt(s)
+        </small>
+      </div>
+    `;
+  }
+
+  // ======================
+  // 👤 DERNIER UTILISATEUR
+  // ======================
+  if(users.length > 0){
+
+    const lastUser = users[users.length - 1];
+
+    container.innerHTML += `
+      <div class="alert-item">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-user-plus text-primary"></i>
+          <span>
+            Nouvel utilisateur :
+            <strong>${lastUser.name || lastUser.nom}</strong>
+          </span>
+        </div>
+
+        <small class="text-muted">
+          ${lastUser.role}
+        </small>
+      </div>
+    `;
+  }
+
+  // ======================
+  // 📚 EXEMPLAIRES
+  // ======================
+  const totalExemplaires =
+    books.reduce(
+      (sum, b) => sum + (b.exemplaires?.length || 0),
+      0
+    );
+
+  container.innerHTML += `
+    <div class="alert-item">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fas fa-layer-group text-warning"></i>
+        <span>
+          Exemplaires enregistrés
+        </span>
+      </div>
+
+      <small class="text-muted">
+        ${totalExemplaires}
+      </small>
+    </div>
+  `;
 }
+  // ===== EXECUTION =====
+
+  updateDashboardStats();
+  renderRecentAlerts();
+
+});
 
 </script>
 

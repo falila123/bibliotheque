@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestion des Livres - Bibliothèque</title>
+<title>Gestion des Livres - Administrateur</title>
 <script src="check-auth.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -14,7 +14,23 @@ body{ background:#f4f6f9; font-family:'Segoe UI',sans-serif; min-height:100vh; }
 .sidebar h4 { text-align:center; color:white; font-weight:500; margin-bottom:30px; }
 .sidebar a { color:white; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:8px; font-weight:500; transition:0.3s; border-radius:8px; margin: 0 10px 10px 10px; }
 .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2);}
-.logout-btn { margin-top:auto; width:90%; bottom: 20px; margin-left: 10px; }
+.logout-btn{
+  margin-top:auto;
+  width:90%;
+  margin-left:10px;
+
+  border:1px solid rgba(255,255,255,0.5);
+  color:white;
+  background:transparent;
+
+  transition:0.25s ease;
+}
+
+.logout-btn:hover{
+  background:white;
+  color:#2563eb !important;
+  border-color:white;
+}
 .main { padding-left: 220px; padding-right: 20px; max-width: 1200px; margin: 20px auto; }
 .page-header{ background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:25px; }
 .page-header h1{ font-weight:700; }
@@ -25,26 +41,199 @@ body{ background:#f4f6f9; font-family:'Segoe UI',sans-serif; min-height:100vh; }
 .stat-icon { font-size:22px; color:#2563eb; margin-bottom:8px; }
 .stat-number { font-size:1.6rem; font-weight:700; color:#1e293b; margin-bottom:3px; }
 .stat-card div:last-child { font-size:0.85rem; color:#64748b; font-weight:500; }
-.kpi-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; margin-bottom:30px; }
-.kpi-card { background:white; padding:20px; border-radius:12px; text-align:center; border-top:4px solid; transition:0.3s; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
-.kpi-card:hover { transform:translateY(-3px); box-shadow:0 6px 15px rgba(0,0,0,0.08); }
-.kpi-card h5 { font-size:0.9rem; font-weight:600; margin-bottom:10px; color:#666; }
-.kpi-card .number { font-size:1.8rem; font-weight:700; margin-bottom:5px; }
-.kpi-card.primary { border-top-color:#2563eb; color:#2563eb; }
-.kpi-card.info { border-top-color:#ec4899; color:#ec4899; } /* rose */
-.kpi-card.success { border-top-color:#28a745; color:#28a745; }
-.kpi-card.danger { border-top-color:#dc2626; color:#dc2626; }
+
+.kpi-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* ================= KPI CARD CLEAN ================= */
+
+.kpi-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+
+  border-top: 4px solid;
+
+  /* 🔥 FLUIDITÉ UNIQUE (UNE SEULE SOURCE) */
+  transition: all 0.18s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  will-change: transform;
+
+  /* 🔥 profondeur propre */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ================= COULEURS TINT ================= */
+
+.kpi-card.primary {
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));
+  border-top-color: #2563eb;
+  color: #2563eb;
+}
+
+.kpi-card.success {
+  background: linear-gradient(135deg, rgba(40,167,69,0.08), rgba(40,167,69,0.03));
+  border-top-color: #28a745;
+  color: #28a745;
+}
+
+.kpi-card.danger {
+  background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(220,38,38,0.03));
+  border-top-color: #dc2626;
+  color: #dc2626;
+}
+
+.kpi-card.info {
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(236,72,153,0.03));
+  border-top-color: #ec4899;
+  color: #ec4899;
+}
+
+/* ================= HOVER CLEAN ================= */
+
+.kpi-card:hover {
+  transform: translate3d(0, -6px, 0);
+
+  box-shadow:
+    0 12px 24px rgba(0,0,0,0.12),
+    0 2px 6px rgba(0,0,0,0.08);
+
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+/* ================= ICON ================= */
+
+.kpi-card i {
+ transition: all 0.26s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.85;
+}
+.kpi-card {
+  transform: translateZ(0);
+}
+.kpi-card h5,
+.kpi-card .number {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.kpi-card:hover i {
+  transform: scale(1.15);
+  opacity: 1;
+}
+
+/* ================= TEXT ================= */
+
+.kpi-card h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #666;
+  transition: transform 0.18s ease;
+}
+
+.kpi-card .number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+
+  transition: transform 0.18s ease;
+}
+
+/* petit effet vivant */
+.kpi-card:hover .number,
+.kpi-card:hover h5 {
+  transform: translateY(-1px);
+}
 
 .books-grid { display:flex; flex-wrap:wrap; gap:15px; justify-content:flex-start; margin-bottom:40px; }
 .book-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.05); display:flex; flex-direction:column; width:calc(20% - 15px); }
 .book-card img{ width:100%; height:180px; object-fit:cover; border-bottom:1px solid #e0e0e0; }
-.book-content{ padding:12px; display:flex; flex-direction:column; gap:4px; }
-.book-title{ font-weight:600; font-size:0.75rem; }
-.book-author{ font-weight:400; font-size:0.8rem; }
-.book-description{font-weight:400; font-size:0.8rem;}
-.info-label{ font-size:0.75rem; color:#444; font-weight:500; margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-.info-badge{ background:#e0e7ff; color:#1e40af; font-size:0.6rem; padding:2px 8px; border-radius:20px; font-weight:500; }
+.book-content {
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.book-title {
+  font-weight:600;
+  font-size:0.75rem;
+}
+.book-author {
+  font-size:0.75rem;
+}
+.btn-description{
+  margin-top:6px;
+  padding:4px;
+  font-size:0.7rem;
+  border:none;
+  border-radius:6px;
+  background:#eef2ff;
+  color:#1e40af;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn-description:hover{
+  background:#dbeafe;
+}
+.code-badge {
+  font-size:0.55rem;
+  white-space:nowrap;   /* empêche retour à la ligne */
+}
+.info-label{ font-size:0.60rem; color:#444; font-weight:500; margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.info-badge{ background:#e0e7ff; color:#1e40af; font-size:0.5rem; padding:2px 8px; border-radius:20px; font-weight:500; }
 .book-status{ margin-top:8px; padding:4px 0; border-radius:20px; font-size:0.75rem; font-weight:600; text-align:center; }
+/* 🔥 FIX hauteur uniforme des cards */
+.book-card{
+  height: 420px;          /* hauteur fixe */
+}
+
+/* 🔥 permet à la zone contenu de s’adapter proprement */
+.book-content{
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 🔥 titre limité à 2 lignes max */
+.book-title {
+  font-weight: 600;
+  font-size: 0.75rem;
+
+  /* 🔥 FIX ALIGNEMENT */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* max 2 lignes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1.2;
+  min-height: 2.4em; /* garde hauteur stable */
+}
+
+#bookPreview:hover{
+  transform:scale(1.03);
+}
+
+/* 🔥 auteur limité à 1 ligne */
+.book-author {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 🔥 empêche les badges de casser les lignes */
+.info-label{
+  flex-wrap: nowrap;   /* IMPORTANT */
+}
+
+/* 🔥 status collé en bas de la card */
+.book-status{
+  margin-top: auto;
+}
 .available{ background:#e6f7ee; color:#28a745; border:1px solid #b7e4c7; }
 .unavailable{ background:#fde8e8; color:#dc2626; border:1px solid #f5c2c7; }
 
@@ -69,6 +258,31 @@ tbody tr:hover{ background:#f1f5f9; }
   z-index: 9999;
   top: 28px;
 }
+
+.btn-generate{
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+
+  /* IMPORTANT : même taille que les autres boutons Bootstrap */
+  padding:6px 12px;
+  font-size:1rem;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  transition:0.2s;
+}
+
+.btn-generate:hover{
+  background:#218838;
+  color:white;
+}
+
 .dropdown-menu-book button{ width:100%; border:none; background:none; padding:8px 12px; text-align:left; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; }
 .dropdown-menu-book button.details {
   color: #2563eb;
@@ -88,6 +302,45 @@ tbody tr:hover{ background:#f1f5f9; }
 .dropdown-menu-book button.delete:hover {
   background: #fef2f2;
 }
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #22c55e;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+#bookPreview {
+  transition: 0.3s;
+}
+
+#bookPreview:hover {
+  transform: scale(1.05);
+}
+
+textarea#description {
+  resize: none;
+}
+
+.modal-footer {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.modal-content {
+  overflow: visible !important;
+}
+
+.btn {
+  pointer-events: auto !important;
+}
+
 @media(max-width:900px){ .book-card{ width:calc(50% - 10px); } }
 @media(max-width:600px){ .book-card{ width:100%; } }
 </style>
@@ -111,21 +364,29 @@ tbody tr:hover{ background:#f1f5f9; }
 
 <!-- KPI Cards Gestion Livres -->
 <div class="kpi-section mt-4">
+
+  <!-- Total livres -->
   <div class="kpi-card primary">
-    <h5><i class="fas fa-book"></i> Total Livres</h5>
+    <h5><i class="fas fa-book"></i> Total livres</h5>
     <div class="number" id="totalLivres">0</div>
   </div>
+
+  <!-- Total exemplaires -->
   <div class="kpi-card info">
-    <h5><i class="fas fa-users"></i> Utilisateurs</h5>
-    <div class="number" id="totalUsers">0</div>
+    <h5><i class="fas fa-layer-group"></i> Total exemplaires</h5>
+    <div class="number" id="totalExemplaires">0</div>
   </div>
+
+  <!-- Disponibles -->
   <div class="kpi-card success">
-    <h5><i class="fas fa-exchange-alt"></i> Emprunts Actifs</h5>
-    <div class="number" id="activeEmprunts">0</div>
+    <h5><i class="fas fa-check-circle"></i> Disponibles</h5>
+    <div class="number" id="livresDisponibles">0</div>
   </div>
+
+  <!-- Indisponibles -->
   <div class="kpi-card danger">
-    <h5><i class="fas fa-clock"></i> Retards</h5>
-    <div class="number" id="retards">0</div>
+    <h5><i class="fas fa-times-circle"></i> Indisponibles</h5>
+    <div class="number" id="livresIndisponibles">0</div>
   </div>
 </div>
 
@@ -155,7 +416,7 @@ tbody tr:hover{ background:#f1f5f9; }
 <table>
   <thead>
     <tr>
-      <th>Code</th>
+      <th>Cote</th>
       <th>Titre</th>
       <th>Auteur</th>
       <th>Catégorie</th>
@@ -167,6 +428,7 @@ tbody tr:hover{ background:#f1f5f9; }
   </thead>
   <tbody id="booksTableBody"></tbody>
 </table>
+
 
 <!-- MODAL AJOUT LIVRE -->
 <div class="modal fade" id="addBookModal" tabindex="-1">
@@ -184,7 +446,7 @@ tbody tr:hover{ background:#f1f5f9; }
               <input type="text" class="form-control" id="titre" placeholder="Entrez le titre" required>
             </div>
             <div class="col-md-6">
-              <label>Code livre</label>
+              <label>Cote livre</label>
               <input type="text" class="form-control" id="codeLivre" readonly>
             </div>
             <div class="col-md-6">
@@ -195,76 +457,168 @@ tbody tr:hover{ background:#f1f5f9; }
               </div>
             </div>
             <div class="col-md-6">
-              <label>Catégorie</label>
-              <select class="form-select" id="categorie" onchange="generateCode()">
-                <option>Littérature</option>
-                <option>Informatique</option>
-                <option>Mathématiques</option>
-                <option>Science</option>
-                <option>Histoire</option>
-              </select>
+  <label>Catégorie</label>
+  <select class="form-select" id="categorie" onchange="generateCode()">
+    <option value="Littérature">Littérature</option>
+    <option value="Informatique">Informatique</option>
+    <option value="Mathématiques">Mathématiques</option>
+    <option value="Science">Science</option>
+    <option value="Histoire">Histoire</option>
+  </select>
+</div>
+            <!-- Nouveaux champs pour le format de cote -->
+            <div class="col-md-4">
+              <label>Sous-catégorie Dewey</label>
+              <select class="form-select" id="subCategorie" onchange="generateCode()"></select>
+              </div>
+           <div class="col-md-4">
+  <label>Type Littéraire/Technique</label>
+  <select class="form-select" id="typeCode" onchange="generateCode()">
+    <option value="ROM">Roman</option>
+    <option value="POE">Poésie</option>
+    <option value="THE">Théâtre</option>
+    <option value="ESS">Essai</option>
+    <option value="PRO">Programmation</option>
+    <option value="WEB">Web Development</option>
+    <option value="DATA">Data Science</option>
+    <option value="DEV">DevOps</option>
+    <option value="SEC">Sécurité</option>
+    <option value="ALG">Algèbre</option>
+    <option value="GEO">Géométrie</option>
+    <option value="CAL">Calcul</option>
+    <option value="STA">Statistiques</option>
+    <option value="TOP">Topologie</option>
+    <option value="PHY">Physique</option>
+    <option value="CHI">Chimie</option>
+    <option value="BIO">Biologie</option>
+    <option value="ECO">Écologie</option>
+    <option value="AST">Astronomie</option>
+    <option value="HIS">Histoire Générale</option>
+    <option value="ANC">Histoire Ancienne</option>
+    <option value="MOY">Moyen Âge</option>
+    <option value="MOD">Histoire Moderne</option>
+    <option value="CON">Histoire Contemporaine</option>
+  </select>
+</div>
+            <div class="col-md-4">
+               <label>Langue</label>
+  <select class="form-select" id="langueCode" onchange="generateCode()">
+    <option value="FR">Français</option>
+    <option value="EN">Anglais</option>
+    <option value="ES">Espagnol</option>
+    <option value="DE">Allemand</option>
+  </select>
             </div>
-            <div class="col-md-6">
-              <label>Auteurs</label>
-              <select class="form-select" id="auteurs" multiple>
-                <option>Antoine de Saint-Exupéry</option>
-                <option>Mark Lutz</option>
-                <option>Gilbert Strang</option>
-                <option>Albert Einstein</option>
-                <option>Mary Beard</option>
-              </select>
-              <small class="text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs auteurs</small>
-            </div>
+            <div class="row">
 
-            <div class="col-md-6 d-flex flex-column">
-              <div class="mb-3">
-                <label>Ajouter auteur</label>
-                <div class="d-flex gap-2">
-                  <input type="text" class="form-control" id="newAuteur" placeholder="Ajouter un auteur">
-                  <button type="button" class="btn btn-outline-primary" onclick="addAuteur()">+</button>
-                </div>
-              </div>
-              <div>
-                <label>Image du livre</label>
-                <input type="file" class="form-control" id="bookImage" accept="image/*">
-                <small class="text-muted">Formats acceptés : jpg, png, gif</small>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <label>Description</label>
-              <textarea class="form-control" id="description" rows="2"></textarea>
-            </div>
+  <!-- AUTEURS -->
+  <div class="col-md-6">
+    <label>Auteurs</label>
+    <select class="form-select" id="auteurs" multiple></select>
+    <small class="text-muted">
+      Maintenez Ctrl (Windows) ou Cmd (Mac) pur sélectionner plusieurs auteurs
+    </small>
+  </div>
+
+  <!-- AJOUT AUTEUR -->
+  <div class="col-md-6">
+    <label>Ajouter auteur</label>
+    <div class="d-flex gap-2">
+      <input type="text" class="form-control" id="newAuteur" placeholder="Ajouter un auteur">
+      <button type="button" class="btn btn-outline-primary" onclick="addAuteur()">+</button>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+
+  <!-- IMAGE -->
+  <div class="col-md-4">
+    <label>Couverture du livre</label>
+    <div class="text-center mb-2">
+      <img id="bookPreview"
+           src="https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png"
+           style="
+              width:120px;
+              height:170px;
+              object-fit:cover;
+              border-radius:10px;
+              border:1px solid #ddd;
+              box-shadow:0 4px 10px rgba(0,0,0,0.1);
+           ">
+    </div>
+    <small class="text-muted">
+      Image récupérée automatiquement ou image par défaut si indisponible
+    </small>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="col-md-8">
+
+    <label>Description</label>
+    <textarea class="form-control" id="description" rows="7"
+      placeholder="Description générée automatiquement"></textarea>
+  </div>
+</div>
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn btn-primary" onclick="addBook()">Ajouter</button>
-      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+
+  <!-- Bouton générer à gauche -->
+  <div>
+    <button type="button"
+        class="btn btn-generate"
+        onclick="generateBookInfo()">
+  Générer
+</button>
+  </div>
+
+  <!-- Actions principales à droite -->
+  <div class="d-flex gap-2">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">
+      Annuler
+    </button>
+    <button class="btn btn-primary" onclick="addBook()">
+      Ajouter
+    </button>
+  </div>
+
+</div>
     </div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- MODAL EDIT LIVRE -->
+<!-- MODAL EDIT LIVRE -->
 <div class="modal fade" id="editBookModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+
       <div class="modal-header">
         <h5 class="modal-title"><i class="fas fa-edit"></i> Modifier le livre</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
         <form id="editBookForm">
+
           <div class="row g-3">
+
+            <!-- TITRE -->
             <div class="col-md-6">
               <label>Titre</label>
               <input type="text" class="form-control" id="editTitre">
             </div>
+
+            <!-- CODE -->
             <div class="col-md-6">
-              <label>Code livre</label>
+              <label>Cote livre</label>
               <input type="text" class="form-control" id="editCodeLivre" readonly>
             </div>
+
+            <!-- ISBN -->
             <div class="col-md-6">
               <label>ISBN</label>
               <div class="input-group">
@@ -272,9 +626,11 @@ tbody tr:hover{ background:#f1f5f9; }
                 <input type="text" class="form-control" id="editIsbnSuffix">
               </div>
             </div>
+
+            <!-- CATEGORIE -->
             <div class="col-md-6">
               <label>Catégorie</label>
-             <select class="form-select" id="editCategorie">
+              <select class="form-select" id="editCategorie" onchange="generateEditCode()">
                 <option>Littérature</option>
                 <option>Informatique</option>
                 <option>Mathématiques</option>
@@ -282,26 +638,114 @@ tbody tr:hover{ background:#f1f5f9; }
                 <option>Histoire</option>
               </select>
             </div>
+
+            <!-- SOUS CATEGORIE -->
+            <div class="col-md-4">
+              <label>Sous-catégorie Dewey</label>
+              <select class="form-select" id="editSubCategorie" onchange="generateEditCode()"></select>
+            </div>
+
+            <!-- TYPE -->
+            <div class="col-md-4">
+              <label>Type Littéraire/Technique</label>
+              <select class="form-select" id="editTypeCode" onchange="generateEditCode()">
+                <option value="ROM">Roman</option>
+                <option value="POE">Poésie</option>
+                <option value="THE">Théâtre</option>
+                <option value="ESS">Essai</option>
+                <option value="PRO">Programmation</option>
+                <option value="WEB">Web Development</option>
+                <option value="DATA">Data Science</option>
+                <option value="DEV">DevOps</option>
+                <option value="SEC">Sécurité</option>
+                <option value="ALG">Algèbre</option>
+                <option value="GEO">Géométrie</option>
+                <option value="CAL">Calcul</option>
+                <option value="STA">Statistiques</option>
+                <option value="TOP">Topologie</option>
+                <option value="PHY">Physique</option>
+                <option value="CHI">Chimie</option>
+                <option value="BIO">Biologie</option>
+                <option value="ECO">Écologie</option>
+                <option value="AST">Astronomie</option>
+                <option value="HIS">Histoire Générale</option>
+                <option value="ANC">Histoire Ancienne</option>
+                <option value="MOY">Moyen Âge</option>
+                <option value="MOD">Histoire Moderne</option>
+                <option value="CON">Histoire Contemporaine</option>
+              </select>
+            </div>
+
+            <!-- LANGUE -->
+            <div class="col-md-4">
+              <label>Langue</label>
+              <select class="form-select" id="editLangueCode" onchange="generateEditCode()">
+                <option value="FR">Français</option>
+                <option value="EN">Anglais</option>
+                <option value="ES">Espagnol</option>
+                <option value="DE">Allemand</option>
+              </select>
+            </div>
+
+            <!-- AUTEURS -->
             <div class="col-md-6">
               <label>Auteurs</label>
               <select class="form-select" id="editAuteurs" multiple></select>
-              <small class="text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs auteurs</small>
+              <small class="text-muted">
+                Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs auteurs
+              </small>
             </div>
+
+            <!-- AJOUT AUTEUR -->
             <div class="col-md-6">
-              <label>Image du livre</label>
-              <input type="file" class="form-control" id="editBookImage" accept="image/*">
-              <small class="text-muted">Formats acceptés : jpg, png, gif</small>
+              <label>Ajouter auteur</label>
+              <div class="d-flex gap-2">
+                <input type="text" class="form-control" id="newEditAuteur">
+                <button type="button" class="btn btn-outline-primary" onclick="addAuteurEdit()">+</button>
+              </div>
             </div>
-            <div class="col-md-12">
+          </div>
+          <hr>
+
+          <!-- IMAGE + DESCRIPTION (MÊME STRUCTURE QUE AJOUT) -->
+          <div class="row g-3">
+
+            <!-- IMAGE -->
+            <div class="col-md-4">
+
+              <label>Couverture du livre</label>
+
+              <div class="text-center mb-2">
+                <img id="editBookPreview"
+                     src="https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png"
+                     style="
+                        width:120px;
+                        height:170px;
+                        object-fit:cover;
+                        border-radius:10px;
+                        border:1px solid #ddd;
+                        box-shadow:0 4px 10px rgba(0,0,0,0.1);
+                     ">
+              </div>
+              <small class="text-muted">
+                Image générée automatiquement ou image par défaut si indisponible
+              </small>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="col-md-8">
+
               <label>Description</label>
-              <textarea class="form-control" id="editDescription" rows="2"></textarea>
+              <textarea class="form-control" id="editDescription" rows="7"></textarea>
             </div>
           </div>
         </form>
       </div>
+
       <div class="modal-footer">
+  
         <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn btn-primary" onclick="saveBookEdits()">Enregistrer</button>
+        <button class="btn btn-primary" onclick="BookEdits()">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -311,6 +755,224 @@ tbody tr:hover{ background:#f1f5f9; }
 
 let booksData = JSON.parse(localStorage.getItem("books")) || [];
 
+const DEFAULT_BOOK_IMAGE =
+"https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+const sousCategories = {
+  "Littérature": ["800", "810", "820", "830", "840"],
+  "Informatique": ["004", "004.5", "004.51", "004.55", "004.56", "004.6", "004.7"],
+  "Mathématiques": ["510", "511", "512", "513", "514", "515", "516"],
+  "Science": ["500", "501", "502", "503", "504", "530", "540", "550"],
+  "Histoire": ["900", "901", "902", "903", "904"]
+};
+
+let auteursList = JSON.parse(localStorage.getItem("auteurs")) || [
+  {id: "000001", nom: "Antoine de Saint-Exupéry"},
+  {id: "000002", nom: "Mark Lutz"},
+  {id: "000003", nom: "Gilbert Strang"},
+  {id: "000004", nom: "Albert Einstein"},
+  {id: "000005", nom: "Mary Beard"}
+];
+
+function saveAuteurs(){
+  localStorage.setItem("auteurs", JSON.stringify(auteursList));
+}
+
+// Mapping Dewey → Catégories et Types
+const deweyMapping = {
+  "800": { categorie: "Littérature", type: "ROM" },
+  "810": { categorie: "Littérature", type: "ROM" },
+  "820": { categorie: "Littérature", type: "POE" },
+  "830": { categorie: "Littérature", type: "THE" },
+  "840": { categorie: "Littérature", type: "ESS" },
+
+  "004": { categorie: "Informatique", type: "PRO" },
+  "004.5": { categorie: "Informatique", type: "PRO" },
+  "004.51": { categorie: "Informatique", type: "PRO" },
+  "004.55": { categorie: "Informatique", type: "DATA" },
+  "004.56": { categorie: "Informatique", type: "WEB" },
+  "004.6": { categorie: "Informatique", type: "SEC" },
+
+  "510": { categorie: "Mathématiques", type: "ALG" },
+  "511": { categorie: "Mathématiques", type: "GEO" },
+  "512": { categorie: "Mathématiques", type: "CAL" },
+  "513": { categorie: "Mathématiques", type: "STA" },
+
+  "500": { categorie: "Science", type: "PHY" },
+  "501": { categorie: "Science", type: "CHI" },
+  "502": { categorie: "Science", type: "BIO" },
+  "503": { categorie: "Science", type: "ECO" },
+  "504": { categorie: "Science", type: "AST" },
+
+  "900": { categorie: "Histoire", type: "HIS" },
+  "901": { categorie: "Histoire", type: "ANC" },
+  "902": { categorie: "Histoire", type: "MOY" },
+  "903": { categorie: "Histoire", type: "MOD" },
+  "904": { categorie: "Histoire", type: "CON" }
+};
+
+function populateSubCategories(selectId, catValue) {
+  const subSelect = document.getElementById(selectId);
+  subSelect.innerHTML = "";
+
+  if (sousCategories[catValue]) {
+    sousCategories[catValue].forEach(sub => {
+      const option = document.createElement("option");
+      option.value = sub;
+      option.text = sub;
+      subSelect.appendChild(option);
+    });
+
+    // ✅ sélection automatique valide
+    subSelect.selectedIndex = 0;
+
+    // ❌ NE PAS générer ici (important pour éviter bug de timing)
+  }
+}
+function resetAddBookForm(){
+
+  document.getElementById("addBookForm").reset();
+
+  // reset preview image
+  const preview = document.getElementById("bookPreview");
+  if(preview){
+    preview.src = DEFAULT_BOOK_IMAGE;
+  }
+
+  // reset file input (très important)
+  const fileInput = document.getElementById("bookImage");
+  if(fileInput){
+    fileInput.value = "";
+  }
+
+  // reset description (optionnel mais propre)
+  const desc = document.getElementById("description");
+  if(desc){
+    desc.value = "";
+  }
+}
+
+function resetFilters() {
+
+  document.getElementById("searchInput").value = "";
+  document.getElementById("categoryFilter").value = "";
+
+  filterBooks();
+
+}
+
+function resetAddBookForm() {
+  const form = document.getElementById("addBookForm");
+
+  form.reset();
+
+  // Reset champs dynamiques
+  document.getElementById("codeLivre").value = "";
+  document.getElementById("isbnSuffix").value = "";
+  document.getElementById("description").value = "";
+
+  // Reset selects si besoin
+  document.getElementById("subCategorie").innerHTML = "";
+  document.getElementById("auteurs").innerHTML = "";
+
+  // Reset image input
+  document.getElementById("bookImage").value = "";
+}
+
+function previewEditImage(event){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById("editBookPreview").src = e.target.result;
+  }
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+// Convertir tableau d'IDs en noms
+function getAuteurNames(ids) {
+  return ids.map(id => {
+    id = id.trim();
+    const auteur = auteursList.find(a => a.id === id);
+    return auteur ? auteur.nom : id;
+  }).join(", ");
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.style.background = type === "success" ? "#22c55e" : "#ef4444";
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2500);
+}
+
+// Remplir le select des auteurs au chargement
+function populateAuteursSelect() {
+  const select = document.getElementById("auteurs");
+  select.innerHTML = "";
+  auteursList.forEach(a => {
+    const option = document.createElement("option");
+    option.value = a.id;
+    option.text = a.nom;
+    select.appendChild(option);
+  });
+}
+populateAuteursSelect();
+
+function populateEditAuteursSelect(book) {
+  const select = document.getElementById("editAuteurs");
+  select.innerHTML = "";
+  auteursList.forEach(a => {
+    const option = document.createElement("option");
+    option.value = a.id;
+    option.text = a.nom;
+    select.appendChild(option);
+  });
+}
+
+function recalculateCategoryCodes(categorie){
+  const dewey = classification[categorie];
+  const livres = booksData.filter(b => b.categorie === categorie);
+  livres.forEach((book, index) => {
+    const auteurId = book.auteur.split(",")[0].trim();
+    const numero = String(index + 1).padStart(3, '0');
+    const newCode = `${book.sousCategorie} ${auteurId} ${book.type} ${book.langue} ${numero}`;
+    book.code = newCode;
+    book.exemplaires = book.exemplaires.map((ex, i) => `${newCode}-${String(i+1).padStart(2,'0')}`);
+  });
+  saveToStorage();
+}
+
+// Ajouter un auteur depuis le champ
+function addAuteur() {
+  const input = document.getElementById("newAuteur");
+  const nom = input.value.trim();
+  if(!nom) return;
+
+  let existing = auteursList.find(a => a.nom === nom);
+  let newId;
+  if(existing) {
+    newId = existing.id;
+  } else {
+    const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+    newId = String(maxId + 1).padStart(6,'0');
+    auteursList.push({id: newId, nom});
+    saveAuteurs();
+  }
+
+  const select = document.getElementById("auteurs");
+  const option = document.createElement("option");
+  option.value = newId;
+  option.text = nom;
+  option.selected = true;
+  select.appendChild(option);
+
+  input.value = "";
+  generateCode();
+}
+
 const classification = {
   "Littérature": "800",
   "Informatique": "004",
@@ -319,87 +981,105 @@ const classification = {
   "Histoire": "900"
 };
 
-  function saveToStorage() {
-    localStorage.setItem("books", JSON.stringify(booksData));
-  }
+function saveToStorage() {
+  localStorage.setItem("books", JSON.stringify(booksData));
+}
 
-function updateKpiCards() {
-  document.getElementById("totalLivres").textContent = booksData.length;
-  
-  // Exemple statiques utilisateurs / emprunts / retards (à adapter selon ton app)
-  const totalUsers = 85; // tu peux récupérer depuis ton localStorage ou API
-  const activeEmprunts = 34; 
-  const retards = 5;
+function updateKpiCards(){
 
-  document.getElementById("totalUsers").textContent = totalUsers;
-  document.getElementById("activeEmprunts").textContent = activeEmprunts;
-  document.getElementById("retards").textContent = retards;
+  const totalLivres = booksData.length;
+
+  let totalExemplaires = 0;
+  let disponibles = 0;
+  let indisponibles = 0;
+
+  booksData.forEach(book => {
+    const nb = book.exemplaires ? book.exemplaires.length : 0;
+
+    totalExemplaires += nb;
+
+    if(nb > 0){
+      disponibles++;
+    } else {
+      indisponibles++;
+    }
+  });
+
+  document.getElementById("totalLivres").innerText = totalLivres;
+  document.getElementById("totalExemplaires").innerText = totalExemplaires;
+  document.getElementById("livresDisponibles").innerText = disponibles;
+  document.getElementById("livresIndisponibles").innerText = indisponibles;
 }
 updateKpiCards();
 
-// ----- UTILS -----
 function generateCode(){
+  const sousCategorie = document.getElementById("subCategorie").value;
+  const auteurs = Array.from(document.getElementById("auteurs").selectedOptions).map(opt => opt.value);
+  const type = document.getElementById("typeCode").value;
+  const langue = document.getElementById("langueCode").value;
 
-  const categorie = document.getElementById("categorie").value;
+  // Vérifier que tous les champs sont remplis
+  if(!sousCategorie || sousCategorie === "" || auteurs.length === 0 || !type || !langue) {
+    document.getElementById("codeLivre").value = "Complétez tous les champs...";
+    return;
+  }
 
-  const auteurs =
-  Array.from(document.getElementById("auteurs").selectedOptions)
-  .map(opt => opt.value);
+  const auteurId = auteurs[0]; // ID unique (000001, etc.)
+  const count = booksData.filter(b => b.sousCategorie === sousCategorie).length + 1;
+  const numero = String(count).padStart(3, '0');
 
-  if(auteurs.length === 0) return;
-
-  const auteurPrincipal = auteurs[0];
-
-  const auteurCode =
-  auteurPrincipal.substring(0,3).toUpperCase();
-
-  const dewey = classification[categorie];
-
-  const count =
-  booksData.filter(b => b.categorie === categorie).length + 1;
-
-  const numero =
-  String(count).padStart(3,'0');
-
-  const cote = `${dewey} ${auteurCode} ${numero}`;
-
+  // Format: 004.55 000001 PRO FR 001
+  const cote = `${sousCategorie} ${auteurId} ${type} ${langue} ${numero}`;
+  
+  console.log("🔧 generateCode Debug:", {sousCategorie, auteurId, type, langue, numero, cote});
+  
   document.getElementById("codeLivre").value = cote;
-
-}
-
-// ----- AJOUT AUTEUR -----
-function addAuteur(){
-  let val = document.getElementById("newAuteur").value.trim();
-  if(!val) return;
-  let option = document.createElement("option");
-  option.text = val; option.selected = true;
-  document.getElementById("auteurs").appendChild(option);
-  document.getElementById("newAuteur").value="";
 }
 
 // ----- AJOUT LIVRE -----
 function addBook(){
-  let titre = document.getElementById("titre").value;
-  let isbn = "978-" + document.getElementById("isbnSuffix").value;
-  let description = document.getElementById("description").value.trim();
-  let categorie = document.getElementById("categorie").value;
-  let auteurs = Array.from(document.getElementById("auteurs").selectedOptions).map(opt=>opt.value);
+  const titre = document.getElementById("titre").value;
+  const isbn = "978-" + document.getElementById("isbnSuffix").value;
+  const description = document.getElementById("description").value.trim();
+  const categorie = document.getElementById("categorie").value;
+  const sousCategorie = document.getElementById("subCategorie").value;
+  const type = document.getElementById("typeCode").value;
+  const langue = document.getElementById("langueCode").value;
+  const auteurs = Array.from(document.getElementById("auteurs").selectedOptions).map(opt => opt.value);
 
-  // Cherche si le livre existe déjà
+  if(!titre || !categorie || !sousCategorie || !type || !langue || auteurs.length === 0) {
+    alert("Veuillez remplir tous les champs requis");
+    return;
+  }
+
   let existingBook = booksData.find(b => b.titre === titre && b.auteur === auteurs.join(", ") && b.isbn === isbn);
   if(existingBook){
+    // 🔥 CORRIGER LE FORMAT DU SUFFIXE : -01, -02, -03 au lieu de -1, -2, -3
     let lastEx = existingBook.exemplaires.length;
-    let newEx = `${existingBook.code}-${lastEx + 1}`;
-    existingBook.exemplaires.push(newEx);
+    const newExNum = String(lastEx + 1).padStart(2, '0');
+    existingBook.exemplaires.push(`${existingBook.code}-${newExNum}`);
+    
+    // ✅ AJOUTER LE MESSAGE
+    alert(`✅ Exemplaire ajouté à "${existingBook.titre}"`);
+    
+    saveToStorage();
     renderCards();
     renderTable();
+    updateKpiCards();
     bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
     return;
   }
 
-  let code = document.getElementById("codeLivre").value; 
+  let code = document.getElementById("codeLivre").value;
+
+  if (!code || code.includes("Complétez")) {
+    generateCode();
+    code = document.getElementById("codeLivre").value;
+  }
+  
   const imgInput = document.getElementById("bookImage");
-  let imgSrc = "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png"; // image par défaut
+  let imgSrc = document.getElementById("bookPreview").src ||
+"https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
 
   if(imgInput.files && imgInput.files[0]){
     const reader = new FileReader();
@@ -408,59 +1088,249 @@ function addBook(){
       saveBook(imgSrc);
     }
     reader.readAsDataURL(imgInput.files[0]);
-  } else {
-    saveBook(imgSrc);
-  }
+  } else saveBook(imgSrc);
 
   function saveBook(img){
-    let newBook = {
+    const newBook = {
       code,
       titre,
       auteur: auteurs.join(", "),
       categorie,
+      sousCategorie,
+      type,
+      langue,
       isbn,
-      exemplaires: [`${code}-01`],
+      exemplaires: [`${code}-01`],  // ✅ Toujours commencer par -01
       statut: "Disponible",
       description,
       image: img
     };
     booksData.push(newBook);
     saveToStorage();
+    showToast("Livre ajouté avec succès", "success");
     renderCards();
     renderTable();
     updateKpiCards();
-    document.getElementById("addBookForm").reset();
+    resetAddBookForm();
     bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
   }
 }
 
 function openAddModal(){
-  generateCode();
+  const catValue = document.getElementById("categorie").value;
+  
+  // ✅ IMPORTANT : Remplir les sous-catégories IMMÉDIATEMENT
+  if(catValue) {
+    populateSubCategories("subCategorie", catValue);
+    
+    // Attendre que les options soient ajoutées avant de générer le code
+    setTimeout(() => {
+      generateCode();
+    }, 100);
+  } else {
+    generateCode();
+  }
+  
   new bootstrap.Modal(document.getElementById('addBookModal')).show();
+}
+
+function showDescription(code){
+  const book = booksData.find(b => b.code === code);
+  if(!book) return;
+
+  const content = `
+    <div>
+      <h5>${book.titre}</h5>
+      <p><strong>Auteur :</strong> ${getAuteurNames(book.auteur.split(","))}</p>
+      <hr>
+      <p>${book.description || "Aucune description disponible."}</p>
+    </div>
+  `;
+
+  document.getElementById("detailsBookContent").innerHTML = content;
+  new bootstrap.Modal(document.getElementById('detailsBookModal')).show();
+}
+
+function getSousCategorieLabel(code) {
+  const labels = {
+    // Littérature
+    "800": "Roman général",
+    "810": "Littérature américaine",
+    "820": "Poésie",
+    "830": "Théâtre",
+    "840": "Essais",
+
+    // Informatique
+    "004": "Informatique générale",
+    "004.5": "Programmation",
+    "004.51": "Développement logiciel",
+    "004.55": "Data Science",
+    "004.56": "Développement Web",
+    "004.6": "Sécurité informatique",
+    "004.7": "Réseaux",
+
+    // Mathématiques
+    "510": "Mathématiques générales",
+    "511": "Algèbre",
+    "512": "Calcul",
+    "513": "Statistiques",
+    "514": "Topologie",
+    "515": "Analyse",
+    "516": "Géométrie",
+
+    // Science
+    "500": "Sciences générales",
+    "530": "Physique",
+    "540": "Chimie",
+    "550": "Sciences de la Terre",
+    "560": "Paléontologie",
+    "570": "Biologie",
+    "580": "Botanique",
+    "590": "Zoologie",
+
+    // Histoire
+    "900": "Histoire générale",
+    "910": "Géographie",
+    "920": "Biographies",
+    "930": "Histoire ancienne",
+    "940": "Histoire de l’Europe",
+    "950": "Histoire de l’Asie",
+    "960": "Histoire de l’Afrique",
+    "970": "Histoire des Amériques"
+  };
+
+  return labels[code] || code;
+}
+
+function getTypeLabel(type){
+  const map = {
+    "ROM": "Roman",
+    "POE": "Poésie",
+    "THE": "Théâtre",
+    "ESS": "Essai",
+    "PRO": "Programmation",
+    "DATA": "Data Science",
+    "WEB": "Web",
+    "SEC": "Sécurité",
+    "ALG": "Algèbre",
+    "GEO": "Géométrie",
+    "CAL": "Calcul",
+    "STA": "Statistiques",
+    "TOP": "Topologie",
+    "PHY": "Physique",
+    "CHI": "Chimie",
+    "BIO": "Biologie",
+    "ECO": "Écologie",
+    "AST": "Astronomie",
+    "HIS": "Histoire",
+    "ANC": "Ancien",
+    "MOY": "Moyen Âge",
+    "MOD": "Moderne",
+    "CON": "Contemporain"
+  };
+  return map[type] || type;
+}
+
+function getLangueLabel(lang){
+  const map = {
+    "FR": "Français",
+    "EN": "Anglais",
+    "ES": "Espagnol",
+    "DE": "Allemand",
+    "IT": "Italien"
+  };
+  return map[lang] || lang;
+}
+
+function generateEditCode(){
+
+  const codeInput = document.getElementById("editCodeLivre");
+
+  // 🔥 récupérer le livre via son ancien code
+  const oldCode = codeInput.dataset.oldCode;
+  const book = booksData.find(b => b.code === oldCode);
+
+  if(!book) return;
+
+  const sousCategorie = document.getElementById("editSubCategorie").value;
+  const type = document.getElementById("editTypeCode").value;
+  const langue = document.getElementById("editLangueCode").value;
+
+  const auteurs = Array.from(document.getElementById("editAuteurs").selectedOptions)
+    .map(opt => opt.value);
+
+  if(!sousCategorie || auteurs.length === 0 || !type || !langue) {
+    codeInput.value = "Complétez tous les champs...";
+    return;
+  }
+
+  const auteurId = auteurs[0];
+
+  // 🔥 EXTRAIRE LE NUMÉRO EXISTANT (important)
+  const parts = book.code.split(" ");
+  const numero = parts[4]; // ex: 001
+
+  // ✅ NOUVELLE COTE MAIS NUMÉRO CONSERVÉ
+  const newCode = `${sousCategorie} ${auteurId} ${type} ${langue} ${numero}`;
+
+  codeInput.value = newCode;
+
+  // 🔥 mettre à jour les exemplaires
+  book.exemplaires = book.exemplaires.map((_, idx) =>
+    `${newCode}-${String(idx + 1).padStart(2, "0")}`
+  );
 }
 
 // ----- RENDER CARDS -----
 function renderCards(){
   const grid = document.getElementById("booksGrid");
   grid.innerHTML = "";
+
   booksData.forEach(book=>{
     const card = document.createElement("div");
     card.className = "book-card";
     card.dataset.category = book.categorie;
+
     card.innerHTML = `
       <img src="${book.image || 'https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png'}">
+      
       <div class="book-content">
         <div class="book-title">${book.titre}</div>
-        <div class="book-author">${book.auteur}</div>
-        <div class="book-description">${book.description}</div>
-        <div class="info-label">Catégorie: <span class="info-badge">${book.categorie}</span></div>
-        <div class="info-label">ISBN: <span class="info-badge">${book.isbn}</span></div>
-        <div class="book-status available">${book.exemplaires.length} exemplaire(s)</div>
+        <div class="book-author">${getAuteurNames(book.auteur.split(","))}</div>
+
+        <div class="info-label">
+          Catégorie: <span class="info-badge">${book.categorie}</span>
+        </div>
+
+        <div class="info-label">
+          Type: <span class="info-badge">${getTypeLabel(book.type)}</span>
+        </div>
+
+        <div class="info-label">
+          Langue: <span class="info-badge">${getLangueLabel(book.langue)}</span>
+        </div>
+
+        <div class="info-label">
+          Cote: <span class="info-badge code-badge">${book.code}</span>
+        </div>
+
+        <div class="info-label">
+          ISBN: <span class="info-badge">${book.isbn}</span>
+        </div>
+       <button class="btn-description" onclick="showDescription('${book.code}')">
+          📖 Voir description
+        </button>
+
+        <div class="book-status available">
+          ${book.exemplaires.length} exemplaire(s)
+        </div>
       </div>
     `;
+
     grid.appendChild(card);
   });
 }
+
 // ----- RENDER TABLE -----
 function renderTable(filteredBooks = booksData){
   const tbody = document.getElementById("booksTableBody");
@@ -470,11 +1340,11 @@ function renderTable(filteredBooks = booksData){
     book.exemplaires.forEach((ex, index) => {
       const tr = document.createElement("tr");
 
-      let statut = "Disponible"; // ici tu peux calculer le statut si tu gères emprunts
+      let statut = "Disponible";
       tr.innerHTML = `
         <td>${ex}</td>
         <td>${book.titre}</td>
-        <td>${book.auteur}</td>
+        <td>${getAuteurNames(book.auteur.split(","))} (${book.auteur.split(",")[0].trim()})</td>
         <td>${book.categorie}</td>
         <td>${book.isbn}</td>
         <td>1/1</td>
@@ -497,6 +1367,7 @@ function renderTable(filteredBooks = booksData){
     });
   });
 }
+
 // ----- FILTRAGE -----
 function filterBooks(){
   let search=document.getElementById("searchInput").value.toLowerCase();
@@ -517,179 +1388,721 @@ function toggleMenu(el){
   const menu = el.querySelector(".dropdown-menu-book");
   const allMenus = document.querySelectorAll(".dropdown-menu-book");
 
-  // Fermer les autres menus
   allMenus.forEach(m => { if(m !== menu) m.style.display="none"; });
 
   if(menu.style.display === "flex"){
     menu.style.display = "none";
     return;
   }
-  // Rendre temporairement visible pour mesurer
   menu.style.display = "flex";
-  menu.style.visibility = "hidden"; // invisible mais mesurable
+  menu.style.visibility = "hidden";
 
   const rect = menu.getBoundingClientRect();
   const spaceBelow = window.innerHeight - el.getBoundingClientRect().bottom;
   const menuHeight = rect.height;
 
   if(spaceBelow < menuHeight + 10){ 
-    // Ouvrir vers le haut
     menu.style.top = "auto";
     menu.style.bottom = "28px";
   } else {
-    // Ouvrir vers le bas
     menu.style.bottom = "auto";
     menu.style.top = "28px";
   }
-  menu.style.visibility = "visible"; // rendre visible
+  menu.style.visibility = "visible";
 }
 
-// Fonction détails
+// ----- DÉTAILS LIVRE -----
 document.addEventListener("click", function(e){
   if(e.target.closest(".details")){
     const tr = e.target.closest("tr");
     const code = tr.children[0].textContent;
+
     const book = booksData.find(b => b.exemplaires.includes(code));
-    
+    if(!book) return;
+
     const content = `
       <div class="row g-3">
-        <div class="col-md-6"><strong>Titre :</strong> ${book.titre}</div>
-        <div class="col-md-6"><strong>Auteur(s) :</strong> ${book.auteur}</div>
-        <div class="col-md-6"><strong>Catégorie :</strong> ${book.categorie}</div>
-        <div class="col-md-6"><strong>ISBN :</strong> ${book.isbn}</div>
-        <div class="col-md-6"><strong>Exemplaire :</strong> ${code}</div>
-        <div class="col-md-6"><strong>Statut :</strong> ${book.statut}</div>
-        <div class="col-12"><strong>Description :</strong><br>${book.description || 'Aucune'}</div>
+
+        <div class="col-md-6">
+          <strong>Titre :</strong> ${book.titre}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Cote :</strong> ${book.code}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Auteur(s) :</strong> ${getAuteurNames(book.auteur.split(","))}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Catégorie :</strong> ${book.categorie}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Sous-catégorie :</strong> ${getSousCategorieLabel(book.sousCategorie)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Type :</strong> ${getTypeLabel(book.type)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Langue :</strong> ${getLangueLabel(book.langue)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>ISBN :</strong> ${book.isbn}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Exemplaire :</strong> ${code}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Statut :</strong> ${book.statut}
+        </div>
+
       </div>
     `;
+
     document.getElementById("detailsBookContent").innerHTML = content;
     new bootstrap.Modal(document.getElementById('detailsBookModal')).show();
   }
 });
-
-// Modal ajout livre
-function openAddModal(){
-  generateCode();
-  new bootstrap.Modal(document.getElementById('addBookModal')).show();
-}
 
 function deleteBook(codeEx) {
   if(!confirm("Voulez-vous vraiment supprimer cet exemplaire ?")) return;
 
   for(let i=0; i<booksData.length; i++){
     const book = booksData[i];
+    const cat = book.categorie;
     const index = book.exemplaires.indexOf(codeEx);
     if(index !== -1){
       book.exemplaires.splice(index,1);
-      // Si plus aucun exemplaire, supprimer le livre complètement
       if(book.exemplaires.length === 0){
         booksData.splice(i,1);
       }
+      saveToStorage();
+      alert(`🗑️ Le livre a été supprimé avec succès`);
+      recalculateCategoryCodes(cat);
+      renderCards();
+      renderTable();
+      updateKpiCards();
       break;
     }
   }
-  saveToStorage();
-  renderCards();
-  renderTable();
-  updateKpiCards();
 }
 
 function editBook(code){
   const book = booksData.find(b => b.code === code);
   if(!book) return;
 
-  // Stocker l'ancien code pour retrouver le livre après modif
-  document.getElementById("editCodeLivre").dataset.oldCode = book.code;
+  const codeInput = document.getElementById("editCodeLivre");
+  codeInput.value = book.code;
+  codeInput.dataset.oldCode = book.code;
+  document.getElementById("editCodeLivre").dataset.bookId = book.id;
 
-  document.getElementById("editTitre").value = book.titre;
-  document.getElementById("editCodeLivre").value = book.code;
-  document.getElementById("editIsbnSuffix").value = book.isbn.replace("978-","");
-  document.getElementById("editCategorie").value = book.categorie;
-  
-  const select = document.getElementById("editAuteurs");
-  select.innerHTML = "";
-  book.auteur.split(", ").forEach(a => {
-    let option = document.createElement("option");
-    option.text = a;
-    option.selected = true;
-    select.appendChild(option);
-  });
-
+  document.getElementById("editTitre").value = book.titre || "";
   document.getElementById("editDescription").value = book.description || "";
+  document.getElementById("editBookPreview").src = book.image || "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+  document.getElementById("editIsbnSuffix").value = (book.isbn || "").replace("978-","");
 
-  // Recalcul automatique du code si on change la catégorie
-  document.getElementById("editCategorie").onchange = updateEditCode;
+  const categorieSelect = document.getElementById("editCategorie");
+  categorieSelect.value = book.categorie;
+
+  populateSubCategories("editSubCategorie", book.categorie);
+  document.getElementById("editSubCategorie").value = book.sousCategorie;
+
+  const typeSelect = document.getElementById("editTypeCode");
+  if(typeSelect) typeSelect.value = book.type;
+
+  const langueSelect = document.getElementById("editLangueCode");
+  if(langueSelect) langueSelect.value = book.langue;
+
+  populateEditAuteursSelect(book);
+
+  const auteursIds = (book.auteur || "").split(",").map(a => a.trim());
+  const auteursSelect = document.getElementById("editAuteurs");
+
+  Array.from(auteursSelect.options).forEach(option=>{
+    option.selected = auteursIds.includes(option.value);
+  });
 
   new bootstrap.Modal(document.getElementById("editBookModal")).show();
 }
 
-function saveBookEdits(){
-  const codeInput = document.getElementById("editCodeLivre");
-  const oldCode = codeInput.dataset.oldCode;
-  const book = booksData.find(b => b.code === oldCode);
-  if(!book) return;
+// Ajouter un auteur depuis le modal Modifier
+function addAuteurEdit(){
+  const input = document.getElementById("newEditAuteur");
+  const select = document.getElementById("editAuteurs");
+  const nom = input.value.trim();
+  if(!nom) return;
 
-  book.titre = document.getElementById("editTitre").value;
-  book.categorie = document.getElementById("editCategorie").value;
-  book.auteur = Array.from(document.getElementById("editAuteurs").selectedOptions).map(o => o.value).join(", ");
-  book.isbn = "978-" + document.getElementById("editIsbnSuffix").value;
-  book.description = document.getElementById("editDescription").value;
-
-  // Recalculer le code
-  const newCode = generateEditCode(book);
-  book.code = newCode;
-  book.exemplaires = book.exemplaires.map((ex, index) => `${newCode}-${index+1}`);
-  codeInput.value = newCode;
-
-  const imgInput = document.getElementById("editBookImage");
-  if(imgInput.files && imgInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = function(e){
-      book.image = e.target.result;
-      finalizeSave();
-    }
-    reader.readAsDataURL(imgInput.files[0]);
+  let existing = auteursList.find(a => a.nom === nom);
+  let newId;
+  if(existing){
+    newId = existing.id;
   } else {
-    finalizeSave();
+    const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+    newId = String(maxId + 1).padStart(6,'0');
+    auteursList.push({id: newId, nom});
+    saveAuteurs();
   }
 
-  function finalizeSave(){
+  const option = document.createElement("option");
+  option.value = newId;
+  option.text = nom;
+  option.selected = true;
+  select.appendChild(option);
+
+  input.value = "";
+ generateEditCode();
+}
+
+function BookEdits() {
+  const codeInput = document.getElementById("editCodeLivre");
+  const oldCode = codeInput.dataset.oldCode;
+
+  const book = booksData.find(b => b.code === oldCode);
+  if (!book) return;
+
+  const newTitre = document.getElementById("editTitre").value.trim();
+  const newCategorie = document.getElementById("editCategorie").value;
+  const newSousCategorie = document.getElementById("editSubCategorie").value;
+  const newType = document.getElementById("editTypeCode").value;
+  const newLangue = document.getElementById("editLangueCode").value;
+
+  const newAuteur = Array
+    .from(document.getElementById("editAuteurs").selectedOptions)
+    .map(o => o.value)
+    .join(", ");
+
+  const newIsbn = "978-" + document.getElementById("editIsbnSuffix").value;
+  const newDescription = document.getElementById("editDescription").value.trim();
+
+  // 🔥 Vérifier doublon (hors livre actuel)
+  let existingBook = booksData.find(b =>
+    b.titre === newTitre &&
+    b.auteur === newAuteur &&
+    b.isbn === newIsbn &&
+    b.code !== oldCode
+  );
+
+  if (existingBook) {
+    const lastExNum = parseInt(
+      existingBook.exemplaires[existingBook.exemplaires.length - 1].split("-")[1]
+    ) || 0;
+
+    const newExNum = String(lastExNum + 1).padStart(2, "0");
+    existingBook.exemplaires.push(`${existingBook.code}-${newExNum}`);
+
+    // supprimer ancien livre
+    const index = booksData.indexOf(book);
+    if (index !== -1) {
+      booksData.splice(index, 1);
+    }
+
     saveToStorage();
     renderCards();
     renderTable();
     updateKpiCards();
-    bootstrap.Modal.getInstance(document.getElementById("editBookModal")).hide();
+
+    bootstrap.Modal
+      .getInstance(document.getElementById("editBookModal"))
+      .hide();
+
+    showToast(`Exemplaire ajouté à "${existingBook.titre}"`, "success");
+    return;
+  }
+
+  // 🔥 Mise à jour normale
+  book.titre = newTitre;
+  book.categorie = newCategorie;
+  book.sousCategorie = newSousCategorie;
+  book.type = newType;
+  book.langue = newLangue;
+  book.auteur = newAuteur;
+  book.isbn = newIsbn;
+  book.description = newDescription;
+
+  generateEditCode();
+
+  // 🔥 IMPORTANT : reset image preview (sans input file)
+  document.getElementById("editBookPreview").src =
+    book.image ||
+    "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+  saveToStorage();
+  renderCards();
+  renderTable();
+  updateKpiCards();
+
+  bootstrap.Modal
+    .getInstance(document.getElementById("editBookModal"))
+    .hide();
+
+  showToast(`Livre "${book.titre}" modifié avec succès`, "success");
+}
+
+// ----- GOOGLE BOOKS API - RÉCUPÉRATION INFO -----
+async function generateBookInfo() {
+  const titreAjout = document.getElementById("titre");
+  const titreEdit = document.getElementById("editTitre");
+
+  let titre = "";
+  if (titreAjout && titreAjout.value.trim() !== "") {
+    titre = titreAjout.value.trim();
+  } else if (titreEdit && titreEdit.value.trim() !== "") {
+    titre = titreEdit.value.trim();
+  }
+
+  if (!titre) {
+    alert("Veuillez saisir le titre du livre");
+    return;
+  }
+
+  console.log("🔍 Recherche livre:", titre);
+
+  const descriptionFields = [
+    document.getElementById("description"),
+    document.getElementById("editDescription")
+  ];
+  const isbnFields = [
+    document.getElementById("isbnSuffix"),
+    document.getElementById("editIsbnSuffix")
+  ];
+  const langueFields = [
+    document.getElementById("langueCode"),
+    document.getElementById("editLangueCode")
+  ];
+  const authorFields = [
+    document.getElementById("auteurs"),
+    document.getElementById("editAuteurs")
+  ];
+
+  descriptionFields.forEach(f => f && (f.value = "Chargement..."));
+  isbnFields.forEach(f => f && (f.value = "Chargement..."));
+  langueFields.forEach(f => f && (f.value = ""));
+  authorFields.forEach(f => f && (f.innerHTML = ""));
+
+ try {
+  console.log("🔍 Appel API Google Books...");
+  
+  // ✅ Ajouter un délai de 1 seconde
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const response = await fetch(
+    "https://www.googleapis.com/books/v1/volumes?q=intitle:" + encodeURIComponent(titre),
+    { cache: "no-store" }
+  );
+  
+  console.log("📡 Réponse API:", response.status);
+  
+  const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      alert("Livre non trouvé dans Google Books");
+      descriptionFields.forEach(f => f && (f.value = ""));
+      isbnFields.forEach(f => f && (f.value = ""));
+      langueFields.forEach(f => f && (f.value = ""));
+      authorFields.forEach(f => f && (f.innerHTML = ""));
+      return;
+    }
+
+    const bookInfo = data.items[0].volumeInfo;
+
+     // --- IMAGE GOOGLE BOOKS ---
+const preview = document.getElementById("bookPreview");
+
+if(preview){
+
+  const thumbnail =
+    bookInfo.imageLinks?.thumbnail ||
+    bookInfo.imageLinks?.smallThumbnail ||
+    "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+  preview.src = thumbnail;
+
+  console.log("🖼️ Image chargée :", thumbnail);
+}
+
+    // --- Description ---
+    const description = bookInfo.description || "Description non disponible.";
+    descriptionFields.forEach(f => f && (f.value = description));
+
+    // --- ISBN ---
+ let isbnSuffix = "";
+
+const ids = bookInfo.industryIdentifiers || [];
+
+if (Array.isArray(ids) && ids.length > 0) {
+
+  // priorité ISBN-13
+  let isbnObj = ids.find(id => id.type === "ISBN_13");
+
+  // fallback ISBN-10
+  if (!isbnObj) {
+    isbnObj = ids.find(id => id.type === "ISBN_10");
+  }
+
+  // fallback ultime (Google incohérent)
+  if (!isbnObj) {
+    isbnObj = ids.find(id => id.identifier);
+  }
+
+  if (isbnObj && isbnObj.identifier) {
+    const clean = String(isbnObj.identifier).replace(/\D/g, "");
+
+    if (clean.length >= 10) {
+      isbnSuffix = clean.startsWith("978")
+        ? clean.slice(3)
+        : clean;
+    }
   }
 }
 
-function generateEditCode(book) {
-  const newCategory = document.getElementById("editCategorie").value;
-  const dewey = classification[newCategory]; // code Dewey correct
+console.log("ISBN brut API:", bookInfo.industryIdentifiers);
+console.log("ISBN final:", isbnSuffix);
 
-  // Premier auteur du formulaire
-  const auteurCode = Array.from(document.getElementById("editAuteurs").selectedOptions)[0].value.substring(0,3).toUpperCase();
+isbnFields.forEach(f => {
+  if (f) f.value = isbnSuffix;
+});
+    // --- Langue ---
+    const langMap = { fr: "FR", en: "EN", es: "ES", de: "DE", it: "IT" };
+    const bookLang = bookInfo.language ? bookInfo.language.toLowerCase() : "fr";
+    langueFields.forEach(f => {
+      if (f) {
+        const code = langMap[bookLang] || "FR";
+        f.value = code;
+      }
+    });
 
-  // Nombre de livres existants dans cette catégorie
-  const count = booksData.filter(b => b.categorie === newCategory && b !== book).length + 1;
+    // --- AUTEURS ---
+    const authors = Array.isArray(bookInfo.authors) ? bookInfo.authors : [];
+    authorFields.forEach(fieldType => {
+      if(fieldType) {
+        fieldType.innerHTML = "";
+        
+        authors.forEach(authorName => {
+          let existing = auteursList.find(a => a.nom === authorName);
+          let authorId;
+          
+          if(existing) {
+            authorId = existing.id;
+          } else {
+            const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+            authorId = String(maxId + 1).padStart(6, '0');
+            auteursList.push({id: authorId, nom: authorName});
+            saveAuteurs();
+          }
+          
+          const option = document.createElement("option");
+          option.value = authorId;
+          option.text = authorName;
+          option.selected = true;
+          fieldType.appendChild(option);
+        });
+      }
+    });
 
-  return `${dewey} ${auteurCode} ${String(count).padStart(3,'0')}`;
+    // --- CATÉGORIE & SOUS-CATÉGORIE & TYPE ---
+    if(bookInfo.categories && bookInfo.categories.length > 0) {
+      const category = bookInfo.categories[0].toLowerCase();
+      
+      let detectedCategorie = "Littérature";
+      let detectedDewey = "800";
+      let detectedType = "ROM";
+
+// INFORMATIQUE
+if(category.includes("computer") || category.includes("informatique") || category.includes("programming") || category.includes("software") || category.includes("development") || category.includes("web") || category.includes("data") || category.includes("machine learning") || category.includes("python") || category.includes("java") || category.includes("c++") || category.includes("javascript")) {
+  detectedCategorie = "Informatique";
+  detectedDewey = "004.5"; // Programmation générale par défaut
+  detectedType = "PRO";
+  
+  // AFFINAGE : Data Science (PRIORITAIRE - vérifier en premier)
+ if (
+  category.includes("data analysis") ||
+  category.includes("data science") ||
+  category.includes("analytics") ||
+  category.includes("machine learning") ||
+  category.includes("ai") ||
+  category.includes("artificial intelligence") ||
+  category.includes("pandas") ||   // ✅ IMPORTANT
+  category.includes("numpy") ||
+  category.includes("sklearn")
+) {
+  detectedDewey = "004.55";
+  detectedType = "DATA";
+}
+  // AFFINAGE : Web
+  else if(category.includes("web development") || category.includes("web") || category.includes("html") || category.includes("css") || category.includes("javascript") || category.includes("react") || category.includes("vue") || category.includes("node")) {
+    detectedDewey = "004.56";
+    detectedType = "WEB";
+  }
+  // AFFINAGE : Programmation spécifique
+  else if(category.includes("programming") || category.includes("python") || category.includes("java") || category.includes("c++") || category.includes("software development")) {
+    detectedDewey = "004.51";
+    detectedType = "PRO";
+  }
+  // AFFINAGE : Sécurité
+  else if(category.includes("security") || category.includes("sécurité") || category.includes("cybersecurity")) {
+    detectedDewey = "004.6";
+    detectedType = "SEC";
+  }
+}
+      // MATHÉMATIQUES
+      else if(category.includes("math") || category.includes("mathématiques")) {
+        detectedCategorie = "Mathématiques";
+        detectedDewey = "510";
+        detectedType = "ALG";
+        
+        if(category.includes("geometry") || category.includes("géométrie")) {
+          detectedDewey = "511";
+          detectedType = "GEO";
+        } else if(category.includes("calculus") || category.includes("calcul")) {
+          detectedDewey = "512";
+          detectedType = "CAL";
+        } else if(category.includes("statistics") || category.includes("statistiques")) {
+          detectedDewey = "513";
+          detectedType = "STA";
+        } else if(category.includes("topology")) {
+          detectedDewey = "514";
+          detectedType = "TOP";
+        }
+      }
+      // SCIENCE
+      else if(category.includes("science") || category.includes("physics") || category.includes("chemistry") || category.includes("biology") || category.includes("ecology") || category.includes("astronomy")) {
+        detectedCategorie = "Science";
+        detectedDewey = "500";
+        detectedType = "PHY";
+        
+        if(category.includes("physics") || category.includes("physique")) {
+          detectedDewey = "500";
+          detectedType = "PHY";
+        } else if(category.includes("chemistry") || category.includes("chimie")) {
+          detectedDewey = "501";
+          detectedType = "CHI";
+        } else if(category.includes("biology") || category.includes("biologie")) {
+          detectedDewey = "502";
+          detectedType = "BIO";
+        } else if(category.includes("ecology") || category.includes("écologie")) {
+          detectedDewey = "503";
+          detectedType = "ECO";
+        } else if(category.includes("astronomy") || category.includes("astronomie")) {
+          detectedDewey = "504";
+          detectedType = "AST";
+        }
+      }
+      // HISTOIRE
+      else if(category.includes("history") || category.includes("histoire")) {
+        detectedCategorie = "Histoire";
+        detectedDewey = "900";
+        detectedType = "HIS";
+        
+        if(category.includes("ancient")) {
+          detectedDewey = "901";
+          detectedType = "ANC";
+        } else if(category.includes("middle") || category.includes("moyen")) {
+          detectedDewey = "902";
+          detectedType = "MOY";
+        } else if(category.includes("modern") || category.includes("moderne")) {
+          detectedDewey = "903";
+          detectedType = "MOD";
+        } else if(category.includes("contemporary") || category.includes("contemporain")) {
+          detectedDewey = "904";
+          detectedType = "CON";
+        }
+      }
+      // LITTÉRATURE (par défaut ou si spécifiquement détecté)
+      else if(category.includes("poetry") || category.includes("poésie")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "820";
+        detectedType = "POE";
+      } else if(category.includes("drama") || category.includes("théâtre")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "830";
+        detectedType = "THE";
+      } else if(category.includes("essay") || category.includes("essai")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "840";
+        detectedType = "ESS";
+      } else if(category.includes("fiction") || category.includes("roman") || category.includes("novel")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "800";
+        detectedType = "ROM";
+      } else {
+        // Défaut ultime
+        detectedCategorie = "Littérature";
+        detectedDewey = "800";
+        detectedType = "ROM";
+      }
+
+      console.log("🔍 Catégorie:", detectedCategorie, "| Dewey:", detectedDewey, "| Type:", detectedType);
+
+    // FORMULAIRE D'AJOUT
+const categorieSelectAdd = document.getElementById("categorie");
+const subcatSelectAdd = document.getElementById("subCategorie");
+const typeSelectAdd = document.getElementById("typeCode");
+
+if(categorieSelectAdd) {
+  console.log("✅ Remplissage AJOUT");
+  categorieSelectAdd.value = detectedCategorie;
+  
+  if(subcatSelectAdd) {
+    populateSubCategories("subCategorie", detectedCategorie);
+    
+    // ✅ IMPORTANT : Attendre plus longtemps et générer APRÈS
+    setTimeout(() => {
+      subcatSelectAdd.value = detectedDewey;
+      console.log("✅ Sous-cat AJOUT:", detectedDewey);
+      
+      if(typeSelectAdd) {
+        typeSelectAdd.value = detectedType;
+        console.log("✅ Type AJOUT:", detectedType);
+      }
+      
+      // ✅ GÉNÉRER LE CODE MAINTENANT (après tout)
+      if (document.getElementById("editBookModal").classList.contains("show")) {
+  generateEditCode();
+} else {
+  generateCode();
+}
+    }, 150);
+  }
 }
 
-function updateEditCode() {
-  const codeInput = document.getElementById("editCodeLivre");
-  const book = booksData.find(b => b.code === codeInput.dataset.oldCode);
-  if(!book) return;
+     // FORMULAIRE D'ÉDITION
+const categorieSelectEdit = document.getElementById("editCategorie");
+const subcatSelectEdit = document.getElementById("editSubCategorie");
+const typeSelectEdit = document.getElementById("editTypeCode");
 
-  const newCode = generateEditCode(book);
-  codeInput.value = newCode;
-
-  // Exemples mis à jour dans le modal
-  book.exemplaires = book.exemplaires.map((ex, index) => `${newCode}-${index+1}`);
+if(categorieSelectEdit) {
+  console.log("✅ Remplissage ÉDITION");
+  categorieSelectEdit.value = detectedCategorie;
+  
+  if(subcatSelectEdit) {
+    populateSubCategories("editSubCategorie", detectedCategorie);
+    
+    // ✅ IMPORTANT : Attendre plus longtemps et générer APRÈS
+    setTimeout(() => {
+      subcatSelectEdit.value = detectedDewey;
+      console.log("✅ Sous-cat ÉDITION:", detectedDewey);
+      
+      if(typeSelectEdit) {
+        typeSelectEdit.value = detectedType;
+        console.log("✅ Type ÉDITION:", detectedType);
+      }
+      
+      // ✅ GÉNÉRER LE CODE MAINTENANT (après tout)
+      if (document.getElementById("editBookModal").classList.contains("show")) {
+  generateEditCode();
+} else {
+  generateCode();
+}
+    }, 150);
+  }
 }
 
+// Générer la cote
+generateCode();
+    }
 
-document.getElementById("categorie").addEventListener("change", generateCode);
+  } catch (error) {
+    console.error("❌ Erreur API:", error);
+    alert("Erreur lors de la récupération des informations du livre");
+    descriptionFields.forEach(f => f && (f.value = ""));
+    isbnFields.forEach(f => f && (f.value = ""));
+    langueFields.forEach(f => f && (f.value = ""));
+    authorFields.forEach(f => f && (f.innerHTML = ""));
+  }
+}
+
+function toggleMenu(el){
+
+  event.stopPropagation(); // important
+
+  const menu = el.querySelector(".dropdown-menu-book");
+
+  // 🔥 fermer tous les autres menus
+  document.querySelectorAll(".dropdown-menu-book").forEach(m => {
+    if(m !== menu){
+      m.style.display = "none";
+    }
+  });
+
+  // toggle celui-ci
+  menu.style.display =
+    menu.style.display === "flex" ? "none" : "flex";
+}
+
+// ----- EVENT LISTENERS -----
+
+document.addEventListener("click", function () {
+
+  document.querySelectorAll(".dropdown-menu-book").forEach(menu => {
+    menu.style.display = "none";
+  });
+
+});
+
+document.getElementById("categorie").addEventListener("change", function() {
+  const categorie = this.value;
+  populateSubCategories("subCategorie", categorie);
+  
+  setTimeout(() => {
+    const subSelect = document.getElementById("subCategorie");
+    subSelect.selectedIndex = 0;
+    generateCode();
+  }, 50);
+});
+
+document.getElementById("subCategorie").addEventListener("change", generateCode);
+document.getElementById("typeCode").addEventListener("change", generateCode);
+document.getElementById("langueCode").addEventListener("change", generateCode);
 document.getElementById("auteurs").addEventListener("change", generateCode);
+
+
+// ----- EDIT -----
+
+document.getElementById("editCategorie").addEventListener("change", function() {
+  const categorie = this.value;
+  populateSubCategories("editSubCategorie", categorie);
+  
+  setTimeout(() => {
+    const subSelect = document.getElementById("editSubCategorie");
+    subSelect.selectedIndex = 0;
+    generateEditCode();
+  }, 50);
+});
+
+document.getElementById("editSubCategorie").addEventListener("change", generateEditCode);
+document.getElementById("editTypeCode").addEventListener("change", generateEditCode);
+document.getElementById("editLangueCode").addEventListener("change", generateEditCode);
+document.getElementById("editAuteurs").addEventListener("change", generateEditCode);
+
+
+// ----- RESET FORM AJOUT APRES FERMETURE MODAL -----
+
+document.querySelector('#addBookModal')
+  .addEventListener('hidden.bs.modal', function () {
+    resetAddBookForm();
+  });
+
+document.getElementById("addBookModal").addEventListener("hidden.bs.modal", function () {
+  document.getElementById("addBookForm").reset();
+
+  // reset du code affiché
+  document.getElementById("codeLivre").value = "";
+
+  // reset sous-catégorie dynamique
+  const subSelect = document.getElementById("subCategorie");
+  if (subSelect) subSelect.innerHTML = "";
+
+  // reset auteurs sélectionnés
+  const auteurs = document.getElementById("auteurs");
+  if (auteurs) Array.from(auteurs.options).forEach(o => o.selected = false);
+});
 
 // Initial render
 renderCards();
@@ -714,7 +2127,6 @@ renderTable();
     </div>
   </div>
 </div>
-
-
+<div id="toast" class="toast-message"></div>
 </body>
 </html>

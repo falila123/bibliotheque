@@ -10,727 +10,3070 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+body{ background:#f4f6f9; font-family:'Segoe UI',sans-serif; min-height:100vh; }
+.sidebar { position: fixed; top:0; left:0; width:200px; height:100%; background:#2563eb; padding:20px 0; display:flex; flex-direction:column; gap:10px; }
+.sidebar h4 { text-align:center; color:white; font-weight:500; margin-bottom:30px; }
+.sidebar a { color:white; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:8px; font-weight:500; transition:0.3s; border-radius:8px; margin: 0 10px 10px 10px; }
+.sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2);}
+.logout-btn{
+  margin-top:auto;
+  width:90%;
+  margin-left:10px;
 
-        /* Navbar */
-        .navbar-custom {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 15px 0;
-        }
+  border:1px solid rgba(255,255,255,0.5);
+  color:white;
+  background:transparent;
 
-        .navbar-custom .navbar-brand {
-            color: white !important;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+  transition:0.25s ease;
+}
 
-        .navbar-custom .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            margin: 0 15px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.logout-btn:hover{
+  background:white;
+  color:#2563eb !important;
+  border-color:white;
+}
 
-        .navbar-custom .nav-link:hover {
-            color: white !important;
-            transform: translateY(-2px);
-        }
+.main { padding-left: 220px; padding-right: 20px; max-width: 1200px; margin: 20px auto; }
+.page-header{ background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:25px; }
+.page-header h1{ font-weight:700; }
+.page-header p{ color:#666; margin:0; }
 
-        .navbar-custom .nav-link.active {
-            color: white !important;
-            border-bottom: 3px solid white;
-            padding-bottom: 5px;
-        }
+.stat-card { background:white; padding:10px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.06); text-align:center; transition:0.3s; }
+.stat-card:hover { transform:translateY(-3px); box-shadow:0 6px 15px rgba(0,0,0,0.08); }
+.stat-icon { font-size:22px; color:#2563eb; margin-bottom:8px; }
+.stat-number { font-size:1.6rem; font-weight:700; color:#1e293b; margin-bottom:3px; }
+.stat-card div:last-child { font-size:0.85rem; color:#64748b; font-weight:500; }
 
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            color: white;
-        }
+.kpi-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
 
-        .btn-logout-custom {
-            background-color: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+/* ================= KPI CARD CLEAN ================= */
 
-        .btn-logout-custom:hover {
-            background-color: white;
-            color: #f45c43;
-        }
+.kpi-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
 
-        /* Main Content */
-        .main-container {
-            padding: 40px 20px;
-        }
+  border-top: 4px solid;
 
-        .page-header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
+  /* 🔥 FLUIDITÉ UNIQUE (UNE SEULE SOURCE) */
+  transition: all 0.18s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  will-change: transform;
 
-        .page-header h1 {
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
+  /* 🔥 profondeur propre */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
-        .page-header p {
-            color: #666;
-            margin: 0;
-        }
+/* ================= COULEURS TINT ================= */
 
-        /* Filtres et actions */
-        .filters-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
+.kpi-card.primary {
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));
+  border-top-color: #2563eb;
+  color: #2563eb;
+}
 
-        .filters-section .row {
-            gap: 15px;
-            align-items: end;
-        }
+.kpi-card.success {
+  background: linear-gradient(135deg, rgba(40,167,69,0.08), rgba(40,167,69,0.03));
+  border-top-color: #28a745;
+  color: #28a745;
+}
 
-        .search-group {
-            display: flex;
-            gap: 10px;
-        }
+.kpi-card.danger {
+  background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(220,38,38,0.03));
+  border-top-color: #dc2626;
+  color: #dc2626;
+}
 
-        .search-group input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
+.kpi-card.info {
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(236,72,153,0.03));
+  border-top-color: #ec4899;
+  color: #ec4899;
+}
 
-        .search-group input:focus {
-            outline: none;
-            border-color: #eb3349;
-            box-shadow: 0 0 0 3px rgba(235, 51, 73, 0.1);
-        }
+/* ================= HOVER CLEAN ================= */
 
-        .search-group button,
-        .btn-add-book {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.kpi-card:hover {
+  transform: translate3d(0, -6px, 0);
 
-        .search-group button:hover,
-        .btn-add-book:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
+  box-shadow:
+    0 12px 24px rgba(0,0,0,0.12),
+    0 2px 6px rgba(0,0,0,0.08);
 
-        .filter-select {
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+/* ================= ICON ================= */
 
-        .filter-select:focus {
-            outline: none;
-            border-color: #eb3349;
-            box-shadow: 0 0 0 3px rgba(235, 51, 73, 0.1);
-        }
+.kpi-card i {
+ transition: all 0.26s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.85;
+}
+.kpi-card {
+  transform: translateZ(0);
+}
+.kpi-card h5,
+.kpi-card .number {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.kpi-card:hover i {
+  transform: scale(1.15);
+  opacity: 1;
+}
 
-        /* Grille de livres */
-        .books-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
+/* ================= TEXT ================= */
 
-        .book-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
+.kpi-card h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #666;
+  transition: transform 0.18s ease;
+}
 
-        .book-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
+.kpi-card .number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px;
 
-        .book-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
+  transition: transform 0.18s ease;
+}
 
-        .book-content {
-            padding: 20px;
-        }
+/* petit effet vivant */
+.kpi-card:hover .number,
+.kpi-card:hover h5 {
+  transform: translateY(-1px);
+}
 
-        .book-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
+.books-grid { display:flex; flex-wrap:wrap; gap:15px; justify-content:flex-start; margin-bottom:40px; }
+.book-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.05); display:flex; flex-direction:column; width:calc(20% - 15px); }
+.book-card img{ width:100%; height:180px; object-fit:cover; border-bottom:1px solid #e0e0e0; }
+.book-content {
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  justify-content: flex-start;
+}
 
-        .book-author {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
+.book-title {
+  font-weight:600;
+  font-size:0.75rem;
+}
 
-        .book-info {
-            font-size: 0.85rem;
-            color: #555;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
+.btn-description{
+  margin-top:6px;
+  padding:4px;
+  font-size:0.7rem;
+  border:none;
+  border-radius:6px;
+  background:#eef2ff;
+  color:#1e40af;
+  cursor:pointer;
+  transition:0.2s;
+}
 
-        .book-info-label {
-            font-weight: 600;
-            color: #333;
-        }
+.btn-description:hover{
+  background:#dbeafe;
+}
+.code-badge {
+  font-size:0.55rem;
+  white-space:nowrap;   /* empêche retour à la ligne */
+}
+.info-label{ font-size:0.60rem; color:#444; font-weight:500; margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.info-badge{ background:#e0e7ff; color:#1e40af; font-size:0.5rem; padding:2px 8px; border-radius:20px; font-weight:500; }
+.book-status{ margin-top:8px; padding:4px 0; border-radius:20px; font-size:0.75rem; font-weight:600; text-align:center; }
 
-        .book-availability {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 12px 0;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+/* 🔥 FIX hauteur uniforme des cards */
+.book-card{
+  height: 420px;          /* hauteur fixe */
+}
 
-        .availability-available {
-            background: #d4edda;
-            color: #155724;
-        }
+.book-status {
+  margin-top: auto;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        .availability-unavailable {
-            background: #f8d7da;
-            color: #721c24;
-        }
+.book-status {
+  gap: 8px; /* un peu plus d’air */
+}
 
-        .book-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
+/* 🔥 titre limité à 2 lignes max */
+.book-title {
+  font-weight: 600;
+  font-size: 0.75rem;
 
-        .btn-action {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
+  /* 🔥 FIX ALIGNEMENT */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* max 2 lignes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-        .btn-borrow {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: white;
-        }
+  line-height: 1.2;
+  min-height: 2.4em; /* garde hauteur stable */
+}
 
-        .btn-borrow:hover {
-            opacity: 0.9;
-        }
+#bookPreview:hover{
+  transform:scale(1.03);
+}
 
-        .btn-borrow:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+/* 🔥 auteur limité à 1 ligne */
+.book-author {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
 
-        .btn-edit {
-            background: #007bff;
-            color: white;
-        }
+.book-card {
+  line-height: 1.2;
+}
+/* 🔥 empêche les badges de casser les lignes */
+.info-label{
+  flex-wrap: nowrap;   /* IMPORTANT */
+}
 
-        .btn-edit:hover {
-            background: #0056b3;
-        }
+.available{ background:#e6f7ee; color:#28a745; border:1px solid #b7e4c7; }
+.unavailable{ background:#fde8e8; color:#dc2626; border:1px solid #f5c2c7; }
 
-        /* Notif */
-        .notif-icon {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
+table { width:100%; border-collapse:collapse; margin-top:40px; background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.05); }
+thead { background:#2563eb; color:white; }
+thead th { padding:12px; text-align:left; font-weight:500; }
+tbody td { padding:10px; vertical-align:middle; border-bottom:1px solid #e0e0e0; }
+tbody tr:hover{ background:#f1f5f9; }
+.table-section {
+  overflow: visible !important;
+}
+.table-responsive {
+  overflow: visible !important;
+}
+body {
+  overflow-x: visible !important;
+}
+.table {
+  overflow: visible !important;
+  position: relative;
+}
+.dropdown-menu-book {
+  position: fixed !important;
+  z-index: 999999 !important;
+}
+.table-actions {
+  position: relative;
+  overflow: visible;
+}
+.dropdown-menu-book {
+  position: absolute;
+  right: 0;
+  display: none;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  width: 140px;
+  z-index: 9999;
+  top: 28px;
+}
 
-        .notif-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: #f5576c;
-            color: white;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
+.btn-generate{
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
 
-        /* Modal style */
-        .modal-content {
-            border-radius: 15px;
-            border: none;
-        }
+  /* IMPORTANT : même taille que les autres boutons Bootstrap */
+  padding:6px 12px;
+  font-size:1rem;
+  height:38px;
 
-        .modal-header {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: white;
-            border: none;
-        }
+  display:flex;
+  align-items:center;
+  gap:6px;
 
-        .modal-header .btn-close {
-            filter: brightness(0) invert(1);
-        }
+  transition:0.2s;
+}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .books-container {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 15px;
-            }
+.btn-generate:hover{
+  background:#218838;
+  color:white;
+}
 
-            .search-group {
-                flex-direction: column;
-            }
+.dropdown-menu-book button{ width:100%; border:none; background:none; padding:8px 12px; text-align:left; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; }
+.dropdown-menu-book button.details {
+  color: #2563eb;
+}
+.dropdown-menu-book button.edit {
+  color: #16a34a;
+}
+.dropdown-menu-book button.delete {
+  color: #dc2626;
+}
+.dropdown-menu-book button.details:hover {
+  background: #eff6ff;
+}
+.dropdown-menu-book button.edit:hover {
+  background: #ecfdf5;
+}
+.dropdown-menu-book button.delete:hover {
+  background: #fef2f2;
+}
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #22c55e;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
 
-            .navbar-custom .nav-link {
-                margin: 8px 0;
-            }
+.book-status.success {
+  background: #e6f7ee;
+  border: 1px solid #b7e4c7;
+  color: #1f9d55;
+}
 
-            .user-section {
-                flex-direction: column;
-                gap: 10px;
-            }
+.book-status.warning {
+  background: #fff7e6;
+  border: 1px solid #fcd34d;
+  color: #d97706;
+}
 
-            .filters-section .row {
-                flex-direction: column;
-            }
-        }
-    </style>
+.book-status.danger {
+  background: #fde8e8;
+  border: 1px solid #f5c2c7;
+  color: #dc2626;
+}
+
+.book-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+#bookPreview {
+  transition: 0.3s;
+}
+
+#bookPreview:hover {
+  transform: scale(1.05);
+}
+
+textarea#description {
+  resize: none;
+}
+
+.modal-footer {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.modal-content {
+  overflow: visible !important;
+}
+
+.btn {
+  pointer-events: auto !important;
+}
+
+.badge-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-status.success {
+  background: #e6f7ee;
+  color: #28a745;
+}
+
+.badge-status.warning {
+  background: #fff7e6;
+  color: #d97706;
+}
+
+.badge-status.danger {
+  background: #fde8e8;
+  color: #dc2626;
+}
+
+.btn-add-copy{
+  margin-top:8px;
+  border:none;
+  background:#eff6ff;
+  color:#2563eb;
+
+  padding:6px 10px;
+  border-radius:8px;
+
+  font-size:0.72rem;
+  font-weight:600;
+
+  transition:0.2s;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.btn-add-copy:hover{
+  background:#dbeafe;
+}
+
+.dropdown-menu-book button.borrow {
+  color: #d97706;
+}
+
+.dropdown-menu-book button.borrow:hover {
+  background: #fff7ed;
+}
+
+.dropdown-menu-book button.return {
+  color: #dc2672;
+}
+
+.dropdown-menu-book button.return:hover {
+  background: #fef2f2;
+}
+
+.dropdown-menu-book button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.table-section,
+.table-responsive {
+  overflow: visible !important;
+}
+
+.table tbody tr {
+  position: relative;
+}
+
+.dropdown-menu-user {
+  position: absolute;
+  z-index: 99999;
+}
+
+.table-responsive {
+  overflow: visible !important;
+}
+
+@media(max-width:900px){ .book-card{ width:calc(50% - 10px); } }
+@media(max-width:600px){ .book-card{ width:100%; } }
+</style>
 </head>
+
 <body>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="dashboard-bibliothecaire.html">
-            <i class="fas fa-book"></i> Bibliothécaire
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard-bibliothecaire.html">
-                        <i class="fas fa-home"></i> Accueil
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="gestion-livres.html">
-                        <i class="fas fa-book"></i> Gestion des livres
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="demandes-emprunts.html">
-                        <i class="fas fa-tasks"></i> Demandes
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="suivi-emprunts.html">
-                        <i class="fas fa-history"></i> Suivi des emprunts
-                    </a>
-                </li>
-            </ul>
-
-            <div class="user-section">
-                <div class="notif-icon">
-                    <i class="fas fa-bell"></i>
-                    <span class="notif-badge">3</span>
-                </div>
-                <button class="btn-logout-custom" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Déconnexion
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!-- CONTENU PRINCIPAL -->
-<div class="main-container">
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="page-header">
-            <h1><i class="fas fa-book-open"></i> Catalogue de Livres</h1>
-            <p>Gérez votre collection de livres</p>
-        </div>
-
-        <!-- Filtres et actions -->
-        <div class="filters-section">
-            <div class="row align-items-end">
-                <div class="col-md-7">
-                    <div class="search-group">
-                        <input 
-                            type="text" 
-                            id="searchInput" 
-                            placeholder="Rechercher par titre, auteur ou ISBN..."
-                        >
-                        <button onclick="searchBooks()">
-                            <i class="fas fa-search"></i> Rechercher
-                        </button>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <select class="filter-select" id="categoryFilter" onchange="searchBooks()">
-                        <option value="">Toutes les catégories</option>
-                        <option value="Littérature">Littérature</option>
-                        <option value="Classique">Classique</option>
-                        <option value="Philosophie">Philosophie</option>
-                        <option value="Sciences Humaines">Sciences Humaines</option>
-                        <option value="Informatique">Informatique</option>
-                        <option value="Mathématiques">Mathématiques</option>
-                        <option value="Physique">Physique</option>
-                    </select>
-                </div>
-                <!-- <div class="col-md-7"> -->
-                <div class="row align-items-end">
-    <div class="col-md-3">
-        <div class="add-group">
-            <button class="btn-add-book" onclick="openAddModal()">
-                <i class="fas fa-plus"></i> Ajouter
-            </button>
-        </div>
-    </div>
-</div>
-            </div>
-        </div>
-
-        <!-- Grille de livres -->
-        <div class="books-container" id="booksContainer">
-            <!-- Les livres seront générés par JavaScript -->
-        </div>
-    </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h4><i class="fas fa-book-open"></i> Bibliothécaire</h4>
+<a href="dashboard-bibliothecaire.html"><i class="fas fa-home"></i> Accueil</a>
+<a href="#" class="active"><i class="fas fa-book"></i>  Gestion des livres</a>
+<a href="demandes-emprunts.html"><i class="fas fa-tasks"></i>  Demandes</a>
+<a href="suivi-emprunts.html"><i class="fas fa-history"></i> Suivi des emprunts</a>
+<a href="statistiques-biblio.html"><i class="fas fa-chart-bar"></i> Statistiques</a>
+<button onclick="logout()" class="btn btn-outline-light logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
 </div>
 
-<!-- Modal Ajouter/Modifier Livre -->
-<div class="modal fade" id="bookModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Ajouter un livre</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="bookForm">
-                    <div class="mb-3">
-                        <label class="form-label">Titre *</label>
-                        <input type="text" class="form-control" id="formTitle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Auteur *</label>
-                        <input type="text" class="form-control" id="formAuthor" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ISBN *</label>
-                        <input type="text" class="form-control" id="formISBN" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Catégorie *</label>
-                        <select class="form-control" id="formCategory" required>
-                            <option>Littérature</option>
-                            <option>Classique</option>
-                            <option>Philosophie</option>
-                            <option>Sciences Humaines</option>
-                            <option>Informatique</option>
-                            <option>Mathématiques</option>
-                            <option>Physique</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Année *</label>
-                        <input type="number" class="form-control" id="formYear" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre total d'exemplaires *</label>
-                        <input type="number" class="form-control" id="formTotal" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" onclick="saveBook()">Enregistrer</button>
-            </div>
-        </div>
-    </div>
+
+<div class="main">
+<div class="page-header">
+<h1><i class="fas fa-book"></i> Gestion Livres</h1>
+<p>Gérez votre collection de livres</p>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- KPI Cards Gestion Livres -->
+<div class="kpi-section mt-4">
+
+  <!-- Total livres -->
+  <div class="kpi-card primary">
+    <h5><i class="fas fa-book"></i> Total livres</h5>
+    <div class="number" id="totalLivres">0</div>
+  </div>
+
+  <!-- Total exemplaires -->
+  <div class="kpi-card info">
+    <h5><i class="fas fa-layer-group"></i> Total exemplaires</h5>
+    <div class="number" id="totalExemplaires">0</div>
+  </div>
+
+  <!-- Disponibles -->
+  <div class="kpi-card success">
+    <h5><i class="fas fa-check-circle"></i> Disponibles</h5>
+    <div class="number" id="livresDisponibles">0</div>
+  </div>
+
+  <!-- Indisponibles -->
+  <div class="kpi-card danger">
+    <h5><i class="fas fa-times-circle"></i> Indisponibles</h5>
+    <div class="number" id="livresIndisponibles">0</div>
+  </div>
+</div>
+
+<div class="search-add-card d-flex align-items-center gap-2 mb-4 p-3" style="background:white; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-top:20px;">
+<input type="text" id="searchInput" class="form-control" placeholder="🔎 Rechercher un livre..." style="max-width:200px; height:38px;">
+<select id="categoryFilter" class="form-select" style="width:200px; height:38px;">
+<option value="">Toutes les catégories</option>
+<option value="Littérature">Littérature</option>
+<option value="Informatique">Informatique</option>
+<option value="Mathématiques">Mathématiques</option>
+<option value="Science">Science</option>
+<option value="Histoire">Histoire</option>
+</select>
+<button class="btn btn-primary" onclick="filterBooks()" style="height:38px; min-width:100px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-search me-1"></i> Rechercher</button>
+ <!-- Bouton Réinitialiser -->
+    <button class="btn btn-primary" onclick="resetFilters()" 
+            style="height:38px; min-width:100px; display:flex; align-items:center; justify-content:center;">
+        <i class="fas fa-rotate me-1"></i> Réinitialiser
+    </button>
+<button class="btn btn-primary" onclick="openAddModal()" style="height:38px; min-width:130px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-plus me-1"></i> Ajouter un livre</button>
+</div>
+
+<div class="books-grid" id="booksGrid"></div>
+
+<div class="books-table mt-5 p-1">
+<h5>Liste des livres</h5>
+<table>
+  <thead>
+    <tr>
+      <th>Cote</th>
+      <th>Titre</th>
+      <th>Auteur</th>
+      <th>Catégorie</th>
+      <th>ISBN</th>
+      <th>Exemplaires</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="booksTableBody"></tbody>
+</table>
+
+
+<!-- MODAL AJOUT LIVRE -->
+<div class="modal fade" id="addBookModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-plus"></i> Ajouter un livre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addBookForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>Titre</label>
+              <input type="text" class="form-control" id="titre" placeholder="Entrez le titre" required>
+            </div>
+            <div class="col-md-6">
+              <label>Cote livre</label>
+              <input type="text" class="form-control" id="codeLivre" readonly>
+            </div>
+            <div class="col-md-6">
+              <label>ISBN</label>
+              <div class="input-group">
+                <span class="input-group-text">978-</span>
+                <input type="text" class="form-control" id="isbnSuffix">
+              </div>
+            </div>
+            <div class="col-md-6">
+  <label>Catégorie</label>
+  <select class="form-select" id="categorie" onchange="generateCode()">
+    <option value="Littérature">Littérature</option>
+    <option value="Informatique">Informatique</option>
+    <option value="Mathématiques">Mathématiques</option>
+    <option value="Science">Science</option>
+    <option value="Histoire">Histoire</option>
+  </select>
+</div>
+            <!-- Nouveaux champs pour le format de cote -->
+            <div class="col-md-4">
+              <label>Sous-catégorie Dewey</label>
+              <select class="form-select" id="subCategorie" onchange="generateCode()"></select>
+              </div>
+           <div class="col-md-4">
+  <label>Type Littéraire/Technique</label>
+  <select class="form-select" id="typeCode" onchange="generateCode()">
+    <option value="ROM">Roman</option>
+    <option value="POE">Poésie</option>
+    <option value="THE">Théâtre</option>
+    <option value="ESS">Essai</option>
+    <option value="PRO">Programmation</option>
+    <option value="WEB">Web Development</option>
+    <option value="DATA">Data Science</option>
+    <option value="DEV">DevOps</option>
+    <option value="SEC">Sécurité</option>
+    <option value="ALG">Algèbre</option>
+    <option value="GEO">Géométrie</option>
+    <option value="CAL">Calcul</option>
+    <option value="STA">Statistiques</option>
+    <option value="TOP">Topologie</option>
+    <option value="PHY">Physique</option>
+    <option value="CHI">Chimie</option>
+    <option value="BIO">Biologie</option>
+    <option value="ECO">Écologie</option>
+    <option value="AST">Astronomie</option>
+    <option value="HIS">Histoire Générale</option>
+    <option value="ANC">Histoire Ancienne</option>
+    <option value="MOY">Moyen Âge</option>
+    <option value="MOD">Histoire Moderne</option>
+    <option value="CON">Histoire Contemporaine</option>
+  </select>
+</div>
+            <div class="col-md-4">
+               <label>Langue</label>
+  <select class="form-select" id="langueCode" onchange="generateCode()">
+    <option value="FR">Français</option>
+    <option value="EN">Anglais</option>
+    <option value="ES">Espagnol</option>
+    <option value="DE">Allemand</option>
+  </select>
+            </div>
+            <div class="row">
+
+  <!-- AUTEURS -->
+  <div class="col-md-6">
+    <label>Auteurs</label>
+    <select class="form-select" id="auteurs" multiple></select>
+    <small class="text-muted">
+      Maintenez Ctrl (Windows) ou Cmd (Mac) pur sélectionner plusieurs auteurs
+    </small>
+  </div>
+
+  <!-- AJOUT AUTEUR -->
+  <div class="col-md-6">
+    <label>Ajouter auteur</label>
+    <div class="d-flex gap-2">
+      <input type="text" class="form-control" id="newAuteur" placeholder="Ajouter un auteur">
+      <button type="button" class="btn btn-outline-primary" onclick="addAuteur()">+</button>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+
+  <!-- IMAGE -->
+  <div class="col-md-4">
+    <label>Couverture du livre</label>
+    <div class="text-center mb-2">
+      <img id="bookPreview"
+           src="https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png"
+           style="
+              width:120px;
+              height:170px;
+              object-fit:cover;
+              border-radius:10px;
+              border:1px solid #ddd;
+              box-shadow:0 4px 10px rgba(0,0,0,0.1);
+           ">
+    </div>
+    <small class="text-muted">
+      Image récupérée automatiquement ou image par défaut si indisponible
+    </small>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="col-md-8">
+
+    <label>Description</label>
+    <textarea class="form-control" id="description" rows="7"
+      placeholder="Description générée automatiquement"></textarea>
+  </div>
+</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+
+  <!-- Bouton générer à gauche -->
+  <div>
+    <button type="button"
+        class="btn btn-generate"
+        onclick="generateBookInfo()">
+  Générer
+</button>
+  </div>
+
+  <!-- Actions principales à droite -->
+  <div class="d-flex gap-2">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">
+      Annuler
+    </button>
+    <button
+  type="button"
+  class="btn btn-primary"
+  onclick="addBook()"
+>Ajouter</button>
+  </div>
+
+</div>
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Auth script -->
-<script src="auth.js" defer></script>
+
+<!-- MODAL EDIT LIVRE -->
+<!-- MODAL EDIT LIVRE -->
+<div class="modal fade" id="editBookModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-edit"></i> Modifier le livre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="editBookForm">
+
+          <div class="row g-3">
+
+            <!-- TITRE -->
+            <div class="col-md-6">
+              <label>Titre</label>
+              <input type="text" class="form-control" id="editTitre">
+            </div>
+
+            <!-- CODE -->
+            <div class="col-md-6">
+              <label>Cote livre</label>
+              <input type="text" class="form-control" id="editCodeLivre" readonly>
+            </div>
+
+            <!-- ISBN -->
+            <div class="col-md-6">
+              <label>ISBN</label>
+              <div class="input-group">
+                <span class="input-group-text">978-</span>
+                <input type="text" class="form-control" id="editIsbnSuffix">
+              </div>
+            </div>
+
+            <!-- CATEGORIE -->
+            <div class="col-md-6">
+              <label>Catégorie</label>
+              <select class="form-select" id="editCategorie" onchange="generateEditCode()">
+                <option>Littérature</option>
+                <option>Informatique</option>
+                <option>Mathématiques</option>
+                <option>Science</option>
+                <option>Histoire</option>
+              </select>
+            </div>
+
+            <!-- SOUS CATEGORIE -->
+            <div class="col-md-4">
+              <label>Sous-catégorie Dewey</label>
+              <select class="form-select" id="editSubCategorie" onchange="generateEditCode()"></select>
+            </div>
+
+            <!-- TYPE -->
+            <div class="col-md-4">
+              <label>Type Littéraire/Technique</label>
+              <select class="form-select" id="editTypeCode" onchange="generateEditCode()">
+                <option value="ROM">Roman</option>
+                <option value="POE">Poésie</option>
+                <option value="THE">Théâtre</option>
+                <option value="ESS">Essai</option>
+                <option value="PRO">Programmation</option>
+                <option value="WEB">Web Development</option>
+                <option value="DATA">Data Science</option>
+                <option value="DEV">DevOps</option>
+                <option value="SEC">Sécurité</option>
+                <option value="ALG">Algèbre</option>
+                <option value="GEO">Géométrie</option>
+                <option value="CAL">Calcul</option>
+                <option value="STA">Statistiques</option>
+                <option value="TOP">Topologie</option>
+                <option value="PHY">Physique</option>
+                <option value="CHI">Chimie</option>
+                <option value="BIO">Biologie</option>
+                <option value="ECO">Écologie</option>
+                <option value="AST">Astronomie</option>
+                <option value="HIS">Histoire Générale</option>
+                <option value="ANC">Histoire Ancienne</option>
+                <option value="MOY">Moyen Âge</option>
+                <option value="MOD">Histoire Moderne</option>
+                <option value="CON">Histoire Contemporaine</option>
+              </select>
+            </div>
+
+            <!-- LANGUE -->
+            <div class="col-md-4">
+              <label>Langue</label>
+              <select class="form-select" id="editLangueCode" onchange="generateEditCode()">
+                <option value="FR">Français</option>
+                <option value="EN">Anglais</option>
+                <option value="ES">Espagnol</option>
+                <option value="DE">Allemand</option>
+              </select>
+            </div>
+
+            <!-- AUTEURS -->
+            <div class="col-md-6">
+              <label>Auteurs</label>
+              <select class="form-select" id="editAuteurs" multiple></select>
+              <small class="text-muted">
+                Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs auteurs
+              </small>
+            </div>
+
+            <!-- AJOUT AUTEUR -->
+            <div class="col-md-6">
+              <label>Ajouter auteur</label>
+              <div class="d-flex gap-2">
+                <input type="text" class="form-control" id="newEditAuteur">
+                <button type="button" class="btn btn-outline-primary" onclick="addAuteurEdit()">+</button>
+              </div>
+            </div>
+          </div>
+          <hr>
+
+          <!-- IMAGE + DESCRIPTION (MÊME STRUCTURE QUE AJOUT) -->
+          <div class="row g-3">
+
+            <!-- IMAGE -->
+            <div class="col-md-4">
+
+              <label>Couverture du livre</label>
+
+              <div class="text-center mb-2">
+                <img id="editBookPreview"
+                     src="https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png"
+                     style="
+                        width:120px;
+                        height:170px;
+                        object-fit:cover;
+                        border-radius:10px;
+                        border:1px solid #ddd;
+                        box-shadow:0 4px 10px rgba(0,0,0,0.1);
+                     ">
+              </div>
+              <small class="text-muted">
+                Image générée automatiquement ou image par défaut si indisponible
+              </small>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="col-md-8">
+
+              <label>Description</label>
+              <textarea class="form-control" id="editDescription" rows="7"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+  
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-primary" onclick="BookEdits()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-    // Données des livres
-    const books = [
-        {
-            id: 1,
-            title: "Le Petit Prince",
-            author: "Antoine de Saint-Exupéry",
-            isbn: "978-2070612758",
-            category: "Littérature",
-            year: 1943,
-            available: 3,
-            total: 5,
-            image: "🌙"
-        },
-        {
-            id: 2,
-            title: "Les Misérables",
-            author: "Victor Hugo",
-            isbn: "978-2253096344",
-            category: "Classique",
-            year: 1862,
-            available: 2,
-            total: 4,
-            image: "📖"
-        },
-        {
-            id: 3,
-            title: "L'Étranger",
-            author: "Albert Camus",
-            isbn: "978-2070360024",
-            category: "Philosophie",
-            year: 1942,
-            available: 0,
-            total: 3,
-            image: "🤔"
-        },
-        {
-            id: 4,
-            title: "Sapiens",
-            author: "Yuval Noah Harari",
-            isbn: "978-2226257017",
-            category: "Sciences Humaines",
-            year: 2011,
-            available: 4,
-            total: 6,
-            image: "🌍"
-        },
-        {
-            id: 5,
-            title: "Introduction aux Algorithmes",
-            author: "Thomas H. Cormen",
-            isbn: "978-2100545261",
-            category: "Informatique",
-            year: 2010,
-            available: 5,
-            total: 8,
-            image: "💻"
-        },
-        {
-            id: 6,
-            title: "La Peste",
-            author: "Albert Camus",
-            isbn: "978-2070360420",
-            category: "Classique",
-            year: 1947,
-            available: 0,
-            total: 3,
-            image: "😷"
-        },
-        {
-            id: 7,
-            title: "Mathématiques pour l'Ingénieur",
-            author: "Jean-Pierre Ramis",
-            isbn: "978-2100547821",
-            category: "Mathématiques",
-            year: 2014,
-            available: 6,
-            total: 10,
-            image: "📐"
-        },
-        {
-            id: 8,
-            title: "Physique Générale",
-            author: "Douglas C. Giancoli",
-            isbn: "978-2744075131",
-            category: "Physique",
-            year: 2015,
-            available: 4,
-            total: 7,
-            image: "⚛️"
-        }
-    ];
 
-    // Afficher les livres
-    function displayBooks(booksToDisplay) {
-        const container = document.getElementById('booksContainer');
-        container.innerHTML = '';
+let booksData =
+  JSON.parse(localStorage.getItem("books")) || [];
 
-        if (booksToDisplay.length === 0) {
-            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">Aucun livre trouvé</p>';
-            return;
-        }
+let empruntsData =
+  JSON.parse(localStorage.getItem("empruntsData")) || [];
 
-        booksToDisplay.forEach(book => {
-            const bookCard = document.createElement('div');
-            bookCard.className = 'book-card';
+let users =
+  JSON.parse(localStorage.getItem("users")) || [];
 
-            const isAvailable = book.available > 0;
+function migrateExemplaires(){
 
-            bookCard.innerHTML = `
-                <div class="book-image">${book.image}</div>
-                <div class="book-content">
-                    <h3 class="book-title">${book.title}</h3>
-                    <p class="book-author"><i class="fas fa-pen-fancy"></i> ${book.author}</p>
-                    
-                    <div class="book-info">
-                        <span class="book-info-label">ISBN:</span>
-                        <span>${book.isbn}</span>
-                    </div>
-                    <div class="book-info">
-                        <span class="book-info-label">Catégorie:</span>
-                        <span>${book.category}</span>
-                    </div>
-                    <div class="book-info">
-                        <span class="book-info-label">Année:</span>
-                        <span>${book.year}</span>
-                    </div>
+  booksData.forEach(book => {
 
-                    <div class="book-availability ${isAvailable ? 'availability-available' : 'availability-unavailable'}">
-                        <i class="fas ${isAvailable ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-                        Disponibles: ${book.available} / ${book.total}
-                    </div>
+    book.exemplaires = book.exemplaires.map(ex => {
 
-                    <div class="book-actions">
-                        <button class="btn-action btn-borrow" ${!isAvailable ? 'disabled' : ''}>
-                            <i class="fas fa-share"></i> ${isAvailable ? 'Emprunter' : 'Non disponible'}
-                        </button>
-                        <button class="btn-action btn-edit" onclick="editBook(${book.id})">
-                            <i class="fas fa-edit"></i> Modifier
-                        </button>
-                    </div>
-                </div>
-            `;
+      // ✅ ancien format string
+      if(typeof ex === "string"){
 
-            container.appendChild(bookCard);
-        });
-    }
+        return {
+          code: ex,
+          statut: "Disponible"
+        };
+      }
 
-    // Recherche
-    function searchBooks() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const categoryFilter = document.getElementById('categoryFilter').value;
-
-        const filtered = books.filter(book => {
-            const matchesSearch = book.title.toLowerCase().includes(searchTerm) ||
-                                book.author.toLowerCase().includes(searchTerm) ||
-                                book.isbn.includes(searchTerm);
-            const matchesCategory = !categoryFilter || book.category === categoryFilter;
-            
-            return matchesSearch && matchesCategory;
-        });
-
-        displayBooks(filtered);
-    }
-
-    // Ouvrir modal ajout
-    function openAddModal() {
-        document.getElementById('bookForm').reset();
-        const modal = new bootstrap.Modal(document.getElementById('bookModal'));
-        modal.show();
-    }
-
-    // Modifier livre
-    function editBook(id) {
-        const book = books.find(b => b.id === id);
-        if (book) {
-            document.getElementById('formTitle').value = book.title;
-            document.getElementById('formAuthor').value = book.author;
-            document.getElementById('formISBN').value = book.isbn;
-            document.getElementById('formCategory').value = book.category;
-            document.getElementById('formYear').value = book.year;
-            document.getElementById('formTotal').value = book.total;
-            
-            const modal = new bootstrap.Modal(document.getElementById('bookModal'));
-            modal.show();
-        }
-    }
-
-    // Enregistrer livre
-    function saveBook() {
-        alert('✅ Livre enregistré avec succès!');
-        bootstrap.Modal.getInstance(document.getElementById('bookModal')).hide();
-    }
-
-    // Afficher tous les livres au chargement
-    window.addEventListener('load', function() {
-        displayBooks(books);
+      // ✅ déjà nouveau format
+      return ex;
     });
+
+  });
+
+  saveToStorage();
+}
+const DEFAULT_BOOK_IMAGE =
+"https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+const sousCategories = {
+  "Littérature": ["800", "810", "820", "830", "840"],
+  "Informatique": ["004", "004.5", "004.51", "004.55", "004.56", "004.6", "004.7"],
+  "Mathématiques": ["510", "511", "512", "513", "514", "515", "516"],
+  "Science": ["500", "501", "502", "503", "504", "530", "540", "550"],
+  "Histoire": ["900", "901", "902", "903", "904"]
+};
+
+let auteursList = JSON.parse(localStorage.getItem("auteurs")) || [
+  {id: "000001", nom: "Antoine de Saint-Exupéry"},
+  {id: "000002", nom: "Mark Lutz"},
+  {id: "000003", nom: "Gilbert Strang"},
+  {id: "000004", nom: "Albert Einstein"},
+  {id: "000005", nom: "Mary Beard"}
+];
+
+function saveAuteurs(){
+  localStorage.setItem("auteurs", JSON.stringify(auteursList));
+}
+
+// Mapping Dewey → Catégories et Types
+const deweyMapping = {
+  "800": { categorie: "Littérature", type: "ROM" },
+  "810": { categorie: "Littérature", type: "ROM" },
+  "820": { categorie: "Littérature", type: "POE" },
+  "830": { categorie: "Littérature", type: "THE" },
+  "840": { categorie: "Littérature", type: "ESS" },
+
+  "004": { categorie: "Informatique", type: "PRO" },
+  "004.5": { categorie: "Informatique", type: "PRO" },
+  "004.51": { categorie: "Informatique", type: "PRO" },
+  "004.55": { categorie: "Informatique", type: "DATA" },
+  "004.56": { categorie: "Informatique", type: "WEB" },
+  "004.6": { categorie: "Informatique", type: "SEC" },
+
+  "510": { categorie: "Mathématiques", type: "ALG" },
+  "511": { categorie: "Mathématiques", type: "GEO" },
+  "512": { categorie: "Mathématiques", type: "CAL" },
+  "513": { categorie: "Mathématiques", type: "STA" },
+
+  "500": { categorie: "Science", type: "PHY" },
+  "501": { categorie: "Science", type: "CHI" },
+  "502": { categorie: "Science", type: "BIO" },
+  "503": { categorie: "Science", type: "ECO" },
+  "504": { categorie: "Science", type: "AST" },
+
+  "900": { categorie: "Histoire", type: "HIS" },
+  "901": { categorie: "Histoire", type: "ANC" },
+  "902": { categorie: "Histoire", type: "MOY" },
+  "903": { categorie: "Histoire", type: "MOD" },
+  "904": { categorie: "Histoire", type: "CON" }
+};
+
+function populateSubCategories(selectId, catValue) {
+  const subSelect = document.getElementById(selectId);
+  subSelect.innerHTML = "";
+
+  if (sousCategories[catValue]) {
+    sousCategories[catValue].forEach(sub => {
+      const option = document.createElement("option");
+      option.value = sub;
+      option.text = sub;
+      subSelect.appendChild(option);
+    });
+
+    // ✅ sélection automatique valide
+    subSelect.selectedIndex = 0;
+
+    // ❌ NE PAS générer ici (important pour éviter bug de timing)
+  }
+}
+function resetAddBookForm(){
+
+  document.getElementById("addBookForm").reset();
+
+  // reset preview image
+  const preview = document.getElementById("bookPreview");
+  if(preview){
+    preview.src = DEFAULT_BOOK_IMAGE;
+  }
+
+  // reset file input (très important)
+  const fileInput = document.getElementById("bookImage");
+  if(fileInput){
+    fileInput.value = "";
+  }
+
+  // reset description (optionnel mais propre)
+  const desc = document.getElementById("description");
+  if(desc){
+    desc.value = "";
+  }
+}
+
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.style.background = type === "success" ? "#22c55e" : "#ef4444";
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2500);
+}
+
+function resetFilters() {
+
+  document.getElementById("searchInput").value = "";
+  document.getElementById("categoryFilter").value = "";
+
+  filterBooks();
+
+}
+
+function resetAddBookForm() {
+  const form = document.getElementById("addBookForm");
+
+  form.reset();
+
+  // Reset champs dynamiques
+  document.getElementById("codeLivre").value = "";
+  document.getElementById("isbnSuffix").value = "";
+  document.getElementById("description").value = "";
+
+  // Reset selects si besoin
+  document.getElementById("subCategorie").innerHTML = "";
+  document.getElementById("auteurs").innerHTML = "";
+
+  // Reset image input
+  document.getElementById("bookImage").value = "";
+}
+
+function previewEditImage(event){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById("editBookPreview").src = e.target.result;
+  }
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+// Convertir tableau d'IDs en noms
+function getAuteurNames(ids) {
+  return ids.map(id => {
+    id = id.trim();
+    const auteur = auteursList.find(a => a.id === id);
+    return auteur ? auteur.nom : id;
+  }).join(", ");
+}
+
+// Remplir le select des auteurs au chargement
+function populateAuteursSelect() {
+  const select = document.getElementById("auteurs");
+  select.innerHTML = "";
+  auteursList.forEach(a => {
+    const option = document.createElement("option");
+    option.value = a.id;
+    option.text = a.nom;
+    select.appendChild(option);
+  });
+}
+populateAuteursSelect();
+
+function populateEditAuteursSelect(book) {
+  const select = document.getElementById("editAuteurs");
+  select.innerHTML = "";
+  auteursList.forEach(a => {
+    const option = document.createElement("option");
+    option.value = a.id;
+    option.text = a.nom;
+    select.appendChild(option);
+  });
+}
+
+function recalculateCategoryCodes(categorie){
+  const dewey = classification[categorie];
+  const livres = booksData.filter(b => b.categorie === categorie);
+  livres.forEach((book, index) => {
+    const auteurId = book.auteur.split(",")[0].trim();
+    const numero = String(index + 1).padStart(3, '0');
+    const newCode = `${book.sousCategorie} ${auteurId} ${book.type} ${book.langue} ${numero}`;
+    book.code = newCode;
+    book.exemplaires = book.exemplaires.map((ex, i) => `${newCode}-${String(i+1).padStart(2,'0')}`);
+  });
+  saveToStorage();
+}
+
+// Ajouter un auteur depuis le champ
+function addAuteur() {
+  const input = document.getElementById("newAuteur");
+  const nom = input.value.trim();
+  if(!nom) return;
+
+  let existing = auteursList.find(a => a.nom === nom);
+  let newId;
+  if(existing) {
+    newId = existing.id;
+  } else {
+    const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+    newId = String(maxId + 1).padStart(6,'0');
+    auteursList.push({id: newId, nom});
+    saveAuteurs();
+  }
+
+  const select = document.getElementById("auteurs");
+  const option = document.createElement("option");
+  option.value = newId;
+  option.text = nom;
+  option.selected = true;
+  select.appendChild(option);
+
+  input.value = "";
+  generateCode();
+}
+
+const classification = {
+  "Littérature": "800",
+  "Informatique": "004",
+  "Mathématiques": "510",
+  "Science": "500",
+  "Histoire": "900"
+};
+
+function saveToStorage() {
+  localStorage.setItem("books", JSON.stringify(booksData));
+}
+
+function updateKpiCards(){
+
+  const totalLivres = booksData.length;
+
+  let totalExemplaires = 0;
+  let livresDisponibles = 0;
+  let livresIndisponibles = 0;
+
+  booksData.forEach(book => {
+
+    const total = book.exemplaires ? book.exemplaires.length : 0;
+
+    totalExemplaires += total;
+
+    // 🔥 on vérifie les statuts
+    const hasAvailable = book.exemplaires.some(
+      ex => ex.statut === "Disponible"
+    );
+
+    if(hasAvailable){
+      livresDisponibles++;
+    } else {
+      livresIndisponibles++;
+    }
+  });
+
+  document.getElementById("totalLivres").innerText =
+    totalLivres;
+
+  document.getElementById("totalExemplaires").innerText =
+    totalExemplaires;
+
+  document.getElementById("livresDisponibles").innerText =
+    livresDisponibles;
+
+  document.getElementById("livresIndisponibles").innerText =
+    livresIndisponibles;
+}
+
+updateKpiCards();
+
+function generateCode(){
+
+  const sousCategorie =
+    document.getElementById("subCategorie").value;
+
+  const auteurs = Array.from(
+    document.getElementById("auteurs").selectedOptions
+  ).map(opt => opt.value);
+
+  const type =
+    document.getElementById("typeCode").value;
+
+  const langue =
+    document.getElementById("langueCode").value;
+
+  // ✅ vérifier champs
+  if(
+    !sousCategorie ||
+    auteurs.length === 0 ||
+    !type ||
+    !langue
+  ){
+
+    document.getElementById("codeLivre").value =
+      "Complétez tous les champs...";
+
+    return;
+  }
+
+  // ✅ premier auteur
+  const auteurId = auteurs[0];
+
+  // ✅ compter livres même sous-catégorie
+  const count =
+    booksData.filter(
+      b => b.sousCategorie === sousCategorie
+    ).length + 1;
+
+  const numero =
+    String(count).padStart(3, "0");
+
+  // ✅ génération cote
+  const cote =
+    `${sousCategorie} ${auteurId} ${type} ${langue} ${numero}`;
+
+  document.getElementById("codeLivre").value =
+    cote;
+}
+
+// ----- AJOUT LIVRE -----
+function addBook(){
+
+  const titre =
+    document.getElementById("titre").value.trim();
+
+  const isbn =
+    "978-" +
+    document.getElementById("isbnSuffix").value.trim();
+
+  const description =
+    document.getElementById("description").value.trim();
+
+  const categorie =
+    document.getElementById("categorie").value;
+
+  const sousCategorie =
+    document.getElementById("subCategorie").value;
+
+  const type =
+    document.getElementById("typeCode").value;
+
+  const langue =
+    document.getElementById("langueCode").value;
+
+  const auteurs = Array.from(
+    document.getElementById("auteurs").selectedOptions
+  ).map(opt => opt.value);
+
+  // =========================
+  // VALIDATION
+  // =========================
+  if(
+    !titre ||
+    !categorie ||
+    !sousCategorie ||
+    !type ||
+    !langue ||
+    auteurs.length === 0
+  ){
+
+    alert("Veuillez remplir tous les champs requis");
+
+    return;
+  }
+
+  // =========================
+  // CODE LIVRE
+  // =========================
+  let code =
+    document.getElementById("codeLivre").value;
+
+  if(
+    !code ||
+    code.includes("Complétez")
+  ){
+
+    generateCode();
+
+    code =
+      document.getElementById("codeLivre").value;
+  }
+
+  // =========================
+  // VERIFICATION DOUBLON
+  // =========================
+  const existingBook = booksData.find(
+
+    b =>
+
+      b.titre === titre &&
+
+      b.auteur === auteurs.join(", ") &&
+
+      b.isbn === isbn
+  );
+
+  if(existingBook){
+
+    showToast(
+      "Livre déjà existant",
+      "warning"
+    );
+
+    return;
+  }
+
+  // =========================
+  // IMAGE
+  // =========================
+  const preview =
+    document.getElementById("bookPreview");
+
+  const imgSrc =
+    preview?.src ||
+    "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+  // =========================
+  // NOUVEAU LIVRE
+  // =========================
+  const newBook = {
+
+    code,
+
+    titre,
+
+    auteur: auteurs.join(", "),
+
+    categorie,
+
+    sousCategorie,
+
+    type,
+
+    langue,
+
+    isbn,
+
+    description,
+
+    image: imgSrc,
+
+    statut: "Disponible",
+
+    exemplaires: [
+      {
+        code: `${code}-01`,
+        statut: "Disponible"
+      }
+    ]
+  };
+
+  // =========================
+  // AJOUT
+  // =========================
+  booksData.push(newBook);
+
+  // =========================
+  // SAUVEGARDE
+  // =========================
+  localStorage.setItem(
+    "books",
+    JSON.stringify(booksData)
+  );
+
+  // =========================
+  // REFRESH UI
+  // =========================
+  renderCards();
+
+  renderTable();
+
+  updateKpiCards?.();
+
+  // =========================
+  // RESET
+  // =========================
+// ✅ toast
+showToast(
+  `Livre "${titre}" ajouté avec succès`,
+  "success"
+);
+
+// ✅ reset formulaire
+resetAddBookForm();
+
+// ✅ fermeture modal
+const modalElement =
+  document.getElementById("addBookModal");
+
+const modalInstance =
+  bootstrap.Modal.getOrCreateInstance(modalElement);
+
+modalInstance.hide();
+}
+
+function openAddModal(){
+  const catValue = document.getElementById("categorie").value;
+  
+  // ✅ IMPORTANT : Remplir les sous-catégories IMMÉDIATEMENT
+  if(catValue) {
+    populateSubCategories("subCategorie", catValue);
+    
+    // Attendre que les options soient ajoutées avant de générer le code
+    setTimeout(() => {
+      generateCode();
+    }, 100);
+  } else {
+    generateCode();
+  }
+  
+  new bootstrap.Modal(document.getElementById('addBookModal')).show();
+}
+
+function showDescription(code){
+  const book = booksData.find(b => b.code === code);
+  if(!book) return;
+
+  const content = `
+    <div>
+      <h5>${book.titre}</h5>
+      <p><strong>Auteur :</strong> ${getAuteurNames(book.auteur.split(","))}</p>
+      <hr>
+      <p>${book.description || "Aucune description disponible."}</p>
+    </div>
+  `;
+
+  document.getElementById("detailsBookContent").innerHTML = content;
+  new bootstrap.Modal(document.getElementById('detailsBookModal')).show();
+}
+
+function getSousCategorieLabel(code) {
+  const labels = {
+    // Littérature
+    "800": "Roman général",
+    "810": "Littérature américaine",
+    "820": "Poésie",
+    "830": "Théâtre",
+    "840": "Essais",
+
+    // Informatique
+    "004": "Informatique générale",
+    "004.5": "Programmation",
+    "004.51": "Développement logiciel",
+    "004.55": "Data Science",
+    "004.56": "Développement Web",
+    "004.6": "Sécurité informatique",
+    "004.7": "Réseaux",
+
+    // Mathématiques
+    "510": "Mathématiques générales",
+    "511": "Algèbre",
+    "512": "Calcul",
+    "513": "Statistiques",
+    "514": "Topologie",
+    "515": "Analyse",
+    "516": "Géométrie",
+
+    // Science
+    "500": "Sciences générales",
+    "530": "Physique",
+    "540": "Chimie",
+    "550": "Sciences de la Terre",
+    "560": "Paléontologie",
+    "570": "Biologie",
+    "580": "Botanique",
+    "590": "Zoologie",
+
+    // Histoire
+    "900": "Histoire générale",
+    "910": "Géographie",
+    "920": "Biographies",
+    "930": "Histoire ancienne",
+    "940": "Histoire de l’Europe",
+    "950": "Histoire de l’Asie",
+    "960": "Histoire de l’Afrique",
+    "970": "Histoire des Amériques"
+  };
+
+  return labels[code] || code;
+}
+
+function getTypeLabel(type){
+  const map = {
+    "ROM": "Roman",
+    "POE": "Poésie",
+    "THE": "Théâtre",
+    "ESS": "Essai",
+    "PRO": "Programmation",
+    "DATA": "Data Science",
+    "WEB": "Web",
+    "SEC": "Sécurité",
+    "ALG": "Algèbre",
+    "GEO": "Géométrie",
+    "CAL": "Calcul",
+    "STA": "Statistiques",
+    "TOP": "Topologie",
+    "PHY": "Physique",
+    "CHI": "Chimie",
+    "BIO": "Biologie",
+    "ECO": "Écologie",
+    "AST": "Astronomie",
+    "HIS": "Histoire",
+    "ANC": "Ancien",
+    "MOY": "Moyen Âge",
+    "MOD": "Moderne",
+    "CON": "Contemporain"
+  };
+  return map[type] || type;
+}
+
+function getLangueLabel(lang){
+  const map = {
+    "FR": "Français",
+    "EN": "Anglais",
+    "ES": "Espagnol",
+    "DE": "Allemand",
+    "IT": "Italien"
+  };
+  return map[lang] || lang;
+}
+
+function generateEditCode(){
+
+  const codeInput = document.getElementById("editCodeLivre");
+
+  // 🔥 récupérer le livre via son ancien code
+  const oldCode = codeInput.dataset.oldCode;
+  const book = booksData.find(b => b.code === oldCode);
+
+  if(!book) return;
+
+  const sousCategorie = document.getElementById("editSubCategorie").value;
+  const type = document.getElementById("editTypeCode").value;
+  const langue = document.getElementById("editLangueCode").value;
+
+  const auteurs = Array.from(document.getElementById("editAuteurs").selectedOptions)
+    .map(opt => opt.value);
+
+  if(!sousCategorie || auteurs.length === 0 || !type || !langue) {
+    codeInput.value = "Complétez tous les champs...";
+    return;
+  }
+
+  const auteurId = auteurs[0];
+
+  // 🔥 EXTRAIRE LE NUMÉRO EXISTANT (important)
+  const parts = book.code.split(" ");
+  const numero = parts[4]; // ex: 001
+
+  // ✅ NOUVELLE COTE MAIS NUMÉRO CONSERVÉ
+  const newCode = `${sousCategorie} ${auteurId} ${type} ${langue} ${numero}`;
+
+  codeInput.value = newCode;
+
+  // 🔥 mettre à jour les exemplaires
+  book.exemplaires = book.exemplaires.map((_, idx) =>
+    `${newCode}-${String(idx + 1).padStart(2, "0")}`
+  );
+}
+
+function getAvailability(exemplaires) {
+
+  // ✅ compter seulement les exemplaires disponibles
+  const disponibles = exemplaires.filter(
+    ex => ex.statut === "Disponible"
+  ).length;
+
+  // ✅ aucun disponible
+  if(disponibles === 0){
+    return {
+      class: "danger",
+      label: "Indisponible"
+    };
+  }
+
+  // ✅ faible disponibilité
+  if(disponibles === 1){
+    return {
+      class: "warning",
+      label: "Disponible"
+    };
+  }
+
+  // ✅ plusieurs disponibles
+  return {
+    class: "success",
+    label: "Disponible"
+  };
+}
+
+// ----- RENDER CARDS -----
+function renderCards(){
+
+  const grid = document.getElementById("booksGrid");
+
+  grid.innerHTML = "";
+
+  booksData.forEach(book => {
+
+    // ✅ EXEMPLAIRES DISPONIBLES UNIQUEMENT
+    const disponibles = book.exemplaires.filter(
+      ex => ex.statut === "Disponible"
+    ).length;
+
+    // ✅ availability basé sur les statuts
+    const availability = getAvailability(book.exemplaires);
+
+    const card = document.createElement("div");
+
+    card.className = "book-card";
+
+    card.dataset.category = book.categorie;
+
+    card.innerHTML = `
+      <img src="${book.image || DEFAULT_BOOK_IMAGE}">
+
+      <div class="book-content">
+
+        <div class="book-title">
+          ${book.titre}
+        </div>
+
+        <div class="book-author">
+          ${getAuteurNames(book.auteur.split(","))}
+        </div>
+
+        <div class="info-label">
+          Catégorie:
+          <span class="info-badge">
+            ${book.categorie}
+          </span>
+        </div>
+
+        <div class="info-label">
+          Type:
+          <span class="info-badge">
+            ${getTypeLabel(book.type)}
+          </span>
+        </div>
+
+        <div class="info-label">
+          Langue:
+          <span class="info-badge">
+            ${getLangueLabel(book.langue)}
+          </span>
+        </div>
+
+        <div class="info-label">
+          Cote:
+          <span class="info-badge code-badge">
+            ${book.code}
+          </span>
+        </div>
+
+        <div class="info-label">
+          ISBN:
+          <span class="info-badge">
+            ${book.isbn}
+          </span>
+        </div>
+
+        <button
+          class="btn-description"
+          onclick="showDescription('${book.code}')"
+        >
+          📖 Voir description
+        </button>
+
+        <button
+          class="btn-add-copy"
+          onclick="addExemplaire('${book.code}')"
+        >
+          <i class="fas fa-plus"></i>
+          Ajouter exemplaire
+        </button>
+
+        <div class="book-status ${availability.class}">
+          ${disponibles} exemplaire(s)
+        </div>
+
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+
+// ----- RENDER TABLE -----
+function renderTable(filteredBooks = booksData){
+
+  const tbody =
+    document.getElementById("booksTableBody");
+
+  tbody.innerHTML = "";
+
+  filteredBooks.forEach(book => {
+
+    // ✅ ignorer livres sans exemplaires
+    if(
+      !book.exemplaires ||
+      book.exemplaires.length === 0
+    ){
+      return;
+    }
+
+    book.exemplaires.forEach((ex, index) => {
+
+      const statut =
+        ex.statut || "Disponible";
+
+      const isBorrowed =
+        statut === "Emprunté";
+
+      let statusClass = "success";
+
+      if(statut === "Emprunté"){
+        statusClass = "danger";
+      }
+
+      const tr =
+        document.createElement("tr");
+
+      tr.innerHTML = `
+
+        <td>${ex.code}</td>
+
+        <td>${book.titre}</td>
+
+        <td>
+          ${getAuteurNames(book.auteur.split(","))}
+          (${book.auteur.split(",")[0].trim()})
+        </td>
+
+        <td>${book.categorie}</td>
+
+        <td>${book.isbn}</td>
+
+        <td>
+          ${index + 1}/${book.exemplaires.length}
+        </td>
+
+        <td>
+          <span class="badge-status ${statusClass}">
+            ${statut}
+          </span>
+        </td>
+
+        <td class="table-actions">
+
+          <div
+            class="menu-dots"
+            onclick="toggleMenu(this)"
+          >
+
+            <i class="fas fa-ellipsis-h"></i>
+
+            <div class="dropdown-menu-book">
+
+              <button
+                class="borrow"
+                onclick="borrowBook('${book.code}', '${ex.code}')"
+                ${isBorrowed ? "disabled" : ""}
+              >
+                <i class='fas fa-book me-2'></i>
+                Emprunter
+              </button>
+
+              <button
+                class="return"
+                onclick="returnBook('${book.code}', '${ex.code}')"
+                ${!isBorrowed ? "disabled" : ""}
+              >
+                <i class='fas fa-undo me-2'></i>
+                Retourner
+              </button>
+
+              <button
+                class="edit"
+                onclick="editBook('${book.code}')"
+              >
+                <i class='fas fa-edit me-2'></i>
+                Modifier
+              </button>
+
+              <button
+                class="delete"
+                onclick="deleteBook('${ex.code}')"
+              >
+                <i class='fas fa-trash me-2'></i>
+                Supprimer
+              </button>
+
+            </div>
+
+          </div>
+
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+
+    });
+
+  });
+
+}
+
+// ----- DROPDOWN MENU -----
+function toggleMenu(el){
+
+  event.stopPropagation(); // important
+
+  const menu = el.querySelector(".dropdown-menu-book");
+
+  // 🔥 fermer tous les autres menus
+  document.querySelectorAll(".dropdown-menu-book").forEach(m => {
+    if(m !== menu){
+      m.style.display = "none";
+    }
+  });
+
+  // toggle celui-ci
+  menu.style.display =
+    menu.style.display === "flex" ? "none" : "flex";
+}
+
+// ----- DÉTAILS LIVRE -----
+document.addEventListener("click", function(e){
+  if(e.target.closest(".details")){
+    const tr = e.target.closest("tr");
+    const code = tr.children[0].textContent;
+
+    const book = booksData.find(b => b.exemplaires.includes(code));
+    if(!book) return;
+
+    const content = `
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <strong>Titre :</strong> ${book.titre}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Cote :</strong> ${book.code}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Auteur(s) :</strong> ${getAuteurNames(book.auteur.split(","))}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Catégorie :</strong> ${book.categorie}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Sous-catégorie :</strong> ${getSousCategorieLabel(book.sousCategorie)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Type :</strong> ${getTypeLabel(book.type)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Langue :</strong> ${getLangueLabel(book.langue)}
+        </div>
+
+        <div class="col-md-6">
+          <strong>ISBN :</strong> ${book.isbn}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Exemplaire :</strong> ${code}
+        </div>
+
+        <div class="col-md-6">
+          <strong>Statut :</strong> ${book.statut}
+        </div>
+
+      </div>
+    `;
+
+    document.getElementById("detailsBookContent").innerHTML = content;
+    new bootstrap.Modal(document.getElementById('detailsBookModal')).show();
+  }
+});
+
+function deleteBook(codeEx){
+
+  if(
+    !confirm(
+      "Voulez-vous vraiment supprimer cet exemplaire ?"
+    )
+  ) return;
+
+  // =========================
+  // RECHERCHE EXEMPLAIRE
+  // =========================
+  for(let i = 0; i < booksData.length; i++){
+
+    const book = booksData[i];
+
+    const index =
+      book.exemplaires.findIndex(
+        ex => ex.code === codeEx
+      );
+
+    if(index !== -1){
+
+      // ✅ supprimer exemplaire
+      book.exemplaires.splice(index, 1);
+
+      // ✅ supprimer livre vide
+      // ✅ si plus d'exemplaires
+if(book.exemplaires.length === 0){
+
+  book.statut = "Indisponible";
+}
+
+      break;
+    }
+  }
+
+  // =========================
+  // SUPPRIMER EMPRUNTS LIÉS
+  // =========================
+  empruntsData = empruntsData.filter(
+
+    e => e.exemplaireCode !== codeEx
+  );
+
+  // =========================
+  // SAUVEGARDE
+  // =========================
+  localStorage.setItem(
+    "books",
+    JSON.stringify(booksData)
+  );
+
+  localStorage.setItem(
+    "empruntsData",
+    JSON.stringify(empruntsData)
+  );
+
+  // =========================
+  // REFRESH UI
+  // =========================
+  renderCards();
+
+  renderTable();
+
+  updateKpiCards?.();
+
+  renderRecentAlerts?.();
+
+  // =========================
+  // TOAST
+  // =========================
+  showToast(
+    "Livre supprimé avec succès",
+    "success"
+  );
+}
+
+function editBook(code){
+  const book = booksData.find(b => b.code === code);
+  if(!book) return;
+
+  const codeInput = document.getElementById("editCodeLivre");
+  codeInput.value = book.code;
+  codeInput.dataset.oldCode = book.code;
+  document.getElementById("editCodeLivre").dataset.bookId = book.id;
+
+  document.getElementById("editTitre").value = book.titre || "";
+  document.getElementById("editDescription").value = book.description || "";
+  document.getElementById("editBookPreview").src = book.image || "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+  document.getElementById("editIsbnSuffix").value = (book.isbn || "").replace("978-","");
+
+  const categorieSelect = document.getElementById("editCategorie");
+  categorieSelect.value = book.categorie;
+
+  populateSubCategories("editSubCategorie", book.categorie);
+  document.getElementById("editSubCategorie").value = book.sousCategorie;
+
+  const typeSelect = document.getElementById("editTypeCode");
+  if(typeSelect) typeSelect.value = book.type;
+
+  const langueSelect = document.getElementById("editLangueCode");
+  if(langueSelect) langueSelect.value = book.langue;
+
+  populateEditAuteursSelect(book);
+
+  const auteursIds = (book.auteur || "").split(",").map(a => a.trim());
+  const auteursSelect = document.getElementById("editAuteurs");
+
+  Array.from(auteursSelect.options).forEach(option=>{
+    option.selected = auteursIds.includes(option.value);
+  });
+
+  new bootstrap.Modal(document.getElementById("editBookModal")).show();
+}
+
+// Ajouter un auteur depuis le modal Modifier
+function addAuteurEdit(){
+  const input = document.getElementById("newEditAuteur");
+  const select = document.getElementById("editAuteurs");
+  const nom = input.value.trim();
+  if(!nom) return;
+
+  let existing = auteursList.find(a => a.nom === nom);
+  let newId;
+  if(existing){
+    newId = existing.id;
+  } else {
+    const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+    newId = String(maxId + 1).padStart(6,'0');
+    auteursList.push({id: newId, nom});
+    saveAuteurs();
+  }
+
+  const option = document.createElement("option");
+  option.value = newId;
+  option.text = nom;
+  option.selected = true;
+  select.appendChild(option);
+
+  input.value = "";
+ generateEditCode();
+}
+
+function BookEdits() {
+  const codeInput = document.getElementById("editCodeLivre");
+  const oldCode = codeInput.dataset.oldCode;
+
+  const book = booksData.find(b => b.code === oldCode);
+  if (!book) return;
+
+  const newTitre = document.getElementById("editTitre").value.trim();
+  const newCategorie = document.getElementById("editCategorie").value;
+  const newSousCategorie = document.getElementById("editSubCategorie").value;
+  const newType = document.getElementById("editTypeCode").value;
+  const newLangue = document.getElementById("editLangueCode").value;
+
+  const newAuteur = Array
+    .from(document.getElementById("editAuteurs").selectedOptions)
+    .map(o => o.value)
+    .join(", ");
+
+  const newIsbn = "978-" + document.getElementById("editIsbnSuffix").value;
+  const newDescription = document.getElementById("editDescription").value.trim();
+
+  // 🔥 Vérifier doublon (hors livre actuel)
+  let existingBook = booksData.find(b =>
+    b.titre === newTitre &&
+    b.auteur === newAuteur &&
+    b.isbn === newIsbn &&
+    b.code !== oldCode
+  );
+
+  if (existingBook) {
+    const lastExNum = parseInt(
+      existingBook.exemplaires[existingBook.exemplaires.length - 1].split("-")[1]
+    ) || 0;
+
+    const newExNum = String(lastExNum + 1).padStart(2, "0");
+    existingBook.exemplaires.push(`${existingBook.code}-${newExNum}`);
+
+    // supprimer ancien livre
+    const index = booksData.indexOf(book);
+    if (index !== -1) {
+      booksData.splice(index, 1);
+    }
+
+    saveToStorage();
+    renderCards();
+    renderTable();
+    updateKpiCards();
+
+    bootstrap.Modal
+      .getInstance(document.getElementById("editBookModal"))
+      .hide();
+
+    showToast(`Exemplaire ajouté à "${existingBook.titre}"`, "success");
+    return;
+  }
+
+  // 🔥 Mise à jour normale
+  book.titre = newTitre;
+  book.categorie = newCategorie;
+  book.sousCategorie = newSousCategorie;
+  book.type = newType;
+  book.langue = newLangue;
+  book.auteur = newAuteur;
+  book.isbn = newIsbn;
+  book.description = newDescription;
+
+  generateEditCode();
+
+  // 🔥 IMPORTANT : reset image preview (sans input file)
+  document.getElementById("editBookPreview").src =
+    book.image ||
+    "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+  saveToStorage();
+  renderCards();
+  renderTable();
+  updateKpiCards();
+
+  bootstrap.Modal
+    .getInstance(document.getElementById("editBookModal"))
+    .hide();
+
+  showToast(`Livre "${book.titre}" modifié avec succès`, "success");
+}
+
+// ----- GOOGLE BOOKS API - RÉCUPÉRATION INFO -----
+async function generateBookInfo() {
+  const titreAjout = document.getElementById("titre");
+  const titreEdit = document.getElementById("editTitre");
+
+  let titre = "";
+  if (titreAjout && titreAjout.value.trim() !== "") {
+    titre = titreAjout.value.trim();
+  } else if (titreEdit && titreEdit.value.trim() !== "") {
+    titre = titreEdit.value.trim();
+  }
+
+  if (!titre) {
+    alert("Veuillez saisir le titre du livre");
+    return;
+  }
+
+  console.log("🔍 Recherche livre:", titre);
+
+  const descriptionFields = [
+    document.getElementById("description"),
+    document.getElementById("editDescription")
+  ];
+  const isbnFields = [
+    document.getElementById("isbnSuffix"),
+    document.getElementById("editIsbnSuffix")
+  ];
+  const langueFields = [
+    document.getElementById("langueCode"),
+    document.getElementById("editLangueCode")
+  ];
+  const authorFields = [
+    document.getElementById("auteurs"),
+    document.getElementById("editAuteurs")
+  ];
+
+  descriptionFields.forEach(f => f && (f.value = "Chargement..."));
+  isbnFields.forEach(f => f && (f.value = "Chargement..."));
+  langueFields.forEach(f => f && (f.value = ""));
+  authorFields.forEach(f => f && (f.innerHTML = ""));
+
+ try {
+  console.log("🔍 Appel API Google Books...");
+  
+  // ✅ Ajouter un délai de 1 seconde
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const response = await fetch(
+    "https://www.googleapis.com/books/v1/volumes?q=intitle:" + encodeURIComponent(titre),
+    { cache: "no-store" }
+  );
+  
+  console.log("📡 Réponse API:", response.status);
+  
+  const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      alert("Livre non trouvé dans Google Books");
+      descriptionFields.forEach(f => f && (f.value = ""));
+      isbnFields.forEach(f => f && (f.value = ""));
+      langueFields.forEach(f => f && (f.value = ""));
+      authorFields.forEach(f => f && (f.innerHTML = ""));
+      return;
+    }
+
+    const bookInfo = data.items[0].volumeInfo;
+
+     // --- IMAGE GOOGLE BOOKS ---
+const preview = document.getElementById("bookPreview");
+
+if(preview){
+
+  const thumbnail =
+    bookInfo.imageLinks?.thumbnail ||
+    bookInfo.imageLinks?.smallThumbnail ||
+    "https://clipart-library.com/images_k/books-clipart-transparent/books-clipart-transparent-10.png";
+
+  preview.src = thumbnail;
+
+  console.log("🖼️ Image chargée :", thumbnail);
+}
+
+    // --- Description ---
+    const description = bookInfo.description || "Description non disponible.";
+    descriptionFields.forEach(f => f && (f.value = description));
+
+    // --- ISBN ---
+ let isbnSuffix = "";
+
+const ids = bookInfo.industryIdentifiers || [];
+
+if (Array.isArray(ids) && ids.length > 0) {
+
+  // priorité ISBN-13
+  let isbnObj = ids.find(id => id.type === "ISBN_13");
+
+  // fallback ISBN-10
+  if (!isbnObj) {
+    isbnObj = ids.find(id => id.type === "ISBN_10");
+  }
+
+  // fallback ultime (Google incohérent)
+  if (!isbnObj) {
+    isbnObj = ids.find(id => id.identifier);
+  }
+
+  if (isbnObj && isbnObj.identifier) {
+    const clean = String(isbnObj.identifier).replace(/\D/g, "");
+
+    if (clean.length >= 10) {
+      isbnSuffix = clean.startsWith("978")
+        ? clean.slice(3)
+        : clean;
+    }
+  }
+}
+
+console.log("ISBN brut API:", bookInfo.industryIdentifiers);
+console.log("ISBN final:", isbnSuffix);
+
+isbnFields.forEach(f => {
+  if (f) f.value = isbnSuffix;
+});
+    // --- Langue ---
+    const langMap = { fr: "FR", en: "EN", es: "ES", de: "DE", it: "IT" };
+    const bookLang = bookInfo.language ? bookInfo.language.toLowerCase() : "fr";
+    langueFields.forEach(f => {
+      if (f) {
+        const code = langMap[bookLang] || "FR";
+        f.value = code;
+      }
+    });
+
+    // --- AUTEURS ---
+    const authors = Array.isArray(bookInfo.authors) ? bookInfo.authors : [];
+    authorFields.forEach(fieldType => {
+      if(fieldType) {
+        fieldType.innerHTML = "";
+        
+        authors.forEach(authorName => {
+          let existing = auteursList.find(a => a.nom === authorName);
+          let authorId;
+          
+          if(existing) {
+            authorId = existing.id;
+          } else {
+            const maxId = Math.max(0, ...auteursList.map(a => parseInt(a.id)));
+            authorId = String(maxId + 1).padStart(6, '0');
+            auteursList.push({id: authorId, nom: authorName});
+            saveAuteurs();
+          }
+          
+          const option = document.createElement("option");
+          option.value = authorId;
+          option.text = authorName;
+          option.selected = true;
+          fieldType.appendChild(option);
+        });
+      }
+    });
+
+    // --- CATÉGORIE & SOUS-CATÉGORIE & TYPE ---
+    if(bookInfo.categories && bookInfo.categories.length > 0) {
+      const category = bookInfo.categories[0].toLowerCase();
+      
+      let detectedCategorie = "Littérature";
+      let detectedDewey = "800";
+      let detectedType = "ROM";
+
+// INFORMATIQUE
+if(category.includes("computer") || category.includes("informatique") || category.includes("programming") || category.includes("software") || category.includes("development") || category.includes("web") || category.includes("data") || category.includes("machine learning") || category.includes("python") || category.includes("java") || category.includes("c++") || category.includes("javascript")) {
+  detectedCategorie = "Informatique";
+  detectedDewey = "004.5"; // Programmation générale par défaut
+  detectedType = "PRO";
+  
+  // AFFINAGE : Data Science (PRIORITAIRE - vérifier en premier)
+ if (
+  category.includes("data analysis") ||
+  category.includes("data science") ||
+  category.includes("analytics") ||
+  category.includes("machine learning") ||
+  category.includes("ai") ||
+  category.includes("artificial intelligence") ||
+  category.includes("pandas") ||   // ✅ IMPORTANT
+  category.includes("numpy") ||
+  category.includes("sklearn")
+) {
+  detectedDewey = "004.55";
+  detectedType = "DATA";
+}
+  // AFFINAGE : Web
+  else if(category.includes("web development") || category.includes("web") || category.includes("html") || category.includes("css") || category.includes("javascript") || category.includes("react") || category.includes("vue") || category.includes("node")) {
+    detectedDewey = "004.56";
+    detectedType = "WEB";
+  }
+  // AFFINAGE : Programmation spécifique
+  else if(category.includes("programming") || category.includes("python") || category.includes("java") || category.includes("c++") || category.includes("software development")) {
+    detectedDewey = "004.51";
+    detectedType = "PRO";
+  }
+  // AFFINAGE : Sécurité
+  else if(category.includes("security") || category.includes("sécurité") || category.includes("cybersecurity")) {
+    detectedDewey = "004.6";
+    detectedType = "SEC";
+  }
+}
+      // MATHÉMATIQUES
+      else if(category.includes("math") || category.includes("mathématiques")) {
+        detectedCategorie = "Mathématiques";
+        detectedDewey = "510";
+        detectedType = "ALG";
+        
+        if(category.includes("geometry") || category.includes("géométrie")) {
+          detectedDewey = "511";
+          detectedType = "GEO";
+        } else if(category.includes("calculus") || category.includes("calcul")) {
+          detectedDewey = "512";
+          detectedType = "CAL";
+        } else if(category.includes("statistics") || category.includes("statistiques")) {
+          detectedDewey = "513";
+          detectedType = "STA";
+        } else if(category.includes("topology")) {
+          detectedDewey = "514";
+          detectedType = "TOP";
+        }
+      }
+      // SCIENCE
+      else if(category.includes("science") || category.includes("physics") || category.includes("chemistry") || category.includes("biology") || category.includes("ecology") || category.includes("astronomy")) {
+        detectedCategorie = "Science";
+        detectedDewey = "500";
+        detectedType = "PHY";
+        
+        if(category.includes("physics") || category.includes("physique")) {
+          detectedDewey = "500";
+          detectedType = "PHY";
+        } else if(category.includes("chemistry") || category.includes("chimie")) {
+          detectedDewey = "501";
+          detectedType = "CHI";
+        } else if(category.includes("biology") || category.includes("biologie")) {
+          detectedDewey = "502";
+          detectedType = "BIO";
+        } else if(category.includes("ecology") || category.includes("écologie")) {
+          detectedDewey = "503";
+          detectedType = "ECO";
+        } else if(category.includes("astronomy") || category.includes("astronomie")) {
+          detectedDewey = "504";
+          detectedType = "AST";
+        }
+      }
+      // HISTOIRE
+      else if(category.includes("history") || category.includes("histoire")) {
+        detectedCategorie = "Histoire";
+        detectedDewey = "900";
+        detectedType = "HIS";
+        
+        if(category.includes("ancient")) {
+          detectedDewey = "901";
+          detectedType = "ANC";
+        } else if(category.includes("middle") || category.includes("moyen")) {
+          detectedDewey = "902";
+          detectedType = "MOY";
+        } else if(category.includes("modern") || category.includes("moderne")) {
+          detectedDewey = "903";
+          detectedType = "MOD";
+        } else if(category.includes("contemporary") || category.includes("contemporain")) {
+          detectedDewey = "904";
+          detectedType = "CON";
+        }
+      }
+      // LITTÉRATURE (par défaut ou si spécifiquement détecté)
+      else if(category.includes("poetry") || category.includes("poésie")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "820";
+        detectedType = "POE";
+      } else if(category.includes("drama") || category.includes("théâtre")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "830";
+        detectedType = "THE";
+      } else if(category.includes("essay") || category.includes("essai")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "840";
+        detectedType = "ESS";
+      } else if(category.includes("fiction") || category.includes("roman") || category.includes("novel")) {
+        detectedCategorie = "Littérature";
+        detectedDewey = "800";
+        detectedType = "ROM";
+      } else {
+        // Défaut ultime
+        detectedCategorie = "Littérature";
+        detectedDewey = "800";
+        detectedType = "ROM";
+      }
+
+      console.log("🔍 Catégorie:", detectedCategorie, "| Dewey:", detectedDewey, "| Type:", detectedType);
+
+    // FORMULAIRE D'AJOUT
+const categorieSelectAdd = document.getElementById("categorie");
+const subcatSelectAdd = document.getElementById("subCategorie");
+const typeSelectAdd = document.getElementById("typeCode");
+
+if(categorieSelectAdd) {
+  console.log("✅ Remplissage AJOUT");
+  categorieSelectAdd.value = detectedCategorie;
+  
+  if(subcatSelectAdd) {
+    populateSubCategories("subCategorie", detectedCategorie);
+    
+    // ✅ IMPORTANT : Attendre plus longtemps et générer APRÈS
+    setTimeout(() => {
+      subcatSelectAdd.value = detectedDewey;
+      console.log("✅ Sous-cat AJOUT:", detectedDewey);
+      
+      if(typeSelectAdd) {
+        typeSelectAdd.value = detectedType;
+        console.log("✅ Type AJOUT:", detectedType);
+      }
+      
+      // ✅ GÉNÉRER LE CODE MAINTENANT (après tout)
+      if (document.getElementById("editBookModal").classList.contains("show")) {
+  generateEditCode();
+} else {
+  generateCode();
+}
+    }, 150);
+  }
+}
+
+     // FORMULAIRE D'ÉDITION
+const categorieSelectEdit = document.getElementById("editCategorie");
+const subcatSelectEdit = document.getElementById("editSubCategorie");
+const typeSelectEdit = document.getElementById("editTypeCode");
+
+if(categorieSelectEdit) {
+  console.log("✅ Remplissage ÉDITION");
+  categorieSelectEdit.value = detectedCategorie;
+  
+  if(subcatSelectEdit) {
+    populateSubCategories("editSubCategorie", detectedCategorie);
+    
+    // ✅ IMPORTANT : Attendre plus longtemps et générer APRÈS
+    setTimeout(() => {
+      subcatSelectEdit.value = detectedDewey;
+      console.log("✅ Sous-cat ÉDITION:", detectedDewey);
+      
+      if(typeSelectEdit) {
+        typeSelectEdit.value = detectedType;
+        console.log("✅ Type ÉDITION:", detectedType);
+      }
+      
+      // ✅ GÉNÉRER LE CODE MAINTENANT (après tout)
+      if (document.getElementById("editBookModal").classList.contains("show")) {
+  generateEditCode();
+} else {
+  generateCode();
+}
+    }, 150);
+  }
+}
+
+// Générer la cote
+generateCode();
+    }
+
+  } catch (error) {
+    console.error("❌ Erreur API:", error);
+    alert("Erreur lors de la récupération des informations du livre");
+    descriptionFields.forEach(f => f && (f.value = ""));
+    isbnFields.forEach(f => f && (f.value = ""));
+    langueFields.forEach(f => f && (f.value = ""));
+    authorFields.forEach(f => f && (f.innerHTML = ""));
+  }
+}
+
+function addExemplaire(bookCode){
+
+  const book = booksData.find(
+    b => b.code === bookCode
+  );
+
+  if(!book) return;
+
+  const nextNumber = book.exemplaires.length + 1;
+
+  const newExemplaireCode =
+  `${book.code}-${String(nextNumber).padStart(2,"0")}`;
+
+  book.exemplaires.push({
+  code: newExemplaireCode,
+  statut: "Disponible"
+});
+
+// ✅ SAUVEGARDE
+saveToStorage();
+
+renderCards();
+renderTable();
+updateKpiCards();
+
+showToast("Nouvel exemplaire ajouté", "success");
+
+}
+
+function borrowBook(bookCode, exemplaireCode){
+
+  // 🔥 toujours source unique
+  const books =
+    JSON.parse(localStorage.getItem("books")) || [];
+
+  // ======================
+  // FIND BOOK + EXEMPLAIRE
+  // ======================
+  const book = books.find(
+    b => b.code === bookCode
+  );
+
+  if(!book) return;
+
+  const exemplaire = book.exemplaires.find(
+    ex => ex.code === exemplaireCode
+  );
+
+  if(!exemplaire) return;
+
+  // ======================
+  // BLOQUER SI DÉJÀ EMPRUNTÉ
+  // ======================
+  if(exemplaire.statut === "Emprunté"){
+
+    showToast("Ce livre a déjà été emprunté", "error");
+    return;
+  }
+
+  // ======================
+  // REMPLIR MODAL
+  // ======================
+  document.getElementById("borrowBookCode").value = bookCode;
+  document.getElementById("borrowExemplaireCode").value = exemplaireCode;
+
+  document.getElementById("studentCode").value = "";
+  document.getElementById("borrowDuration").value = "";
+  document.getElementById("studentInfo").innerHTML = "";
+
+  const today = new Date();
+
+  document.getElementById("borrowDate").value =
+    today.toLocaleDateString();
+
+  document.getElementById("returnDate").value = "";
+
+  // ======================
+  // FIX EVENT LISTENER (IMPORTANT)
+  // ======================
+  const durationInput =
+    document.getElementById("borrowDuration");
+
+  durationInput.oninput = function(){
+
+    const duration = parseInt(this.value);
+
+    if(!duration || duration <= 0){
+      document.getElementById("returnDate").value = "";
+      return;
+    }
+
+    const returnDate = new Date();
+    returnDate.setDate(returnDate.getDate() + duration);
+
+    document.getElementById("returnDate").value =
+      returnDate.toLocaleDateString();
+  };
+
+  // ======================
+  // OUVRIR MODAL
+  // ======================
+  new bootstrap.Modal(
+    document.getElementById("borrowModal")
+  ).show();
+}
+
+function confirmBorrow(){
+
+  const bookCode =
+    document.getElementById("borrowBookCode").value;
+
+  const exemplaireCode =
+    document.getElementById("borrowExemplaireCode").value;
+
+  const studentCode =
+    document.getElementById("studentCode").value.trim();
+
+  const duration =
+    parseInt(document.getElementById("borrowDuration").value);
+
+  // ✅ validation champs
+  if(!studentCode || !duration){
+    alert("Veuillez remplir tous les champs");
+    return;
+  }
+
+  // ✅ vérifier étudiant
+  const student = users.find(
+    u =>
+      u.matricule === studentCode &&
+      u.role === "Étudiant"
+  );
+
+  if(!student){
+    alert("Matricule étudiant introuvable");
+    return;
+  }
+
+  // ✅ dates
+  const today = new Date();
+
+  const returnDate = new Date();
+  returnDate.setDate(today.getDate() + duration);
+
+  // ✅ récupérer livre
+  const book = booksData.find(
+    b => b.code === bookCode
+  );
+
+  if(!book) return;
+
+  // ✅ récupérer exemplaire
+  const exemplaire = book.exemplaires.find(
+    ex => ex.code === exemplaireCode
+  );
+
+  if(!exemplaire) return;
+
+  // ❌ empêcher double emprunt
+  if(exemplaire.statut === "Emprunté"){
+    alert("Cet exemplaire est déjà emprunté");
+    return;
+  }
+
+  // ✅ mise à jour exemplaire
+  exemplaire.statut = "Emprunté";
+
+  exemplaire.empruntePar = student.matricule;
+  exemplaire.nomEtudiant = student.name;
+  exemplaire.dateEmprunt = today.toISOString();
+  exemplaire.dateRetour = returnDate.toISOString();
+
+  // ✅ historique emprunt (snapshot propre)
+  empruntsData.push({
+
+    id: Date.now(),
+
+    bookCode: book.code,
+    bookTitle: book.titre || book.title || "Livre inconnu",
+
+    exemplaireCode: exemplaire.code,
+
+    studentCode: student.matricule,
+    studentName: student.name,
+
+    dateEmprunt: today.toISOString(),
+    dateRetour: returnDate.toISOString(),
+
+    statut: "En cours"
+  });
+
+  // ✅ sauvegarde
+  localStorage.setItem(
+    "empruntsData",
+    JSON.stringify(empruntsData)
+  );
+
+  saveToStorage();
+
+  // ✅ refresh UI
+  renderCards();
+  renderTable();
+
+  // ✅ fermer modal
+  bootstrap.Modal
+    .getInstance(document.getElementById("borrowModal"))
+    .hide();
+
+  // ✅ reset champs
+  document.getElementById("studentCode").value = "";
+  document.getElementById("borrowDuration").value = "";
+  document.getElementById("studentInfo").innerHTML = "";
+  document.getElementById("returnDate").value = "";
+
+  // ✅ toast
+  showToast(
+    `Livre emprunté par ${student.name}`,
+    "success"
+  );
+}
+
+function getStudentName(code){
+
+  const user = users.find(u => u.matricule === code || u.code === code);
+
+  return user ? user.name : code;
+}
+
+function verifyStudent(){
+
+  const matricule =
+    document.getElementById("studentCode")
+    .value
+    .trim();
+
+  const info =
+    document.getElementById("studentInfo");
+
+  // 🔥 reset si vide
+  if(!matricule){
+
+    info.innerHTML = "";
+
+    return;
+  }
+
+  // 🔥 rechercher étudiant
+  const student = users.find(
+    u =>
+      u.matricule === matricule &&
+      u.role === "Étudiant"
+  );
+
+  // 🔥 étudiant trouvé
+  if(student){
+
+    info.innerHTML = `
+      <span style="color:#16a34a;font-weight:600;">
+        ✓ Étudiant trouvé :
+        ${student.name}
+      </span>
+    `;
+
+  } else {
+
+    info.innerHTML = `
+      <span style="color:#dc2626;font-weight:600;">
+        ✗ Aucun étudiant trouvé
+      </span>
+    `;
+  }
+}
+
+function returnBook(bookCode, exemplaireCode){
+
+  // 🔥 source unique
+  const books =
+    JSON.parse(localStorage.getItem("books")) || [];
+
+  let emprunts =
+    JSON.parse(localStorage.getItem("empruntsData")) || [];
+
+  // ======================
+  // FIND BOOK + EXEMPLAIRE
+  // ======================
+  const book = books.find(
+    b => b.code === bookCode
+  );
+
+  if(!book) return;
+
+  const exemplaire = book.exemplaires.find(
+    ex => ex.code === exemplaireCode
+  );
+
+  if(!exemplaire) return;
+
+  // ======================
+  // PROTECTION
+  // ======================
+  if(exemplaire.statut !== "Emprunté"){
+    showToast("Cet exemplaire est déjà disponible", "error");
+    return;
+  }
+
+  // ======================
+  // UPDATE EXEMPLAIRE
+  // ======================
+  exemplaire.statut = "Disponible";
+
+  // ======================
+  // UPDATE EMPRUNT
+  // ======================
+  const emprunt = emprunts.find(
+    e =>
+      e.exemplaireCode === exemplaireCode &&
+      e.statut === "En cours"
+  );
+
+  if(emprunt){
+
+    emprunt.statut = "Retourné";
+    emprunt.dateRetourEffective = new Date().toISOString();
+  }
+
+  // ======================
+  // SAVE UNIQUE
+  // ======================
+  localStorage.setItem("books", JSON.stringify(books));
+  localStorage.setItem("empruntsData", JSON.stringify(emprunts));
+
+  // ======================
+  // REFRESH UI GLOBAL
+  // ======================
+  if(typeof renderTable === "function") renderTable();
+  if(typeof renderEmpruntsTable === "function") renderEmpruntsTable();
+  if(typeof renderRecentAlerts === "function") renderRecentAlerts();
+  if(typeof updateKpiBooks === "function") updateKpiBooks();
+
+  showToast("Livre retourné avec succès", "success");
+}
+
+// ----- EVENT LISTENERS -----
+
+document.addEventListener("click", function () {
+
+  document.querySelectorAll(".dropdown-menu-book").forEach(menu => {
+    menu.style.display = "none";
+  });
+
+});
+
+document.getElementById("categorie").addEventListener("change", function() {
+  const categorie = this.value;
+  populateSubCategories("subCategorie", categorie);
+  
+  setTimeout(() => {
+    const subSelect = document.getElementById("subCategorie");
+    subSelect.selectedIndex = 0;
+    generateCode();
+  }, 50);
+});
+
+document.getElementById("subCategorie").addEventListener("change", generateCode);
+document.getElementById("typeCode").addEventListener("change", generateCode);
+document.getElementById("langueCode").addEventListener("change", generateCode);
+document.getElementById("auteurs").addEventListener("change", generateCode);
+
+
+// ----- EDIT -----
+
+document.getElementById("editCategorie").addEventListener("change", function() {
+  const categorie = this.value;
+  populateSubCategories("editSubCategorie", categorie);
+  
+  setTimeout(() => {
+    const subSelect = document.getElementById("editSubCategorie");
+    subSelect.selectedIndex = 0;
+    generateEditCode();
+  }, 50);
+});
+
+document.getElementById("editSubCategorie").addEventListener("change", generateEditCode);
+document.getElementById("editTypeCode").addEventListener("change", generateEditCode);
+document.getElementById("editLangueCode").addEventListener("change", generateEditCode);
+document.getElementById("editAuteurs").addEventListener("change", generateEditCode);
+
+
+// ----- RESET FORM AJOUT APRES FERMETURE MODAL -----
+
+document.querySelector('#addBookModal')
+  .addEventListener('hidden.bs.modal', function () {
+    resetAddBookForm();
+  });
+
+document.getElementById("addBookModal").addEventListener("hidden.bs.modal", function () {
+  document.getElementById("addBookForm").reset();
+
+  // reset du code affiché
+  document.getElementById("codeLivre").value = "";
+
+  // reset sous-catégorie dynamique
+  const subSelect = document.getElementById("subCategorie");
+  if (subSelect) subSelect.innerHTML = "";
+
+  // reset auteurs sélectionnés
+  const auteurs = document.getElementById("auteurs");
+  if (auteurs) Array.from(auteurs.options).forEach(o => o.selected = false);
+});
+
+// Initial render
+migrateExemplaires();
+updateKpiCards();
+renderCards();
+renderTable();
 </script>
+</div>
+
+<!-- MODAL DETAILS LIVRE -->
+<div class="modal fade" id="detailsBookModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-eye"></i> Détails du Livre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="detailsBookContent">
+        <!-- Le contenu sera injecté via JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast-message"></div>
+
+<div class="modal fade" id="borrowModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Enregistrer un emprunt
+        </h5>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" id="borrowBookCode">
+        <input type="hidden" id="borrowExemplaireCode">
+
+        <!-- ✅ MATRICULE ÉTUDIANT -->
+        <div class="mb-3">
+
+          <label class="form-label">
+            Matricule étudiant
+          </label>
+
+          <input type="text"
+                 id="studentCode"
+                 class="form-control"
+                 placeholder="Ex: 22A145FS"
+                 oninput="verifyStudent()">
+
+          <!-- ✅ infos étudiant -->
+          <small id="studentInfo"
+                 class="mt-2 d-block">
+          </small>
+
+        </div>
+
+        <!-- ✅ DURÉE -->
+        <div class="mb-3">
+
+          <label class="form-label">
+            Durée d'emprunt (jours)
+          </label>
+
+          <input type="number"
+                 id="borrowDuration"
+                 class="form-control"
+                 min="1"
+                 placeholder="Ex: 7">
+
+        </div>
+
+        <!-- ✅ DATE EMPRUNT AUTO -->
+        <div class="mb-3">
+
+          <label class="form-label">
+            Date d'emprunt
+          </label>
+
+          <input type="text"
+                 id="borrowDate"
+                 class="form-control"
+                 readonly>
+
+        </div>
+
+        <!-- ✅ DATE RETOUR AUTO -->
+        <div class="mb-3">
+
+          <label class="form-label">
+            Date retour prévue
+          </label>
+
+          <input type="text"
+                 id="returnDate"
+                 class="form-control"
+                 readonly>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button class="btn btn-secondary"
+                data-bs-dismiss="modal">
+          Annuler
+        </button>
+
+        <button class="btn btn-primary"
+                onclick="confirmBorrow()">
+
+          Confirmer l'emprunt
+
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toastMessage" class="toast-message"></div>
 
 </body>
 </html>

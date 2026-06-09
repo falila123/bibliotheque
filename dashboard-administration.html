@@ -19,79 +19,85 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+.page-header{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom:25px;
+}
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #f1f5f9; /* ou proche */
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Navbar */
-        .navbar-custom {
-            background: linear-gradient(135deg, #00b4db 0%, #00d4ff 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 15px 0;
-        }
+        .navbar-custom{
+  background: #3b82f6; /* bleu plus clair */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+  padding: 12px 0;
+}
 
-        .navbar-custom .navbar-brand {
-            color: white !important;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+/* BRAND */
+.navbar-custom .navbar-brand{
+  color:white;
+  font-weight:700;
+  letter-spacing:0.3px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
-        .navbar-custom .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            margin: 0 15px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+/* LINKS */
+.navbar-custom .nav-link{
+  color: rgba(255,255,255,0.75);
+  font-weight:500;
+  padding:8px 14px;
+  border-radius:10px;
+  transition:0.25s ease;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
 
-        .navbar-custom .nav-link:hover {
-            color: white !important;
-            transform: translateY(-2px);
-        }
+.navbar-custom .nav-link:hover{
+  color:white;
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
 
-        .navbar-custom .nav-link.active {
-            color: white !important;
-            border-bottom: 3px solid white;
-            padding-bottom: 5px;
-        }
+/* ACTIVE LINK */
+.navbar-custom .nav-link.active{
+  color:white;
+  background: rgba(255,255,255,0.18);
+}
 
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            color: white;
-        }
+/* BUTTON */
+.btn-logout-custom{
+  background: rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.3);
+  color:white;
+  padding:7px 14px;
+  border-radius:10px;
+  font-weight:600;
+  transition:0.25s ease;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
 
-        .btn-logout-custom {
-            background-color: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-logout-custom:hover {
-            background-color: white;
-            color: #00d4ff;
-        }
-
-        /* Main Content */
-        .main-container {
-            padding: 50px 20px;
-        }
-
-        .welcome-section {
+.btn-logout-custom:hover{
+  background:white;
+  color: #3b82f6;
+  transform: translateY(-1px);
+}
+             .main,
+            .main-container{
+            max-width: 1100px;   /* 👈 plus compact */
+            margin: 20px auto;
+            padding: 20px;
+            }
+                    .welcome-section {
             background: white;
             padding: 30px;
             border-radius: 15px;
@@ -106,48 +112,77 @@
             margin-bottom: 10px;
         }
 
-        /* Cartes KPI */
-        .kpi-section {
-            margin-bottom: 40px;
-        }
+   .kpi-section{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:18px;
+  margin-bottom:25px;
+}
 
-        .kpi-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 25px;
-            text-align: center;
-            color: white;
-            transition: all 0.3s ease;
-        }
+.kpi-card{
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,1));
+  padding:18px;
+  border-radius:14px;
+  border-top:4px solid;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  transition:0.25s ease;
+  cursor:pointer;
+}
 
-        .kpi-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
+.kpi-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
 
-        .kpi-card h5 {
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
+.kpi-card h5{
+  font-size:0.9rem;
+  font-weight:600;
+  margin-bottom:10px;
+}
 
-        .kpi-card .number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
+.kpi-card .number{
+  font-size:1.9rem;
+  font-weight:700;
+}
 
-        .kpi-card p {
-            font-size: 0.9rem;
-            margin: 0;
-            opacity: 0.9;
-        }
+.kpi-card p{
+  font-size:0.85rem;
+  color:#64748b;
+  margin:0;
+}
 
-        .kpi-emprunts { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .kpi-retards { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .kpi-disponibles { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .kpi-utilisateurs { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+/* couleurs cohérentes */
+.kpi-card.primary{
+  border-top-color:#2563eb;
+  color:#2563eb;
+  background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02));
+}
+
+.kpi-card.success{
+  border-top-color:#16a34a;
+  color:#16a34a;
+  background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.02));
+}
+
+.kpi-card.warning{
+  border-top-color:#f59e0b;
+  color:#f59e0b;
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+}
+
+.kpi-card.danger{
+  border-top-color:#dc2626;
+  color:#dc2626;
+  background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(220,38,38,0.02));
+}
+
+/* alerts */
+.alerts-panel{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
 
         /* Section Title */
         .section-title {
@@ -256,6 +291,35 @@
             font-size: 0.75rem;
             font-weight: 700;
         }
+        .kpi-card.primary,
+.kpi-card.success,
+.kpi-card.danger,
+.kpi-card.info{
+  background-repeat: no-repeat;
+}
+  .kpi-card.primary{
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02));
+}
+
+.kpi-card.success{
+  background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
+}
+
+.kpi-card.danger{
+  background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02));
+}
+
+.kpi-card.info{
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(236,72,153,0.02));
+}
+.kpi-card:hover{
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+.kpi-warning{
+  border-color:#f59e0b;
+  color:#f59e0b;
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+}
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -320,11 +384,7 @@
             </ul>
 
             <!-- Droite: Notifications et Déconnexion -->
-            <div class="user-section">
-                <div class="notif-icon">
-                    <i class="fas fa-bell"></i>
-                    <span class="notif-badge">1</span>
-                </div>
+            <div class="user-section"></div>
                 <button class="btn-logout-custom" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </button>
@@ -333,122 +393,43 @@
     </div>
 </nav>
 
-<!-- CONTENU PRINCIPAL -->
+<!-- DASHBOARD ADMINISTRATION -->
 <div class="main-container">
-    <div class="container">
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <h1>Bienvenue, <span id="userName"></span> 👋</h1>
-            <p>Consultez les statistiques et rapports globaux de votre bibliothèque</p>
-        </div>
 
-        <!-- KPI Cards -->
-        <div class="kpi-section">
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="kpi-card kpi-emprunts">
-                        <h5>Emprunts ce mois</h5>
-                        <div class="number">248</div>
-                        <p>+12% par rapport au mois dernier</p>
-                    </div>
-                </div>
+  <!-- HEADER -->
+ <div class="main">
+<div class="page-header">
+<h1><i class="fas fa-user-circle fa-lg"></i> Bienvenue <span id="userName"></span></h1>
+</div>
+</div>
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="kpi-card kpi-retards">
-                        <h5>Retards actifs</h5>
-                        <div class="number">23</div>
-                        <p>Livres non retournés</p>
-                    </div>
-                </div>
+<div class="kpi-section">
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="kpi-card kpi-disponibles">
-                        <h5>Livres disponibles</h5>
-                        <div class="number">456</div>
-                        <p>Sur 650 au total</p>
-                    </div>
-                </div>
+  <div class="kpi-card primary">
+  <h5><i class="fas fa-book"></i> Catalogue</h5>
+  <div class="number" id="kpiLivres">0</div>
+  <p>Total des ressources</p>
+</div>
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="kpi-card kpi-utilisateurs">
-                        <h5>Utilisateurs actifs</h5>
-                        <div class="number">342</div>
-                        <p>Cette semaine</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="kpi-card success">
+  <h5><i class="fas fa-users"></i> Utilisateurs actifs</h5>
+  <div class="number" id="kpiUsers">0</div>
+  <p>Comptes en activité</p>
+</div>
 
-        <!-- Graphiques -->
-        <!-- <div class="chart-section">
-            <div class="section-title">
-                <h3><i class="fas fa-chart-line"></i> Activité des emprunts</h3>
-            </div>
-            <div class="chart-container">
-                <canvas id="empruntsChart"></canvas>
-            </div>
-        </div>
+  <div class="kpi-card warning">
+  <h5><i class="fas fa-exchange-alt"></i> Emprunts</h5>
+  <div class="number" id="kpiEmprunts">0</div>
+  <p>En cours</p>
+</div>
 
-        <div class="chart-section">
-            <div class="section-title">
-                <h3><i class="fas fa-chart-pie"></i> Distribution par rôle</h3>
-            </div>
-            <div class="chart-container">
-                <canvas id="rolesChart"></canvas>
-            </div>
-        </div> -->
+ <div class="kpi-card danger">
+  <h5><i class="fas fa-clock"></i> Retards</h5>
+  <div class="number" id="kpiRetards">0</div>
+  <p>À traiter</p>
+</div>
 
-        <!-- Tableau d'activité -->
-        <!-- <div class="table-section">
-            <div class="section-title">
-                <h3><i class="fas fa-list"></i> Activité récente</h3>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Événement</th>
-                            <th>Utilisateur</th>
-                            <th>Détails</th>
-                            <th>Niveau d'activité</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>23/02/2026</td>
-                            <td>Emprunt validé</td>
-                            <td>Alice Dupont</td>
-                            <td>Le Seigneur des Anneaux</td>
-                            <td><span class="badge-activity badge-high">Haute</span></td>
-                        </tr>
-                        <tr>
-                            <td>23/02/2026</td>
-                            <td>Retard détecté</td>
-                            <td>Bob Martin</td>
-                            <td>1984 - 2 jours de retard</td>
-                            <td><span class="badge-activity badge-high">Haute</span></td>
-                        </tr>
-                        <tr>
-                            <td>22/02/2026</td>
-                            <td>Livre retourné</td>
-                            <td>Claire Lefevre</td>
-                            <td>Harry Potter</td>
-                            <td><span class="badge-activity badge-medium">Moyenne</span></td>
-                        </tr>
-                        <tr>
-                            <td>22/02/2026</td>
-                            <td>Utilisateur créé</td>
-                            <td>Admin</td>
-                            <td>Nouvel étudiant</td>
-                            <td><span class="badge-activity badge-low">Basse</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div> -->
+</div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -456,49 +437,24 @@
 <script src="auth.js" defer></script>
 
 <script>
-    // Graphique Emprunts
-    const empruntsCtx = document.getElementById('empruntsChart').getContext('2d');
-    new Chart(empruntsCtx, {
-        type: 'line',
-        data: {
-            labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7'],
-            datasets: [{
-                label: 'Emprunts',
-                data: [45, 52, 48, 61, 55, 68, 72],
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
 
-    // Graphique Rôles
-    const rolesCtx = document.getElementById('rolesChart').getContext('2d');
-    new Chart(rolesCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Étudiants', 'Bibliothécaires', 'Administrateurs', 'Administration'],
-            datasets: [{
-                data: [200, 30, 10, 15],
-                backgroundColor: ['#667eea', '#f093fb', '#4facfe', '#43e97b']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== UTILISATEUR CONNECTÉ =====
+
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+  if(currentUser){
+
+    document.getElementById("userName").textContent =
+      currentUser.nom ||
+      currentUser.name ||
+      "Administration";
+  }
+
+});
+
 </script>
 
 </body>

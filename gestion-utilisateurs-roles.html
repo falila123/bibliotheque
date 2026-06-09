@@ -25,7 +25,24 @@ body{
 .sidebar h4 { text-align:center; color:white; font-weight:500; margin-bottom:30px; }
 .sidebar a { color:white; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:8px; font-weight:500; transition:0.3s; border-radius:8px; margin: 0 10px 10px 10px;}
 .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2);}
-.logout-btn { margin-top:auto; width:90%; bottom: 20px; margin-left: 10px;}
+.logout-btn{
+  margin-top:auto;
+  width:90%;
+  margin-left:10px;
+
+  border:1px solid rgba(255,255,255,0.5);
+  color:white;
+  background:transparent;
+
+  transition:0.25s ease;
+}
+
+.logout-btn:hover{
+  background:white;
+  color:#2563eb !important;
+  border-color:white;
+}
+
 
 /* MAIN */
 .main {
@@ -57,14 +74,39 @@ body{
 .stat-card h6{ color:#666; margin-bottom:8px; }
 .stat-card h3{ font-weight:700; color:#2563eb; }
 
-/* TABLE */
-.table-section{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+.stat-etudiant { background: #eaf7ee; }
+.stat-biblio { background: #e8f6f9; }
+.stat-admin { background: #fff8e1; }
+.stat-administration { background: #fdecea; }
+
+/* Couleurs spécifiques */
+.stat-etudiant {
+  border-top: 5px solid #28a745;
 }
-.table tbody tr:hover{ background:#f1f5f9; }
+.stat-etudiant h3 {
+  color: #28a745;
+}
+
+.stat-biblio {
+  border-top: 5px solid #17a2b8;
+}
+.stat-biblio h3 {
+  color: #17a2b8;
+}
+
+.stat-admin {
+  border-top: 5px solid #ffc107;
+}
+.stat-admin h3 {
+  color: #ffc107;
+}
+
+.stat-administration {
+  border-top: 5px solid #dc3545;
+}
+.stat-administration h3 {
+  color: #dc3545;
+}
 
 /* ROLE BADGES */
 .badge-role{ padding:5px 10px; border-radius:20px; font-weight:600; font-size:0.85rem; }
@@ -73,31 +115,141 @@ body{
 .badge-administrateur{ background:#fff3cd; color:#856404; }
 .badge-administration{ background:#f8d7da; color:#721c24; }
 
-/* BUTTONS */
-.btn-add, .btn-search, .btn-reset{
-  background:#2563eb;
-  color:white;
-  padding:8px 18px;
-  border-radius:8px;
-  border:none;
-  font-weight:600;
+/* TABLE */
+.table-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.btn-add:hover, .btn-search:hover, .btn-reset:hover{ opacity:0.9; }
+
+/* BUTTONS */
+.btn-add, .btn-search, .btn-reset {
+  background: #2563eb;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-add:hover,
+.btn-search:hover,
+.btn-reset:hover {
+  opacity: 0.9;
+}
 
 /* ACTION MENU */
-.action-menu{ position:relative; }
-.menu-dots{ cursor:pointer; padding:6px; }
-.dropdown-menu-user{
-  position:absolute; right:0; top:25px;
-  background:white; border-radius:8px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.15);
-  display:none; min-width:130px; overflow:hidden;
+.action-menu {
+  position: relative;
+  overflow: visible;
 }
-.dropdown-menu-user button{
-  width:100%; border:none; background:none; padding:8px 12px; text-align:left; font-size:14px;
+
+.menu-dots {
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: 0.2s;
 }
-.dropdown-menu-user button:hover{ background:#f1f5f9; }
-.dropdown-menu-user .delete{ color:#dc3545; }
+
+.menu-dots:hover {
+  background: #f1f5f9;
+}
+
+.inactive-user {
+  filter: grayscale(40%);
+}
+
+/* DROPDOWN */
+.dropdown-menu-user {
+  position: absolute;
+  right: 0;
+  top: 28px;
+  display: none;
+  flex-direction: column;
+  background: #ffffff !important;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  width: 150px;
+  z-index: 9999;
+
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* BUTTONS INSIDE MENU */
+.dropdown-menu-user button {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* EDIT */
+.dropdown-menu-user button.edit {
+  color: #16a34a;
+}
+
+.dropdown-menu-user button.edit:hover {
+  background: #ecfdf5;
+}
+
+/* DELETE */
+.dropdown-menu-user button.delete {
+  color: #dc2626;
+}
+
+.dropdown-menu-user button.delete:hover {
+  background: #fef2f2;
+}
+
+/* TABLE HOVER FIX (IMPORTANT) */
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover td {
+  background: #f1f5f9 !important;
+}
+
+/* Animation */
+@keyframes fadeMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card i {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.stat-card {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.stat-card:hover i {
+  transform: scale(1.15);
+  transition: 0.25s ease;
+}
 
 /* SEARCH + RECHERCHE BOX */
 .search-add-box{
@@ -124,6 +276,35 @@ body{
     border-color: #2563eb;
 }
 
+.toast-custom {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2563eb;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 99999;
+}
+
+.toast-custom.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-custom.success {
+  background: #16a34a;
+}
+
+.toast-custom.error {
+  background: #dc2626;
+}
+
 /* Responsive */
 @media(max-width:768px){
   .search-add-box{ flex-direction:column; align-items:stretch; }
@@ -132,6 +313,7 @@ body{
 </head>
 
 <body>
+  <div id="toast" class="toast-custom"></div>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -153,10 +335,39 @@ body{
 
 <!-- STATS -->
 <div class="row mb-4">
-<div class="col-md-3"><div class="stat-card"><h6>Étudiants</h6><h3 id="count-etudiant">0</h3></div></div>
-<div class="col-md-3"><div class="stat-card"><h6>Bibliothécaires</h6><h3 id="count-biblio">0</h3></div></div>
-<div class="col-md-3"><div class="stat-card"><h6>Administrateurs</h6><h3 id="count-admin">0</h3></div></div>
-<div class="col-md-3"><div class="stat-card"><h6>Administration</h6><h3 id="count-administration">0</h3></div></div>
+
+  <div class="col-md-3">
+  <div class="stat-card stat-etudiant">
+    <i class="fas fa-user-graduate"></i>
+    <h6>Étudiants</h6>
+    <h3 id="count-etudiant">0</h3>
+  </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-administration">
+      <i class="fas fa-user-tie"></i>
+      <h6>Administration</h6>
+      <h3 id="count-administration">0</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-biblio">
+      <i class="fas fa-book"></i>
+      <h6>Bibliothécaires</h6>
+      <h3 id="count-biblio">0</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card stat-admin">
+      <i class="fas fa-user-shield"></i>
+      <h6>Administrateurs</h6>
+      <h3 id="count-admin">0</h3>
+    </div>
+  </div>
+
 </div>
 
 <!-- SEARCH + RECHERCHE BOX -->
@@ -165,10 +376,10 @@ body{
     
     <!-- Barre de recherche -->
     <input type="text" id="searchInput" class="form-control" placeholder="🔎 Rechercher un utilisateur..." 
-           style="max-width:250px; height:38px;">
+           style="max-width:240px; height:38px;">
 
     <!-- Sélecteur rôle -->
-    <select id="roleFilter" class="form-select" style="width:180px; height:38px;">
+    <select id="roleFilter" class="form-select" style="width:150px; height:38px;">
         <option value="">Tous les rôles</option>
         <option value="Étudiant">Étudiant</option>
         <option value="Bibliothécaire">Bibliothécaire</option>
@@ -176,8 +387,14 @@ body{
         <option value="Administration">Administration</option>
     </select>
 
+    <select id="statusFilter" class="form-select" style="width:160px; height:38px;">
+  <option value="">Tous les statuts</option>
+  <option value="actif">Actifs</option>
+  <option value="inactif">Désactivés</option>
+</select>
+
     <!-- Bouton Rechercher -->
-    <button class="btn btn-primary" onclick="renderUsers()" 
+    <button class="btn btn-primary" onclick="applyUserFilters()" 
             style="height:38px; min-width:100px; display:flex; align-items:center; justify-content:center;">
         <i class="fas fa-search me-1"></i> Rechercher
     </button>
@@ -190,7 +407,7 @@ body{
 
     <!-- Bouton Ajouter -->
     <button class="btn btn-primary" onclick="openUserModal()" 
-            style="height:38px; min-width:130px; display:flex; align-items:center; justify-content:center;">
+            style="height:38px; min-width:120px; display:flex; align-items:center; justify-content:center;">
         <i class="fas fa-plus me-1"></i> Ajouter
     </button>
 
@@ -202,54 +419,410 @@ body{
 <table class="table">
 <thead>
 <tr>
-<th>ID</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Date création</th><th>Actions</th>
+<th>Nom</th><th>Email</th><th>Matricule</th><th>Rôle</th><th>Date création</th><th>Actions</th>
 </tr>
 </thead>
 <tbody id="usersTable"></tbody>
 </table>
 </div>
 </div>
+</div>
+<!-- MODAL AJOUT UTILISATEUR -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-user-plus"></i>
+          Ajouter un utilisateur
+        </h5>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <form id="addUserForm">
+
+          <div class="mb-3">
+            <label>Nom complet</label>
+
+            <input type="text"
+                   class="form-control"
+                   id="userName"
+                   required>
+          </div>
+
+          <div class="mb-3">
+            <label>Email</label>
+
+            <input type="email"
+                   class="form-control"
+                   id="userEmail"
+                   required>
+          </div>
+
+          <div class="mb-3">
+            <label>Mot de passe</label>
+
+            <input type="password"
+                   class="form-control"
+                   id="userPassword"
+                   required>
+          </div>
+
+          <div class="mb-3">
+            <label>Rôle</label>
+
+            <select class="form-select"
+                    id="userRole"
+                    required
+                    onchange="toggleMatriculeField()">
+
+              <option value="">Sélectionner...</option>
+
+              <option value="Étudiant">
+                Étudiant
+              </option>
+
+              <option value="Bibliothécaire">
+                Bibliothécaire
+              </option>
+
+              <option value="Administrateur">
+                Administrateur
+              </option>
+
+              <option value="Administration">
+                Administration
+              </option>
+
+            </select>
+          </div>
+
+          <!-- ✅ MATRICULE -->
+          <div class="mb-3"
+               id="matriculeContainer"
+               style="display:none;">
+
+            <label>Matricule</label>
+
+            <input type="text"
+                   class="form-control"
+                   id="userMatricule"
+                   placeholder="Ex: 22A123FS">
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+
+        <button class="btn btn-secondary"
+                data-bs-dismiss="modal">
+          Annuler
+        </button>
+
+        <button class="btn btn-primary"
+                onclick="addUser()">
+          Ajouter
+        </button>
+
+      </div>
+
+    </div>
+  </div>
 </div>
 
+<!-- MODAL MODIFIER UTILISATEUR -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-user-edit"></i> Modifier un utilisateur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="editUserForm">
+
+          <input type="hidden" id="editUserId">
+
+          <div class="mb-3">
+            <label>Nom complet</label>
+            <input type="text" class="form-control" id="editUserName" required>
+          </div>
+
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control" id="editUserEmail" required>
+          </div>
+
+          <div class="mb-3" id="editMatriculeContainer"><label class="form-label">Matricule</label>
+            <input
+                type="text"
+                id="editUserMatricule"
+                class="form-control"
+              >
+            </div>
+
+          <div class="mb-3">
+            <label>Rôle</label>
+
+            <select class="form-select"
+                    id="editUserRole"
+                    required
+                    onchange="toggleEditMatriculeField()">
+
+              <option value="Étudiant">Étudiant</option>
+              <option value="Bibliothécaire">Bibliothécaire</option>
+              <option value="Administrateur">Administrateur</option>
+              <option value="Administration">Administration</option>
+
+            </select>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-primary" onclick="updateUser()">Enregistrer</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-let users=[
-{id:1,name:"Alice Dupont",email:"alice@mail.com",role:"Étudiant",date:"10/01/2026"},
-{id:2,name:"Bob Martin",email:"bob@mail.com",role:"Bibliothécaire",date:"05/01/2026"},
-{id:3,name:"Claire Lefevre",email:"claire@mail.com",role:"Administrateur",date:"01/01/2026"},
-{id:4,name:"David Admin",email:"admin@mail.com",role:"Administration",date:"01/01/2026"},
-{id:5,name:"Emma Laurent",email:"emma@mail.com",role:"Étudiant",date:"12/01/2026"}
+let users = JSON.parse(localStorage.getItem("users")) || [
+{id:1,name:"Alice Dupont",email:"alice@mail.com",role:"Étudiant",date:"10/01/2026",status: "actif"},
+{id:2,name:"Bob Martin",email:"bob@mail.com",role:"Bibliothécaire",date:"05/01/2026",status: "actif"},
+{id:3,name:"Claire Lefevre",email:"claire@mail.com",role:"Administrateur",date:"01/01/2026",status: "actif"},
+{id:4,name:"David Admin",email:"admin@mail.com",role:"Administration",date:"01/01/2026",status: "actif"},
+{id:5,name:"Emma Laurent",email:"emma@mail.com",role:"Étudiant",date:"12/01/2026",status: "actif"}
 ];
 
+function applyUserFilters(){
+  renderUsers();
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+
+  toast.className = "toast-custom show " + type;
+  toast.textContent = message;
+
+  setTimeout(() => {
+    toast.className = "toast-custom";
+  }, 2500);
+}
+
+function toggleMatriculeField(){
+
+  const role =
+    document.getElementById("userRole").value;
+
+  const container =
+    document.getElementById("matriculeContainer");
+
+  if(role === "Étudiant"){
+
+    container.style.display = "block";
+
+  } else {
+
+    container.style.display = "none";
+
+    document.getElementById("userMatricule").value = "";
+  }
+}
+
+function toggleEditMatriculeField(){
+
+  const role =
+    document.getElementById("editUserRole").value;
+
+  const container =
+    document.getElementById("editMatriculeContainer");
+
+  if(role === "Étudiant"){
+
+    container.style.display = "block";
+
+  } else {
+
+    container.style.display = "none";
+
+    document.getElementById("editUserMatricule").value = "";
+  }
+}
+
+function toggleUserStatus(id){
+
+  const user = users.find(u => u.id === id);
+  if(!user) return;
+
+  // toggle status
+  user.status = (user.status === "actif") ? "inactif" : "actif";
+
+  // sauvegarde
+  localStorage.setItem("users", JSON.stringify(users));
+
+  // re-render
+  renderUsers();
+
+  // message
+  showToast(
+    `Utilisateur "${user.name}" ${user.status === "actif" ? "activé" : "désactivé"}`,
+    "success"
+  );
+}
+
 function renderUsers(){
-  const tbody=document.getElementById("usersTable");
-  const search=document.getElementById("searchInput").value.toLowerCase();
-  const roleFilter=document.getElementById("roleFilter").value;
-  tbody.innerHTML="";
-  users.filter(u=>{
-    const matchesSearch = u.name.toLowerCase().includes(search)||u.email.toLowerCase().includes(search);
-    const matchesRole = roleFilter===""||u.role===roleFilter;
-    return matchesSearch&&matchesRole;
-  }).forEach(u=>{
-    let badgeClass = u.role==="Étudiant"?"badge-etudiant":u.role==="Bibliothécaire"?"badge-bibliothecaire":u.role==="Administrateur"?"badge-administrateur":"badge-administration";
-    tbody.innerHTML+=`
-      <tr>
-        <td>${u.id}</td>
-        <td>${u.name}</td>
-        <td>${u.email}</td>
-        <td><span class="badge-role ${badgeClass}">${u.role}</span></td>
-        <td>${u.date}</td>
-        <td>
-          <div class="action-menu">
-            <div class="menu-dots" onclick="toggleMenu(this)"><i class="fas fa-ellipsis-h"></i></div>
-            <div class="dropdown-menu-user">
-              <button onclick="editUser(${u.id})"><i class="fas fa-edit"></i> Modifier</button>
-              <button class="delete"><i class="fas fa-trash"></i> Supprimer</button>
+
+  const tbody =
+    document.getElementById("usersTable");
+
+  const search =
+    document.getElementById("searchInput")
+    .value
+    .toLowerCase();
+
+  const roleFilter =
+    document.getElementById("roleFilter").value;
+
+  const statusFilter =
+    document.getElementById("statusFilter").value;
+
+  tbody.innerHTML = "";
+
+  users
+    .filter(u => {
+
+      const matchesSearch =
+
+        u.name.toLowerCase().includes(search) ||
+
+        u.email.toLowerCase().includes(search) ||
+
+        (u.matricule || "")
+          .toLowerCase()
+          .includes(search);
+
+      const matchesRole =
+        roleFilter === "" ||
+        u.role === roleFilter;
+
+      const matchesStatus =
+        statusFilter === "" ||
+        u.status === statusFilter;
+
+      return (
+        matchesSearch &&
+        matchesRole &&
+        matchesStatus
+      );
+    })
+
+    .forEach(u => {
+
+      let badgeClass =
+
+        u.role === "Étudiant"
+          ? "badge-etudiant"
+
+        : u.role === "Bibliothécaire"
+          ? "badge-bibliothecaire"
+
+        : u.role === "Administrateur"
+          ? "badge-administrateur"
+
+        : "badge-administration";
+
+      tbody.innerHTML += `
+
+        <tr class="${u.status === 'inactif'
+          ? 'inactive-user'
+          : ''}"
+
+          style="${u.status === 'inactif'
+            ? 'opacity:0.4'
+            : ''}">
+
+          <td>${u.name}</td>
+
+          <td>${u.email}</td>
+
+          <td>
+            ${u.role === "Étudiant"
+              ? (u.matricule || "-")
+              : "-"}
+          </td>
+
+          <td>
+            <span class="badge-role ${badgeClass}">
+              ${u.role}
+            </span>
+          </td>
+
+          <td>${u.date}</td>
+
+          <td>
+
+            <div class="action-menu">
+
+              <div class="menu-dots"
+                   onclick="toggleMenu(this)">
+
+                <i class="fas fa-ellipsis-h"></i>
+
+              </div>
+
+              <div class="dropdown-menu-user">
+
+                <button class="edit"
+                        onclick="editUser(${u.id})">
+
+                  <i class="fas fa-edit"></i>
+
+                  Modifier
+
+                </button>
+
+                <button
+                  class="${u.status === 'actif'
+                    ? 'delete'
+                    : 'edit'}"
+
+                  onclick="toggleUserStatus(${u.id})">
+
+                  <i class="fas ${u.status === 'actif'
+                    ? 'fa-ban'
+                    : 'fa-check'}"></i>
+
+                  ${u.status === 'actif'
+                    ? 'Désactiver'
+                    : 'Activer'}
+
+                </button>
+
+              </div>
+
             </div>
-          </div>
-        </td>
-      </tr>`;
-  });
+
+          </td>
+
+        </tr>
+      `;
+    });
+
   updateRoleStats();
 }
 
@@ -277,10 +850,275 @@ function updateRoleStats(){
 }
 
 function resetFilters(){
-  document.getElementById("searchInput").value="";
-  document.getElementById("roleFilter").value="";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("roleFilter").value = "";
+  document.getElementById("statusFilter").value = "";
+
   renderUsers();
 }
+
+function openUserModal(){
+  const modal = new bootstrap.Modal(document.getElementById("addUserModal"));
+  modal.show();
+}
+
+function addUser(){
+
+  const name =
+    document.getElementById("userName")
+    .value
+    .trim();
+
+  const email =
+    document.getElementById("userEmail")
+    .value
+    .trim();
+
+  const password =
+    document.getElementById("userPassword")
+    .value
+    .trim();
+
+  const role =
+    document.getElementById("userRole").value;
+
+  const matricule =
+    document.getElementById("userMatricule")
+    .value
+    .trim();
+
+  if(!name || !email || !password || !role){
+
+    alert("Veuillez remplir tous les champs");
+
+    return;
+  }
+
+  // ✅ matricule obligatoire pour étudiant
+  if(role === "Étudiant" && !matricule){
+
+    alert("Veuillez renseigner le matricule étudiant");
+
+    return;
+  }
+
+  // ✅ vérifier doublon matricule
+  if(role === "Étudiant"){
+
+    const existingMatricule = users.find(
+      u => u.matricule === matricule
+    );
+
+    if(existingMatricule){
+
+      alert("Ce matricule existe déjà");
+
+      return;
+    }
+  }
+
+  const newId =
+    users.length > 0
+      ? Math.max(...users.map(u => u.id)) + 1
+      : 1;
+
+  const newUser = {
+
+    id: newId,
+
+    name,
+
+    email,
+
+    password,
+
+    role,
+
+    matricule:
+      role === "Étudiant"
+        ? matricule
+        : "",
+
+    status: "actif",
+
+    date: new Date().toLocaleDateString()
+  };
+
+  users.push(newUser);
+
+  localStorage.setItem(
+    "users",
+    JSON.stringify(users)
+  );
+
+  renderUsers();
+
+  showToast(
+    `Utilisateur "${newUser.name}" ajouté avec succès`,
+    "success"
+  );
+
+  document.getElementById("addUserForm").reset();
+
+  // ✅ cacher le champ matricule après reset
+  document.getElementById(
+    "matriculeContainer"
+  ).style.display = "none";
+
+  bootstrap.Modal
+    .getInstance(
+      document.getElementById("addUserModal")
+    )
+    .hide();
+}
+
+function editUser(id){
+
+  document.querySelectorAll(".dropdown-menu-user")
+    .forEach(menu => {
+      menu.style.display = "none";
+    });
+
+  const user = users.find(u => u.id === id);
+
+  if(!user) return;
+
+  document.getElementById("editUserId").value =
+    user.id;
+
+  document.getElementById("editUserName").value =
+    user.name;
+
+  document.getElementById("editUserEmail").value =
+    user.email;
+
+  document.getElementById("editUserRole").value =
+    user.role;
+
+  // ✅ MATRICULE
+  document.getElementById("editUserMatricule").value =
+    user.matricule || "";
+
+  // ✅ AFFICHER / CACHER LE CHAMP
+  toggleEditMatriculeField();
+
+  const modalEl =
+    document.getElementById("editUserModal");
+
+  const modal =
+    new bootstrap.Modal(modalEl);
+
+  modal.show();
+}
+
+function updateUser(){
+
+  const id =
+    parseInt(document.getElementById("editUserId").value);
+
+  const name =
+    document.getElementById("editUserName")
+    .value
+    .trim();
+
+  const email =
+    document.getElementById("editUserEmail")
+    .value
+    .trim();
+
+  const role =
+    document.getElementById("editUserRole").value;
+
+  const matricule =
+    document.getElementById("editUserMatricule")
+    .value
+    .trim();
+
+  if(!name || !email || !role){
+
+    showToast(
+      "Veuillez remplir tous les champs",
+      "error"
+    );
+
+    return;
+  }
+
+  // ✅ matricule obligatoire pour étudiant
+  if(role === "Étudiant" && !matricule){
+
+    showToast(
+      "Veuillez renseigner le matricule",
+      "error"
+    );
+
+    return;
+  }
+
+  // ✅ vérifier doublon matricule
+  if(role === "Étudiant"){
+
+    const matriculeExists = users.find(u =>
+
+      u.id !== id &&
+      u.matricule === matricule
+    );
+
+    if(matriculeExists){
+
+      showToast(
+        "Ce matricule existe déjà",
+        "error"
+      );
+
+      return;
+    }
+  }
+
+  const userIndex =
+    users.findIndex(u => u.id === id);
+
+  if(userIndex === -1) return;
+
+  users[userIndex].name = name;
+
+  users[userIndex].email = email;
+
+  users[userIndex].role = role;
+
+  // ✅ sauvegarde matricule
+  users[userIndex].matricule =
+    role === "Étudiant"
+      ? matricule
+      : "";
+
+  localStorage.setItem(
+    "users",
+    JSON.stringify(users)
+  );
+
+  renderUsers();
+
+  showToast(
+    `Utilisateur "${name}" mis à jour avec succès`,
+    "success"
+  );
+
+  const modalEl =
+    document.getElementById("editUserModal");
+
+  const modalInstance =
+    bootstrap.Modal.getInstance(modalEl);
+
+  if(modalInstance){
+
+    modalInstance.hide();
+  }
+}
+
+document.getElementById("addUserModal").addEventListener("hidden.bs.modal", function () {
+  document.getElementById("addUserForm").reset();
+});
 
 renderUsers();
 </script>
